@@ -160,6 +160,7 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
     console.log(`   - Email: ${passenger.email}`);
     console.log(`   - Name: ${passenger.name}`);
     console.log(`   - Age: ${passenger.age}`);
+    console.log(`   - Gender: ${passenger.gender}`);
 
     await page.evaluate((p) => {
       const typeInto = (selectors, val) => {
@@ -182,32 +183,39 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
       // 2. Contact Email
       typeInto(['input[placeholder*="Email"]', 'input[type="email"]', 'input[name="email"]'], p.email);
 
-      // 3. Passenger 1 Name
+      // 3. Passenger 1 Name (Name *)
       typeInto(['input[placeholder*="Name"]', 'input[name="passengerName"]', 'input[name="name"]', 'input[class*="name"]'], p.name);
 
-      // 4. Passenger 1 Age
+      // 4. Passenger 1 Age (Age *)
       typeInto(['input[placeholder*="Age"]', 'input[name="passengerAge"]', 'input[name="age"]', 'input[class*="age"]'], p.age);
 
       // 5. Gender Radio (Male)
-      const maleRadios = Array.from(document.querySelectorAll('input[type="radio"], label, span'));
+      const maleRadios = Array.from(document.querySelectorAll('input[type="radio"], label, span, div'));
       const maleOption = maleRadios.find(r => r.innerText && r.innerText.trim().toLowerCase() === 'male');
       if (maleOption) maleOption.click();
+
+      // 6. Travel Insurance selection ("Don't add Travel Insurance")
+      const insuranceOptions = Array.from(document.querySelectorAll('label, div, span, input[type="radio"]'));
+      const noInsuranceBtn = insuranceOptions.find(el => 
+        el.innerText && el.innerText.toLowerCase().includes("don't add travel insurance")
+      );
+      if (noInsuranceBtn) noInsuranceBtn.click();
     }, passenger);
 
     await delay(3000);
 
-    // STEP 9: Advance to Payment Gateway
-    console.log('💳 Step 9: Advancing to live Payment Gateway / Checkout...');
+    // STEP 9: Advance to Payment Gateway via "Continue booking" button
+    console.log('💳 Step 9: Clicking "Continue booking" to advance straight to live Payment Gateway / Checkout...');
     await page.evaluate(() => {
       const allButtons = Array.from(document.querySelectorAll('button, div, a'));
-      const proceedPayBtn = allButtons.find(b => 
+      const continueBookingBtn = allButtons.find(b => 
         b.innerText && (
+          b.innerText.trim().toLowerCase().includes('continue booking') ||
           b.innerText.trim().toLowerCase().includes('proceed to pay') ||
-          b.innerText.trim().toLowerCase().includes('pay now') ||
-          b.innerText.trim().toLowerCase().includes('continue to pay')
+          b.innerText.trim().toLowerCase().includes('pay now')
         )
       );
-      if (proceedPayBtn) proceedPayBtn.click();
+      if (continueBookingBtn) continueBookingBtn.click();
     });
 
     console.log('\n================================================================');
