@@ -92,19 +92,19 @@ const NearbyPage = () => {
       case 'restaurant': return 'bg-red-100 text-red-700';
       case 'lodging': return 'bg-purple-100 text-purple-700';
       case 'attraction': return 'bg-blue-100 text-blue-700';
-      default: return 'bg-gray-100 text-gray-700';
+      default: return 'bg-zinc-100 text-zinc-400';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-zinc-50 py-8">
       <div className="max-w-6xl mx-auto px-4">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-white mb-2">
             🎯 Nearby Recommendations
           </h1>
-          <p className="text-gray-600">
+          <p className="text-zinc-400">
             Find the best places near you based on your budget and preferences
           </p>
         </div>
@@ -133,7 +133,7 @@ const NearbyPage = () => {
 
               {/* Budget */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
                   Budget per person (optional)
                 </label>
                 <input
@@ -150,7 +150,7 @@ const NearbyPage = () => {
 
               {/* Radius */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
                   Search Radius: {radius} km
                 </label>
                 <input
@@ -169,7 +169,7 @@ const NearbyPage = () => {
 
               {/* Category */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
                   Category
                 </label>
                 <select
@@ -186,7 +186,7 @@ const NearbyPage = () => {
 
               {/* Sort By */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
                   Sort By
                 </label>
                 <select
@@ -222,10 +222,10 @@ const NearbyPage = () => {
             {!location && !error && (
               <div className="card text-center py-12">
                 <span className="text-6xl mb-4 block">📍</span>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-white mb-2">
                   Get Started
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-zinc-400 mb-4">
                   Click "Get My Location" to find the best places near you
                 </p>
               </div>
@@ -234,7 +234,7 @@ const NearbyPage = () => {
             {loading && (
               <div className="card text-center py-12">
                 <div className="animate-spin text-6xl mb-4">🔍</div>
-                <p className="text-gray-600">Searching for nearby places...</p>
+                <p className="text-zinc-400">Searching for nearby places...</p>
               </div>
             )}
 
@@ -246,17 +246,17 @@ const NearbyPage = () => {
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
                       <p className="text-2xl font-bold text-primary-600">{recommendations.count}</p>
-                      <p className="text-xs text-gray-600">Places Found</p>
+                      <p className="text-xs text-zinc-400">Places Found</p>
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-secondary-600">{recommendations.radius}</p>
-                      <p className="text-xs text-gray-600">Search Radius</p>
+                      <p className="text-xs text-zinc-400">Search Radius</p>
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-green-600">
                         {recommendations.budget !== 'No budget specified' ? `₹${recommendations.budget}` : 'Any'}
                       </p>
-                      <p className="text-xs text-gray-600">Budget</p>
+                      <p className="text-xs text-zinc-400">Budget</p>
                     </div>
                   </div>
                 </div>
@@ -278,9 +278,9 @@ const NearbyPage = () => {
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <span className="text-2xl">{getCategoryIcon(place.category)}</span>
-                              <h4 className="font-semibold text-gray-900">{place.name}</h4>
+                              <h4 className="font-semibold text-white">{place.name}</h4>
                             </div>
-                            <p className="text-sm text-gray-600">{place.address}</p>
+                            <p className="text-sm text-zinc-400">{place.address}</p>
                           </div>
 
                           <span className={`px-2 py-1 rounded text-xs font-medium ${getCategoryColor(place.category)}`}>
@@ -350,7 +350,7 @@ const NearbyPage = () => {
                 {recommendations.recommendations.length === 0 && (
                   <div className="card text-center py-8">
                     <span className="text-4xl mb-2 block">😕</span>
-                    <p className="text-gray-600">No places found matching your criteria</p>
+                    <p className="text-zinc-400">No places found matching your criteria</p>
                     <p className="text-sm text-gray-500 mt-1">Try increasing the search radius or budget</p>
                   </div>
                 )}

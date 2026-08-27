@@ -78,14 +78,14 @@ const PlanTripPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">
             Plan Your Perfect Trip
           </h1>
-          <p className="text-gray-600">
+          <p className="text-zinc-400">
             Tell us your preferences and our AI will create a personalized itinerary for you
           </p>
         </div>
@@ -119,38 +119,38 @@ const PlanTripPage = () => {
 
                   {/* Trip Summary */}
                   <div className="pt-4 border-t border-gray-200 space-y-2">
-                    <h3 className="font-semibold text-gray-900 mb-3">Trip Summary</h3>
+                    <h3 className="font-semibold text-white mb-3">Trip Summary</h3>
 
                     <div className="text-sm">
-                      <span className="text-gray-600">Destination:</span>
-                      <span className="ml-2 font-medium text-gray-900">
+                      <span className="text-zinc-400">Destination:</span>
+                      <span className="ml-2 font-medium text-white">
                         {lastRequestData?.destination}
                       </span>
                     </div>
 
                     <div className="text-sm">
-                      <span className="text-gray-600">Budget:</span>
-                      <span className="ml-2 font-medium text-gray-900">
+                      <span className="text-zinc-400">Budget:</span>
+                      <span className="ml-2 font-medium text-white">
                         ₹{lastRequestData?.budget.toLocaleString('en-IN')}
                       </span>
                     </div>
 
                     <div className="text-sm">
-                      <span className="text-gray-600">Duration:</span>
-                      <span className="ml-2 font-medium text-gray-900">
+                      <span className="text-zinc-400">Duration:</span>
+                      <span className="ml-2 font-medium text-white">
                         {lastRequestData?.duration} days
                       </span>
                     </div>
 
                     <div className="text-sm">
-                      <span className="text-gray-600">Start Date:</span>
-                      <span className="ml-2 font-medium text-gray-900">
+                      <span className="text-zinc-400">Start Date:</span>
+                      <span className="ml-2 font-medium text-white">
                         {lastRequestData?.startDate && new Date(lastRequestData.startDate).toLocaleDateString('en-IN')}
                       </span>
                     </div>
 
                     <div className="text-sm">
-                      <span className="text-gray-600">Interests:</span>
+                      <span className="text-zinc-400">Interests:</span>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {lastRequestData?.interests.map(interest => (
                           <span
@@ -211,30 +211,30 @@ const PlanTripPage = () => {
               <div className="card text-center py-12">
                 <div className="max-w-md mx-auto">
                   <span className="text-6xl mb-4 block">🗺️</span>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     Ready to Plan Your Trip?
                   </h3>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-zinc-400 mb-6">
                     Fill in your trip details on the left and click "Generate Itinerary"
                     to get a personalized travel plan powered by AI.
                   </p>
-                  <div className="space-y-2 text-left bg-gray-50 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900 mb-3">Features:</h4>
+                  <div className="space-y-2 text-left bg-zinc-900/50 rounded-lg p-4 border border-zinc-800">
+                    <h4 className="font-semibold text-white mb-3">Features:</h4>
                     <div className="flex items-start space-x-2">
                       <span>✅</span>
-                      <span className="text-sm text-gray-700">AI-powered itinerary generation</span>
+                      <span className="text-sm text-zinc-400">AI-powered itinerary generation</span>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span>✅</span>
-                      <span className="text-sm text-gray-700">Budget-aware planning</span>
+                      <span className="text-sm text-zinc-400">Budget-aware planning</span>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span>✅</span>
-                      <span className="text-sm text-gray-700">Personalized to your interests</span>
+                      <span className="text-sm text-zinc-400">Personalized to your interests</span>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span>✅</span>
-                      <span className="text-sm text-gray-700">Day-wise activity breakdown</span>
+                      <span className="text-sm text-zinc-400">Day-wise activity breakdown</span>
                     </div>
                   </div>
                 </div>

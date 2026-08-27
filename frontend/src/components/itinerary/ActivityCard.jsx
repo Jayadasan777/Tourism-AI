@@ -32,10 +32,10 @@ const ActivityCard = ({ activity, isLast }) => {
           <div className="flex-1">
             <div className="flex items-center gap-2">
               {category && <span className="text-lg">{getCategoryIcon(category)}</span>}
-              <h5 className="font-semibold text-gray-900">{title}</h5>
+              <h5 className="font-semibold text-white">{title}</h5>
             </div>
             {placeName && placeName !== title && (
-              <p className="text-xs text-gray-500 mt-0.5">📍 {placeName}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">📍 {placeName}</p>
             )}
           </div>
           <span className="text-sm font-medium text-secondary-600 ml-4 flex-shrink-0">
@@ -43,15 +43,15 @@ const ActivityCard = ({ activity, isLast }) => {
           </span>
         </div>
 
-        <p className="text-xs text-gray-500 mb-1">{time}</p>
+        <p className="text-xs text-zinc-500 mb-1">{time}</p>
 
         {address && (
-          <p className="text-xs text-gray-600 mb-1">
+          <p className="text-xs text-zinc-400 mb-1">
             📮 {address}
           </p>
         )}
 
-        <p className="text-sm text-gray-600 leading-relaxed mb-2">
+        <p className="text-sm text-zinc-400 leading-relaxed mb-2">
           {description}
         </p>
 
