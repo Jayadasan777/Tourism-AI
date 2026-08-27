@@ -16,11 +16,24 @@ const automateRedBusBooking = async ({ from, to, date, passengerDetails }) => {
 
   let browser;
   try {
-    // Launch browser (visible for demo)
+    // Launch browser
+    // Production (Render): headless with Chrome executable
+    // Development (localhost): visible browser for demo
+    const isProduction = process.env.NODE_ENV === 'production';
+
     browser = await puppeteer.launch({
-      headless: false, // Show browser so judges can see!
+      headless: isProduction ? 'new' : false, // Headless in production, visible locally
+      executablePath: isProduction ? process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium' : undefined,
       defaultViewport: { width: 1280, height: 800 },
-      args: ['--start-maximized']
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+        '--window-size=1280,800',
+        ...(isProduction ? [] : ['--start-maximized'])
+      ]
     });
 
     const page = await browser.newPage();

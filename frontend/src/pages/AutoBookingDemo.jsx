@@ -27,7 +27,8 @@ const AutoBookingDemo = () => {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/agentic/automate-booking', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://smart-tour-ai-backend.onrender.com/api';
+      const response = await fetch(`${apiUrl}/agentic/automate-booking`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
