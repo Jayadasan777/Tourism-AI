@@ -1,8 +1,19 @@
 import axios from 'axios';
 
+// Get API URL from environment
+const apiUrl = import.meta.env.VITE_API_URL;
+
+if (!apiUrl) {
+  console.error('❌ VITE_API_URL is not set!');
+  console.error('Please set VITE_API_URL in Vercel environment variables');
+  console.error('Expected: https://smart-tour-ai-backend.onrender.com/api');
+}
+
+console.log('🌐 API URL:', apiUrl || 'http://localhost:5000/api (fallback)');
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: apiUrl || 'http://localhost:5000/api',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
