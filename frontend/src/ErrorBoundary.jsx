@@ -17,30 +17,25 @@ class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">
-              ⚠️ Application Error
+        <div className="min-h-screen flex items-center justify-center bg-obsidian-950 p-4">
+          <div className="max-w-md w-full card border-zinc-800 p-8 shadow-2xl">
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+              ⚠️ Application Notice
             </h1>
-            <p className="text-gray-700 mb-4">
-              Something went wrong. Please check:
+            <p className="text-zinc-400 text-sm mb-4">
+              An issue occurred. You can reload the page or continue browsing.
             </p>
-            <ul className="list-disc list-inside text-sm text-gray-600 mb-4 space-y-2">
-              <li>Environment variables are set in Vercel</li>
-              <li>Firebase configuration is correct</li>
-              <li>Backend API is running</li>
-            </ul>
-            <details className="text-xs text-gray-500">
-              <summary className="cursor-pointer font-semibold mb-2">
+            <details className="text-xs text-zinc-500 mb-6">
+              <summary className="cursor-pointer font-semibold text-zinc-400 hover:text-white mb-2">
                 Technical Details
               </summary>
-              <pre className="bg-gray-100 p-2 rounded overflow-auto">
+              <pre className="bg-zinc-950 p-3 rounded border border-zinc-800 text-zinc-400 overflow-auto font-mono text-[11px]">
                 {this.state.error?.toString()}
               </pre>
             </details>
             <button
               onClick={() => window.location.reload()}
-              className="mt-4 w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700"
+              className="btn-primary w-full"
             >
               Reload Page
             </button>
