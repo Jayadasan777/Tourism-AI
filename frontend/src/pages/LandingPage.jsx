@@ -78,8 +78,11 @@ const LandingPage = () => {
                 <div className="flex items-center gap-3">
                   <div className="text-3xl">🤖</div>
                   <div>
-                    <div className="text-white font-semibold text-sm">Google Gemini AI</div>
-                    <div className="text-zinc-500 text-xs">Powered by Gemini 1.5 Flash</div>
+                    <div className="text-white font-semibold text-sm flex items-center gap-2">
+                      <span>Google Gemini AI</span>
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    </div>
+                    <div className="text-zinc-400 text-xs font-mono">Gemini 2.5 Flash Live Engine</div>
                   </div>
                 </div>
               </div>
