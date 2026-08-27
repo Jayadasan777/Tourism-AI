@@ -1,21 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 const AuthContext = createContext(null);
-
-// Safely import Firebase - wrapped to prevent module crash
-let auth = null;
-let firebaseError = null;
-
-try {
-  // This will throw if Firebase config has issues
-  const firebaseModule = require('../config/firebase');
-  auth = firebaseModule.auth;
-  console.log('✅ Firebase auth loaded');
-} catch (error) {
-  console.error('❌ Firebase auth import failed:', error);
-  firebaseError = error.message;
-}
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -63,7 +50,7 @@ function AuthProvider({ children }) {
   };
 
   // Show error if Firebase failed to load
-  if (firebaseError && !loading) {
+  if (!auth && !loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <div className="max-w-md bg-white rounded-lg shadow-lg p-6">
@@ -79,12 +66,9 @@ function AuthProvider({ children }) {
             <li>VITE_FIREBASE_MESSAGING_SENDER_ID</li>
             <li>VITE_FIREBASE_APP_ID</li>
           </ul>
-          <details className="text-xs text-gray-500 mb-4">
-            <summary className="cursor-pointer font-semibold">Error Details</summary>
-            <pre className="mt-2 bg-gray-100 p-2 rounded overflow-auto text-xs">
-              {firebaseError}
-            </pre>
-          </details>
+          <p className="text-sm text-gray-600 mb-4">
+            Open browser console (F12) to see which variables are missing.
+          </p>
           <a
             href="/status"
             className="block w-full text-center bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700"
