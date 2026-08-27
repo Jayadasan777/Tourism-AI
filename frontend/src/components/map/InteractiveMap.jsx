@@ -111,22 +111,27 @@ const InteractiveMap = ({ itinerary, height = '500px' }) => {
   const routeCoordinates = [];
 
   itinerary.days.forEach((day) => {
-    day.activities.forEach((activity) => {
-      // For demo, we'll use mock coordinates based on activity index
-      // In real implementation, get from Google Places API
-      if (activity.placeName && activity.address) {
-        // Generate realistic coordinates (would come from Places API)
-        const baseLatLng = getBaseCoordinates(itinerary.metadata?.destination || 'India');
-        const lat = baseLatLng.lat + (Math.random() - 0.5) * 0.1;
-        const lng = baseLatLng.lng + (Math.random() - 0.5) * 0.1;
+    (day.activities || []).forEach((activity) => {
+      let latLng = null;
+      if (Array.isArray(activity.coordinates) && activity.coordinates.length === 2) {
+        latLng = activity.coordinates;
+      } else if (activity.geometry?.location) {
+        latLng = [activity.geometry.location.lat, activity.geometry.location.lng];
+      } else if (activity.placeName || activity.title) {
+        const baseLatLng = getBaseCoordinates(itinerary.destination || itinerary.metadata?.destination || 'India');
+        latLng = [
+          baseLatLng.lat + (Math.random() - 0.5) * 0.05,
+          baseLatLng.lng + (Math.random() - 0.5) * 0.05
+        ];
+      }
 
+      if (latLng) {
         places.push({
           ...activity,
           dayNumber: day.dayNumber,
-          coordinates: [lat, lng]
+          coordinates: latLng
         });
-
-        routeCoordinates.push([lat, lng]);
+        routeCoordinates.push(latLng);
       }
     });
   });
