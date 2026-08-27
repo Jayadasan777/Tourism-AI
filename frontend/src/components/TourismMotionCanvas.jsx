@@ -35,13 +35,12 @@ export default function TourismMotionCanvas({ type = 'mountains', className = ''
     scene.add(animatedGroup);
 
     if (type === 'mountains') {
-      // 1. Procedural Himalayan Mountain Ridge with River Valley
+      // 1. Procedural Himalayan Mountain Ridge with River Valley - Monochrome
       const planeGeo = new THREE.PlaneGeometry(6, 4, 24, 16);
       const pos = planeGeo.attributes.position;
       for (let i = 0; i < pos.count; i++) {
         const x = pos.getX(i);
         const y = pos.getY(i);
-        // Create 2 jagged mountain peaks with central river valley dip
         const ridge = Math.sin(x * 1.5) * Math.cos(y * 1.2) * 0.75 + Math.sin(x * 3.5) * 0.25;
         const valley = Math.exp(-Math.pow(x + 0.2, 2) * 2.5) * 0.45;
         pos.setZ(i, ridge - valley);
@@ -49,10 +48,10 @@ export default function TourismMotionCanvas({ type = 'mountains', className = ''
       planeGeo.computeVertexNormals();
 
       const mountainMat = new THREE.MeshPhysicalMaterial({
-        color: 0x7C5CFF,
-        emissive: 0x0A0B10,
-        roughness: 0.35,
-        metalness: 0.6,
+        color: 0x111111,
+        emissive: 0x000000,
+        roughness: 0.2,
+        metalness: 0.85,
         flatShading: true
       });
       const mountainMesh = new THREE.Mesh(planeGeo, mountainMat);
@@ -60,50 +59,50 @@ export default function TourismMotionCanvas({ type = 'mountains', className = ''
       mountainMesh.position.y = -0.5;
       animatedGroup.add(mountainMesh);
 
-      // Wireframe contour lines (Topographic map elevation lines)
+      // Wireframe contour lines - Crisp White
       const wireGeo = new THREE.WireframeGeometry(planeGeo);
-      const wireMat = new THREE.LineBasicMaterial({ color: 0xFF8A3D, transparent: true, opacity: 0.35 });
+      const wireMat = new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.45 });
       const wireMesh = new THREE.LineSegments(wireGeo, wireMat);
       mountainMesh.add(wireMesh);
     } else if (type === 'radar') {
-      // 2. High-Tech Indian Geographic Radar Globe with Orbital Pulse Rings
+      // 2. High-Tech Geographic Radar Globe with Orbital Pulse Rings - Monochrome
       const globeGeo = new THREE.IcosahedronGeometry(1.2, 2);
       const globeMat = new THREE.MeshStandardMaterial({
-        color: 0x1DD3B0,
+        color: 0xFFFFFF,
         wireframe: true,
         transparent: true,
-        opacity: 0.6
+        opacity: 0.65
       });
       const globe = new THREE.Mesh(globeGeo, globeMat);
       animatedGroup.add(globe);
 
-      // Orbital radar rings
+      // Orbital radar rings - White
       const ringGeo = new THREE.RingGeometry(1.5, 1.55, 32);
-      const ringMat = new THREE.MeshBasicMaterial({ color: 0x7C5CFF, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.rotation.x = Math.PI / 2;
       animatedGroup.add(ring);
     }
 
-    // Ambient floating glow points
+    // Ambient floating glow points - White & Silver
     const pCount = 8;
     const pGeo = new THREE.SphereGeometry(0.03, 6, 6);
-    const pMat = new THREE.MeshBasicMaterial({ color: type === 'radar' ? 0x1DD3B0 : 0xFF8A3D });
+    const pMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
     for (let i = 0; i < pCount; i++) {
       const p = new THREE.Mesh(pGeo, pMat);
       p.position.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 2 + 0.5, (Math.random() - 0.5) * 2);
       animatedGroup.add(p);
     }
 
-    // Lights
-    const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
+    // Lights - Pure Crisp White
+    const ambLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x7C5CFF, 2.2);
+    const dirLight1 = new THREE.DirectionalLight(0xFFFFFF, 2.8);
     dirLight1.position.set(3, 4, 3);
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0xFF8A3D, 1.8);
+    const dirLight2 = new THREE.DirectionalLight(0xAAAAAA, 1.8);
     dirLight2.position.set(-3, -2, -2);
     scene.add(dirLight2);
 

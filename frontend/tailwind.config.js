@@ -7,41 +7,34 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Nature & Expedition Luxury Palette
-        forest: {
-          950: '#030806', // Pitch Forest Night
-          900: '#06130E', // Deep Evergreen Canvas
-          850: '#0B1E17', // Pine Glass Surface
-          800: '#122C23', // Elevated Moss Hover
-          700: '#1C4235', // Subtle Border
-        },
-        nature: {
-          emerald: '#10B981', // Lush Rainforest Accent
-          mint: '#34D399',    // Vibrant Fern
-          amber: '#F59E0B',   // Sunrise Gold / Campfire
-          sand: '#E6DFD5',    // Himalayan Stone Off-white
-          sky: '#0284C7',     // Glacial River
-        },
+        // Ultra-Luxury Black & White Monochrome Palette
         base: {
-          bg: '#040B08',       // Deep Rainforest Night
-          card: '#081711',     // Moss Glass Surface
-          elevated: '#0E241B', // Elevated Hover Card
-          border: '#153629',   // Organic Border
+          bg: '#000000',       // Pure OLED Deep Black
+          card: '#0A0A0A',     // Minimalist Dark Surface
+          elevated: '#141414', // Crisp Elevated Hover Surface
+          border: '#222222',   // Sharp Minimal Border
         },
         accent: {
-          violet: '#10B981',   // Mapped to Lush Emerald for global buttons
-          marigold: '#F59E0B', // Sunrise Amber
-          teal: '#34D399',     // Live Radar Mint
+          violet: '#FFFFFF',   // Primary Button: Pure Crisp White
+          marigold: '#E5E5E5', // Secondary Accent: Warm Silver
+          teal: '#FFFFFF',     // Radar & Status: Pure White
+        },
+        nature: {
+          emerald: '#FFFFFF',
+          mint: '#E5E5E5',
+          amber: '#D4D4D4',
+          sand: '#FAFAFA',
+          sky: '#A3A3A3',
         },
         text: {
-          primary: '#F2EFE9',  // Warm Stone Off-white
-          muted: '#8EA89D',    // Forest Mist Secondary
+          primary: '#FFFFFF',  // Crisp Pure White
+          muted: '#888888',    // Sleek Platinum Gray
         },
         obsidian: {
-          950: '#040B08',
-          900: '#081711',
-          850: '#0E241B',
-          800: '#153629',
+          950: '#000000',
+          900: '#0A0A0A',
+          850: '#141414',
+          800: '#222222',
         }
       },
       fontFamily: {
@@ -54,19 +47,18 @@ export default {
         tight: '-0.02em',
       },
       boxShadow: {
-        'glow-emerald': '0 0 30px rgba(16, 185, 129, 0.3)',
-        'glow-emerald-lg': '0 0 50px rgba(16, 185, 129, 0.45)',
-        'glow-amber': '0 0 30px rgba(245, 158, 11, 0.3)',
-        'glow-forest': '0 10px 40px -10px rgba(16, 185, 129, 0.25)',
+        'glow-white': '0 0 25px rgba(255, 255, 255, 0.25)',
+        'glow-white-lg': '0 0 45px rgba(255, 255, 255, 0.4)',
+        'glow-silver': '0 0 20px rgba(220, 220, 220, 0.2)',
       },
       animation: {
-        'pulse-emerald': 'pulseEmerald 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-white': 'pulseWhite 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float-slow': 'float 6s ease-in-out infinite',
       },
       keyframes: {
-        pulseEmerald: {
+        pulseWhite: {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-          '50%': { opacity: '0.6', transform: 'scale(1.05)' },
+          '50%': { opacity: '0.5', transform: 'scale(1.05)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },

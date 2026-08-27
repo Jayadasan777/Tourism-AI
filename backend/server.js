@@ -9,6 +9,7 @@ const itineraryRoutes = require('./routes/itineraryRoutes');
 const safetyRoutes = require('./routes/safetyRoutes');
 const recommendationRoutes = require('./routes/recommendationRoutes');
 const databaseRoutes = require('./routes/database');
+const agenticRoutes = require('./routes/agentic');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -74,6 +75,7 @@ app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/safety', safetyRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/database', databaseRoutes);
+app.use('/api/agentic', agenticRoutes);
 
 // 404 handler
 app.use((req, res) => {

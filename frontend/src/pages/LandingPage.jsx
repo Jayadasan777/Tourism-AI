@@ -94,28 +94,28 @@ const LandingPage = () => {
               className="lg:col-span-6 space-y-7 text-left"
             >
               {/* SIH / National Intelligence Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-base-card border border-base-border backdrop-blur-md shadow-glow-emerald">
-                <span className="text-xs font-semibold uppercase tracking-wider text-nature-emerald">
-                  🌿 Smart Tour AI 2026
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-base-card border border-base-border backdrop-blur-md shadow-glow-white">
+                <span className="text-xs font-semibold uppercase tracking-wider text-white">
+                  ✦ Smart Tour AI 2026
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-nature-amber" />
-                <span className="text-xs text-text-muted">Eco-Tourism & Expedition OS</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+                <span className="text-xs text-text-muted">Autonomous Travel & Safety Engine</span>
               </div>
 
               {/* Display Headline with Clash/Syne font */}
-              <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-primary leading-[1.08]">
-                Explore India's
+              <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08]">
+                Intelligent
                 <br />
-                <span className="bg-gradient-to-r from-nature-emerald via-nature-mint to-nature-amber bg-clip-text text-transparent">
-                  Living Nature
+                <span className="bg-gradient-to-r from-white via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
+                  Indian Tourism
                 </span>
                 <br />
-                & Heritage Trails.
+                & Safety OS.
               </h1>
 
               {/* Subtitle */}
               <p className="text-lg text-text-muted leading-relaxed max-w-lg font-sans">
-                Algorithmic travel planning crafted for nature explorers, rainforest drives, and sacred heritage corridors across all 38 districts with live hazard radar.
+                Generates authentic, conflict-free travel itineraries across all 38 districts with live GPS tracking, verified local culinary stops, and active hazard defense.
               </p>
 
               {/* CTA Action Buttons with Framer Motion hover states */}
@@ -125,7 +125,7 @@ const LandingPage = () => {
                     to={user ? "/plan" : "/register"} 
                     className="btn-primary text-base px-8 py-3.5 rounded-xl font-bold inline-flex items-center gap-2"
                   >
-                    <span>Start Your Expedition</span>
+                    <span>Start Planning Free</span>
                     <span className="text-lg">→</span>
                   </Link>
                 </motion.div>
@@ -135,7 +135,7 @@ const LandingPage = () => {
                     to="/nearby" 
                     className="btn-secondary text-base px-7 py-3.5 rounded-xl font-medium inline-flex items-center gap-2"
                   >
-                    <span>🎯 Live Eco-Radar</span>
+                    <span>🎯 Live Radar</span>
                   </Link>
                 </motion.div>
               </div>
@@ -143,15 +143,15 @@ const LandingPage = () => {
               {/* Live Status Readouts */}
               <div className="flex items-center gap-6 pt-4 text-xs font-mono text-text-muted border-t border-base-border/70">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-nature-mint animate-pulse-emerald" />
-                  <span>GPS RADAR: ACTIVE</span>
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse-white" />
+                  <span>GPS RADAR: ONLINE</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-nature-emerald" />
+                  <span className="w-2 h-2 rounded-full bg-white" />
                   <span>GEMINI 2.5 FLASH</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-nature-amber" />
+                  <span className="w-2 h-2 rounded-full bg-white" />
                   <span>100% BUDGET LOCKED</span>
                 </div>
               </div>
