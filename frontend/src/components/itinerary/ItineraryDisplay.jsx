@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import DayCard from './DayCard';
+import InteractiveMap from '../map/InteractiveMap';
 
 const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
+  const [showMap, setShowMap] = useState(false);
   // API returns data as { days, metadata: { destination, budget, ... } }
   // Support both flat (authenticated/saved) and nested (anonymous) structures
   const days = itinerary.days;
@@ -105,10 +108,37 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
         </div>
       </div>
 
+      {/* Interactive Map */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold text-gray-900">
+            🗺️ Interactive Map
+          </h3>
+          <button
+            onClick={() => setShowMap(!showMap)}
+            className="btn-secondary text-sm"
+          >
+            {showMap ? '📋 Show List View' : '🗺️ Show Map View'}
+          </button>
+        </div>
+
+        {showMap && (
+          <InteractiveMap itinerary={itinerary} height="600px" />
+        )}
+
+        {!showMap && (
+          <div className="bg-gray-50 rounded-lg p-6 text-center text-gray-600">
+            <span className="text-4xl mb-2 block">🗺️</span>
+            <p>Click "Show Map View" to see all places on an interactive map</p>
+            <p className="text-sm mt-1">View routes, distances, and navigate to each location</p>
+          </div>
+        )}
+      </div>
+
       {/* Day-wise Itinerary */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold text-gray-900">
-          Day-wise Itinerary
+          📅 Day-wise Itinerary
         </h3>
 
         {days && days.length > 0 ? (
