@@ -4,6 +4,13 @@
 **Purpose:** Active development branch for 3-person team
 **Base:** `main` (backend + frontend setup complete)
 
+## 🚨 CRITICAL: Work ONLY on This Branch!
+
+**⚠️ NEVER work on `main` branch!**
+**✅ ALWAYS work on `working` branch!**
+
+All your commits, pushes, and pulls should be to/from `working` branch.
+
 ---
 
 ## 📋 What's in This Branch
@@ -52,11 +59,18 @@
 ### First Time Setup
 
 ```bash
-# Clone repo (if not done)
+# Step 1: Clone repository
 git clone https://github.com/Jayadasan777/Tourism-AI.git
 cd Tourism-AI
 
-# Switch to working branch
+# Step 2: ⚠️ IMMEDIATELY switch to working branch!
+git checkout working
+
+# Step 3: Verify you're on the right branch
+git branch
+# You should see: * working (the * should be on working!)
+
+# ⚠️ If you see * main, switch now:
 git checkout working
 
 # Install backend

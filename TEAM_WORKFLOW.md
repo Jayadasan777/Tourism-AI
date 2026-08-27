@@ -1,25 +1,67 @@
 # 🚀 Smart Tour AI - Team Workflow (3-Person Parallel Development)
 
-**Branch:** `working`
+**Strategy:** Personal branches → Pull Requests → `working` branch
+
 **Team:** Black Forge (3 developers)
 **Timeline:** 2 weeks (10 working days)
-**Strategy:** Parallel development with minimal blocking
+**Development Model:** Feature branches with code review
+
+## 🚨 CRITICAL: Branch Strategy
+
+### Branch Structure:
+```
+main (stable reference - DO NOT TOUCH)
+  ↓
+working (integration branch - PR target only)
+  ↓
+feature/person-a (Person A works here)
+feature/person-b (Person B works here)
+feature/person-c (Person C works here)
+```
+
+### ✅ ALWAYS:
+- Work on **YOUR personal branch** (`feature/YOUR-NAME`)
+- Commit to **YOUR branch**
+- Push to **YOUR branch**: `git push origin feature/YOUR-NAME`
+- Create **Pull Requests** from YOUR branch → `working`
+- Sync with `working` daily: `git merge working`
+- Request code review before merging
+
+### ❌ NEVER:
+- Work directly on `main`
+- Work directly on `working`
+- Commit directly to `main` or `working`
+- Create PR to `main` (always to `working`)
+- Force push
+- Merge your own PR without review
+
+### Before every session:
+```bash
+git branch    # Must show: * feature/YOUR-NAME
+
+# Sync with working:
+git checkout working && git pull origin working
+git checkout feature/YOUR-NAME && git merge working
+```
 
 ---
 
-## 👥 Team Assignments
+## 👥 Team Assignments & Branch Names
 
 ### Person A - "Itinerary Track" 
+**Branch:** `feature/person-a` (or `feature/YOUR-ACTUAL-NAME`)
 **Primary Role:** Core Feature Development
 **Modules:** 3, 6
 **Time:** 18-22 hours
 
 ### Person B - "UI/UX Track"
+**Branch:** `feature/person-b` (or `feature/YOUR-ACTUAL-NAME`)
 **Primary Role:** Frontend & Design
 **Modules:** 4, 5, 8
 **Time:** 18-22 hours
 
 ### Person C - "Infrastructure Track"
+**Branch:** `feature/person-c` (or `feature/YOUR-ACTUAL-NAME`)
 **Primary Role:** Auth & Deployment
 **Modules:** 2, 7, 9
 **Time:** 18-22 hours
