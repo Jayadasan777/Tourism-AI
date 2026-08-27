@@ -9,8 +9,10 @@ const FIREBASE_ERRORS = {
   'auth/network-request-failed': 'Network error. Check your connection.',
 };
 
-function getErrorMessage(code) {
-  return FIREBASE_ERRORS[code] || 'Something went wrong. Please try again.';
+function getErrorMessage(err) {
+  const code = err?.code;
+  const message = err?.message;
+  return FIREBASE_ERRORS[code] || message || code || 'Registration failed. Please try again.';
 }
 
 const GoogleIcon = () => (
@@ -53,7 +55,8 @@ export default function RegisterPage() {
       await new Promise(resolve => setTimeout(resolve, 100));
       navigate('/plan', { replace: true });
     } catch (err) {
-      setError(getErrorMessage(err.code));
+      console.error('Registration error:', err);
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -68,8 +71,9 @@ export default function RegisterPage() {
       await new Promise(resolve => setTimeout(resolve, 100));
       navigate('/plan', { replace: true });
     } catch (err) {
+      console.error('Google registration error:', err);
       if (err.code !== 'auth/popup-closed-by-user') {
-        setError(getErrorMessage(err.code));
+        setError(getErrorMessage(err));
       }
     } finally {
       setLoading(false);
