@@ -8,6 +8,24 @@
 
 ---
 
+## 🚨 FOR DEVELOPERS: USE THE `working` BRANCH!
+
+**⚠️ This is the `main` branch - for reference only!**
+
+**👉 Clone and immediately switch to `working` branch:**
+
+```bash
+git clone https://github.com/Jayadasan777/Tourism-AI.git
+cd Tourism-AI
+git checkout working    # ← IMPORTANT!
+```
+
+**All development happens on the `working` branch.**
+
+See [`START_HERE.md`](https://github.com/Jayadasan777/Tourism-AI/blob/working/START_HERE.md) on the `working` branch for complete instructions.
+
+---
+
 ## 📌 Problem Statement
 
 **SIH26056** — Travel & Tourism
@@ -40,10 +58,18 @@ A **unified intelligent tourism platform** providing:
 
 ### Backend Setup
 
+**⚠️ First, switch to `working` branch!**
+
 ```bash
 # Clone repository
 git clone https://github.com/Jayadasan777/Tourism-AI.git
-cd Tourism-AI/backend
+cd Tourism-AI
+
+# Switch to working branch
+git checkout working
+
+# Now install backend
+cd backend
 
 # Install dependencies
 npm install
