@@ -6,16 +6,16 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const [showMap, setShowMap] = useState(false);
   // API returns data as { days, metadata: { destination, budget, ... } }
   // Support both flat (authenticated/saved) and nested (anonymous) structures
-  const days = itinerary.days;
-  const destination = itinerary.destination || itinerary.metadata?.destination;
-  const budget = itinerary.budget || itinerary.metadata?.budget;
-  const duration = itinerary.duration || itinerary.metadata?.duration;
-  const totalEstimatedCost = itinerary.totalEstimatedCost || itinerary.metadata?.totalEstimatedCost || 0;
-  const startDate = itinerary.startDate || itinerary.metadata?.startDate;
+  const days = itinerary.days || [];
+  const destination = itinerary.destination || itinerary.metadata?.destination || 'Destination';
+  const budget = Number(itinerary.budget || itinerary.metadata?.budget || 5000);
+  const duration = Number(itinerary.duration || itinerary.metadata?.duration || 1);
+  const totalEstimatedCost = Number(itinerary.totalEstimatedCost || itinerary.metadata?.totalEstimatedCost || 0);
+  const startDate = itinerary.startDate || itinerary.metadata?.startDate || new Date().toISOString();
 
   const budgetComparison = totalEstimatedCost - budget;
   const isOverBudget = budgetComparison > 0;
-  const budgetPercentage = (totalEstimatedCost / budget) * 100;
+  const budgetPercentage = budget > 0 ? (totalEstimatedCost / budget) * 100 : 0;
 
   return (
     <div className="space-y-6">
