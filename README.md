@@ -8,21 +8,33 @@
 
 ---
 
-## 🚨 FOR DEVELOPERS: USE THE `working` BRANCH!
+## 🚨 FOR DEVELOPERS: PERSONAL BRANCH WORKFLOW
 
 **⚠️ This is the `main` branch - for reference only!**
 
-**👉 Clone and immediately switch to `working` branch:**
+**We use personal branches + Pull Requests:**
 
 ```bash
+# 1. Clone repository
 git clone https://github.com/Jayadasan777/Tourism-AI.git
 cd Tourism-AI
-git checkout working    # ← IMPORTANT!
+
+# 2. Switch to working branch
+git checkout working
+git pull origin working
+
+# 3. Create YOUR personal branch
+git checkout -b feature/YOUR-NAME    # e.g., feature/jay
+
+# 4. Push YOUR branch to GitHub
+git push -u origin feature/YOUR-NAME
+
+# 5. Start coding on YOUR branch!
 ```
 
-**All development happens on the `working` branch.**
+**Workflow:** Work on YOUR branch → Create PR to `working` → Code review → Merge
 
-See [`START_HERE.md`](https://github.com/Jayadasan777/Tourism-AI/blob/working/START_HERE.md) on the `working` branch for complete instructions.
+See [`START_HERE.md`](https://github.com/Jayadasan777/Tourism-AI/blob/working/START_HERE.md) and [`PR_WORKFLOW.md`](https://github.com/Jayadasan777/Tourism-AI/blob/working/PR_WORKFLOW.md) on the `working` branch for complete instructions.
 
 ---
 
