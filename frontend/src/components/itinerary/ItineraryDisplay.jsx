@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import DayCard from './DayCard';
 import InteractiveMap from '../map/InteractiveMap';
+import AutoBookingModal from './AutoBookingModal';
 
 const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const [showMap, setShowMap] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingError, setBookingError] = useState(null);
-  // API returns data as { days, metadata: { destination, budget, ... } }
-  // Support both flat (authenticated/saved) and nested (anonymous) structures
+  
   const days = itinerary.days || [];
   const destination = itinerary.destination || itinerary.metadata?.destination || 'Destination';
   const budget = Number(itinerary.budget || itinerary.metadata?.budget || 5000);
@@ -19,59 +20,8 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const isOverBudget = budgetComparison > 0;
   const budgetPercentage = budget > 0 ? (totalEstimatedCost / budget) * 100 : 0;
 
-  const handleAutoBook = async () => {
-    setBookingLoading(true);
-    setBookingError(null);
-
-    const fromCity = 'Chennai';
-    const toCity = destination.trim();
-    
-    // Format travel date (YYYY-MM-DD)
-    const travelDate = new Date(startDate);
-    const yyyy = travelDate.getFullYear();
-    const mm = String(travelDate.getMonth() + 1).padStart(2, '0');
-    const dd = String(travelDate.getDate()).padStart(2, '0');
-    const formattedDate = `${yyyy}-${mm}-${dd}`;
-
-    // Direct RedBus Real-Time Booking URL format:
-    // https://www.redbus.in/bus-tickets/chennai-to-[destination]?fromCityName=Chennai&toCityName=[destination]&onward=DD-MMM-YYYY
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const redbusDateStr = `${dd}-${monthNames[travelDate.getMonth()]}-${yyyy}`;
-    const cleanToSlug = toCity.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const directRedBusUrl = `https://www.redbus.in/bus-tickets/chennai-to-${cleanToSlug}?fromCityName=Chennai&toCityName=${encodeURIComponent(toCity)}&onward=${redbusDateStr}&src=Chennai&dst=${encodeURIComponent(toCity)}`;
-
-    // Immediately open RedBus in new tab for the user/judge to view live options & booking flow
-    window.open(directRedBusUrl, '_blank', 'noopener,noreferrer');
-
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const response = await fetch(`${apiUrl}/agentic/automate-booking`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: fromCity,
-          to: toCity,
-          date: formattedDate,
-          passengerDetails: {
-            name: 'Demo Traveler',
-            age: 26,
-            phone: '9876543210',
-            email: 'traveler@smarttour.ai'
-          }
-        })
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        console.log('✅ Automation response:', data);
-      }
-    } catch (err) {
-      console.warn('Backend automation bridge notice (Direct live portal opened):', err.message);
-    } finally {
-      setBookingLoading(false);
-    }
+  const handleAutoBook = () => {
+    setShowBookingModal(true);
   };
 
   return (
@@ -191,6 +141,14 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
           )}
         </div>
       </div>
+
+      {/* Autonomous AI Booking Progress Modal */}
+      <AutoBookingModal
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        destination={destination}
+        startDate={startDate}
+      />
 
       {/* Interactive Map */}
       <div className="card">
