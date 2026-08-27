@@ -43,7 +43,8 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
       const fromCity = 'Chennai'; // In production, reverse geocode userLocation
 
       // Call automation API
-      const response = await fetch('http://localhost:5000/api/agentic/automate-booking', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://smart-tour-ai-backend.onrender.com/api';
+      const response = await fetch(`${apiUrl}/agentic/automate-booking`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -106,29 +107,26 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
               </button>
             )}
 
-            {/* Auto-Book Button - Only show in development */}
-            {import.meta.env.DEV && (
-              <button
-                onClick={handleAutoBook}
-                disabled={loading || bookingLoading}
-                className="relative overflow-hidden text-sm px-4 py-2 rounded-lg font-bold inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-lg shadow-purple-500/30 border border-purple-400/20 hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {bookingLoading ? (
-                  <>
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <span>Opening Browser...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>🤖</span>
-                    <span>Auto-Book Transport (Demo)</span>
-                  </>
-                )}
-              </button>
-            )}
+            <button
+              onClick={handleAutoBook}
+              disabled={loading || bookingLoading}
+              className="relative overflow-hidden text-sm px-4 py-2 rounded-lg font-bold inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-lg shadow-purple-500/30 border border-purple-400/20 hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {bookingLoading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Opening Browser...</span>
+                </>
+              ) : (
+                <>
+                  <span>🤖</span>
+                  <span>Auto-Book Transport</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
 
