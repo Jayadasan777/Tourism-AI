@@ -20,25 +20,56 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const isOverBudget = budgetComparison > 0;
   const budgetPercentage = budget > 0 ? (totalEstimatedCost / budget) * 100 : 0;
 
-  const handleAutoBook = () => {
+  const handleAutoBook = async () => {
+    setBookingLoading(true);
+    setBookingError(null);
+
     const fromCity = 'Chennai';
     const toCity = (destination || 'Madurai').trim();
     
-    // Calculate realistic onward travel date formatted for RedBus (DD-MMM-YYYY)
+    // Format travel date (DD-MMM-YYYY)
     const travelDate = new Date(startDate);
     const yyyy = travelDate.getFullYear();
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const dd = String(travelDate.getDate()).padStart(2, '0');
     const redbusDateStr = `${dd}-${monthNames[travelDate.getMonth()]}-${yyyy}`;
+    const formattedIsoDate = `${yyyy}-${String(travelDate.getMonth() + 1).padStart(2, '0')}-${dd}`;
     
     const cleanFromSlug = fromCity.toLowerCase().replace(/[^a-z0-9]/g, '-');
     const cleanToSlug = toCity.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    
-    // Direct Live RedBus Search & Seat Booking Portal URL
     const realTimeRedBusUrl = `https://www.redbus.in/bus-tickets/${cleanFromSlug}-to-${cleanToSlug}?fromCityName=${encodeURIComponent(fromCity)}&toCityName=${encodeURIComponent(toCity)}&onward=${redbusDateStr}&src=${encodeURIComponent(fromCity)}&dst=${encodeURIComponent(toCity)}`;
 
-    // Open Real-time RedBus directly
+    // 1. Immediately launch real-time RedBus portal tab for traveler review
     window.open(realTimeRedBusUrl, '_blank', 'noopener,noreferrer');
+
+    // 2. Trigger Deep AI Agent to analyze buses, select seat & autofill passenger form
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/agentic/automate-booking`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: fromCity,
+          to: toCity,
+          date: formattedIsoDate,
+          passengerDetails: {
+            name: 'Jayadasan S',
+            age: 22,
+            phone: '9876543210',
+            email: 'jayadasan@smarttour.ai'
+          }
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log('✅ Deep AI Agent Automated Execution Complete:', data);
+      }
+    } catch (err) {
+      console.warn('Backend deep automation notice:', err.message);
+    } finally {
+      setBookingLoading(false);
+    }
   };
 
   return (
