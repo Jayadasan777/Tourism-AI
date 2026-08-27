@@ -17,35 +17,43 @@ export default function Navbar() {
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="text-2xl group-hover:scale-110 transition-transform duration-200">
-              🗺️
+              🧭
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg text-white tracking-tight">
+              <span className="font-display font-bold text-lg text-text-primary tracking-tight">
                 Smart Tour AI
               </span>
-              <span className="text-[10px] text-zinc-500 tracking-wider uppercase">
+              <span className="text-[10px] text-accent-violet tracking-wider uppercase font-mono">
                 SIH 2026
               </span>
             </div>
           </Link>
 
           {/* Navigation Controls */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             {user ? (
               <>
                 <Link
                   to="/plan"
-                  className="text-zinc-400 hover:text-white transition-colors font-medium text-sm"
+                  className="nav-link font-medium text-sm"
                 >
                   Plan Trip
                 </Link>
                 <Link
                   to="/nearby"
-                  className="text-zinc-400 hover:text-white transition-colors font-medium text-sm"
+                  className="nav-link font-medium text-sm inline-flex items-center gap-1"
                 >
-                  🎯 Nearby
+                  <span>🎯</span>
+                  <span>Nearby Radar</span>
                 </Link>
-                <span className="text-xs text-zinc-500 hidden sm:block max-w-[120px] truncate">
+                <Link
+                  to="/status"
+                  className="nav-link font-medium text-sm inline-flex items-center gap-1"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-teal animate-pulse" />
+                  <span>Status</span>
+                </Link>
+                <span className="text-xs font-mono text-text-muted hidden sm:block max-w-[130px] truncate">
                   {user.displayName || user.email}
                 </span>
                 <button
@@ -59,11 +67,11 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="text-zinc-400 hover:text-white transition-colors font-medium text-sm"
+                  className="nav-link font-medium text-sm"
                 >
                   Login
                 </Link>
-                <Link to="/register" className="btn-primary text-sm px-5 py-2">
+                <Link to="/register" className="btn-primary text-sm px-5 py-2 rounded-lg">
                   Get Started
                 </Link>
               </>

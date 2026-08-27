@@ -2,111 +2,184 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Rich Obsidian Black & White Design System */
+/* Design System Exact CSS Variables */
+:root {
+  --bg-base: #0A0B10;
+  --accent-violet: #7C5CFF;
+  --accent-marigold: #FF8A3D;
+  --accent-teal: #1DD3B0;
+  --text-primary: #F5F3EF;
+  --text-muted: #9A9AA5;
+}
+
 @layer base {
-  /* Obsidian Canvas Background */
   body {
-    @apply bg-obsidian-950 text-zinc-100 antialiased;
-    background: linear-gradient(to bottom, #050505, #09090b);
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Inter', 'Satoshi', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Custom Obsidian Scrollbar */
+  h1, h2, h3, .font-display {
+    font-family: 'Syne', 'Cabinet Grotesk', sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  /* Custom Smooth Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-obsidian-900;
+    background: #0A0B10;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-zinc-700 rounded-full;
+    background: #232536;
+    border-radius: 9999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-zinc-500;
+    background: #7C5CFF;
   }
 
-  /* Selection Color */
   ::selection {
-    @apply bg-white/20 text-white;
-  }
-
-  /* High-contrast focus rings */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-white ring-offset-2 ring-offset-obsidian-950;
+    background: rgba(124, 92, 255, 0.3);
+    color: #F5F3EF;
   }
 }
 
-/* Luxury Component Styles */
 @layer components {
-  /* Primary Button - Solid White */
+  /* Primary Button - Violet glow */
   .btn-primary {
-    @apply bg-white text-black px-6 py-2.5 rounded-lg font-semibold tracking-tight;
-    @apply hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200;
-    @apply disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed;
-    @apply shadow-glow-white;
+    @apply relative inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200;
+    background: linear-gradient(135deg, #7C5CFF 0%, #6342E8 100%);
+    color: #F5F3EF;
+    box-shadow: 0 0 20px rgba(124, 92, 255, 0.35);
+  }
+  .btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(124, 92, 255, 0.55);
+  }
+  .btn-primary:active {
+    transform: scale(0.98);
   }
 
-  /* Secondary Button - Dark Outline */
+  /* Secondary Button - Subtle Marigold / Dark border */
   .btn-secondary {
-    @apply bg-obsidian-850 text-white border border-zinc-700 px-6 py-2.5 rounded-lg font-medium;
-    @apply hover:border-zinc-500 hover:bg-obsidian-800 active:scale-[0.98] transition-all duration-200;
+    @apply relative inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200;
+    background: #12131C;
+    color: var(--text-primary);
+    border: 1px solid #232536;
+  }
+  .btn-secondary:hover {
+    border-color: rgba(255, 138, 61, 0.4);
+    background: #1A1B26;
+    box-shadow: 0 0 20px rgba(255, 138, 61, 0.2);
+    transform: scale(1.02);
+  }
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  /* Safety / Live Action Button */
+  .btn-safety {
+    @apply relative inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200;
+    background: #12131C;
+    color: #1DD3B0;
+    border: 1px solid rgba(29, 211, 176, 0.4);
+  }
+  .btn-safety:hover {
+    background: rgba(29, 211, 176, 0.1);
+    box-shadow: 0 0 25px rgba(29, 211, 176, 0.3);
+    transform: scale(1.02);
+  }
+
+  /* Masterpiece Card with lift & glow on hover */
+  .card {
+    @apply rounded-xl p-6 transition-all duration-200;
+    background: #12131C;
+    border: 1px solid #232536;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(124, 92, 255, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(124, 92, 255, 0.2);
+  }
+
+  .card-safety:hover {
+    border-color: rgba(29, 211, 176, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(29, 211, 176, 0.2);
+  }
+
+  .card-discovery:hover {
+    border-color: rgba(255, 138, 61, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(255, 138, 61, 0.2);
+  }
+
+  /* Nav link with drawing underline on hover */
+  .nav-link {
+    @apply relative text-sm font-medium transition-colors duration-200;
+    color: var(--text-muted);
+  }
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #7C5CFF, #FF8A3D);
+    transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .nav-link:hover::after {
+    width: 100%;
   }
 
   /* Luxury Input Field */
   .input,
   .input-field {
-    @apply w-full px-4 py-2.5 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500;
-    @apply focus:border-white focus:ring-1 focus:ring-white transition-all duration-200;
-    @apply disabled:bg-zinc-950 disabled:text-zinc-600 disabled:cursor-not-allowed;
-    color: #ffffff !important;
+    @apply w-full px-4 py-2.5 rounded-lg transition-all duration-200;
+    background: #12131C;
+    border: 1px solid #232536;
+    color: #F5F3EF !important;
   }
-
-  /* Dark Glass Card */
-  .card {
-    @apply bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/80 rounded-xl p-6;
-    @apply shadow-xl;
-  }
-
-  /* Elevated Glass Card (hover state) */
-  .card-elevated {
-    @apply card hover:bg-zinc-900/70 hover:border-zinc-700 transition-all duration-300;
-  }
-
-  /* Success Badge */
-  .badge-success {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
-    @apply bg-success-950/40 text-success-400 border border-success-800/50;
-  }
-
-  /* Warning Badge */
-  .badge-warning {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
-    @apply bg-warning-950/40 text-warning-400 border border-warning-800/50;
-  }
-
-  /* Translucent White Pill Badge */
-  .badge-glass {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
-    @apply bg-white/10 border border-white/20 text-zinc-300 backdrop-blur-sm;
+  .input:focus,
+  .input-field:focus {
+    border-color: #7C5CFF;
+    outline: none;
+    box-shadow: 0 0 15px rgba(124, 92, 255, 0.3);
   }
 
   /* Interest Pill Selector */
   .pill-selector {
-    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200;
-    @apply border border-zinc-700 bg-obsidian-850 text-zinc-400;
-    @apply hover:border-zinc-500 hover:text-white cursor-pointer;
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer;
+    background: #12131C;
+    border: 1px solid #232536;
+    color: var(--text-muted);
   }
-
+  .pill-selector:hover {
+    border-color: rgba(124, 92, 255, 0.5);
+    color: var(--text-primary);
+  }
   .pill-selector-active {
-    @apply bg-white text-black border-white;
+    background: #7C5CFF;
+    color: #F5F3EF;
+    border-color: #7C5CFF;
+    box-shadow: 0 0 20px rgba(124, 92, 255, 0.4);
   }
 
-  /* Glassmorphism Surface */
-  .glass-surface {
-    @apply backdrop-blur-xl bg-black/70 border border-zinc-800/80;
+  /* Translucent Badges */
+  .badge-glass {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
+    background: rgba(124, 92, 255, 0.1);
+    border: 1px solid rgba(124, 92, 255, 0.3);
+    color: #F5F3EF;
   }
 }
 
