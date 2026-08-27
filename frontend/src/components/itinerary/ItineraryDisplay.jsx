@@ -21,7 +21,24 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const budgetPercentage = budget > 0 ? (totalEstimatedCost / budget) * 100 : 0;
 
   const handleAutoBook = () => {
-    setShowBookingModal(true);
+    const fromCity = 'Chennai';
+    const toCity = (destination || 'Madurai').trim();
+    
+    // Calculate realistic onward travel date formatted for RedBus (DD-MMM-YYYY)
+    const travelDate = new Date(startDate);
+    const yyyy = travelDate.getFullYear();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const dd = String(travelDate.getDate()).padStart(2, '0');
+    const redbusDateStr = `${dd}-${monthNames[travelDate.getMonth()]}-${yyyy}`;
+    
+    const cleanFromSlug = fromCity.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const cleanToSlug = toCity.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    
+    // Direct Live RedBus Search & Seat Booking Portal URL
+    const realTimeRedBusUrl = `https://www.redbus.in/bus-tickets/${cleanFromSlug}-to-${cleanToSlug}?fromCityName=${encodeURIComponent(fromCity)}&toCityName=${encodeURIComponent(toCity)}&onward=${redbusDateStr}&src=${encodeURIComponent(fromCity)}&dst=${encodeURIComponent(toCity)}`;
+
+    // Open Real-time RedBus directly
+    window.open(realTimeRedBusUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
