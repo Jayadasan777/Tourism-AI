@@ -12,10 +12,20 @@ const initializeFirebase = () => {
   }
 
   try {
-    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH ||
-                               path.join(__dirname, 'serviceAccountKey.json');
+    let serviceAccount;
 
-    const serviceAccount = require(serviceAccountPath);
+    // Production: Use environment variable (for Render/Heroku/etc)
+    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+      console.log('📦 Loading Firebase credentials from environment variable');
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    }
+    // Development: Use file path
+    else {
+      console.log('📦 Loading Firebase credentials from file');
+      const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH ||
+                                 path.join(__dirname, 'serviceAccountKey.json');
+      serviceAccount = require(serviceAccountPath);
+    }
 
     firebaseApp = admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
@@ -25,8 +35,9 @@ const initializeFirebase = () => {
     return firebaseApp;
   } catch (error) {
     console.error('❌ Firebase initialization failed:', error.message);
-    console.error('Make sure you have downloaded the Firebase service account key');
-    console.error('Place it at: backend/config/serviceAccountKey.json');
+    console.error('Make sure you have:');
+    console.error('  - FIREBASE_SERVICE_ACCOUNT env variable (production), OR');
+    console.error('  - serviceAccountKey.json file at: backend/config/serviceAccountKey.json (development)');
     throw new Error('Firebase configuration error');
   }
 };

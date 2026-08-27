@@ -133,7 +133,11 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
     };
 
   } catch (error) {
-    console.error('Gemini API Error:', error);
+    console.error('Gemini API Error message:', error.message);
+    console.error('Gemini API Error status:', error.status || error.statusCode || 'unknown');
+    if (error.errorDetails) {
+      console.error('Gemini API Error details:', JSON.stringify(error.errorDetails));
+    }
 
     // Return fallback for demo purposes if API fails
     if (process.env.NODE_ENV === 'development') {
@@ -152,39 +156,53 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
  * Fallback itinerary for demo/testing (in case API fails)
  */
 const getFallbackItinerary = ({ destination, budget, duration, interests, startDate }) => {
+  const dailyBudget = Math.floor(budget / duration);
+  const dayTemplates = [
+    {
+      activities: [
+        { time: '09:00 AM', title: `Arrival in ${destination}`, description: 'Check into hotel and acclimatize. Explore nearby areas and local markets.', estimatedCost: 0 },
+        { time: '02:00 PM', title: 'Local Sightseeing', description: 'Visit popular landmarks and attractions nearby. Take photos and enjoy local cuisine.', estimatedCost: Math.floor(dailyBudget * 0.3) },
+        { time: '07:00 PM', title: 'Evening Relaxation', description: 'Enjoy sunset views and try authentic local restaurants.', estimatedCost: Math.floor(dailyBudget * 0.2) },
+      ]
+    },
+    {
+      activities: [
+        { time: '07:00 AM', title: 'Morning Exploration', description: 'Start your day early with a guided tour of the main attractions.', estimatedCost: Math.floor(dailyBudget * 0.25) },
+        { time: '12:00 PM', title: 'Cultural Experience', description: 'Visit museums, temples, or local markets to experience the culture.', estimatedCost: Math.floor(dailyBudget * 0.15) },
+        { time: '04:00 PM', title: 'Adventure Activity', description: `Enjoy an adventure activity suited to ${destination}'s terrain and your interests.`, estimatedCost: Math.floor(dailyBudget * 0.35) },
+        { time: '08:00 PM', title: 'Dinner', description: 'Try local specialties at a recommended restaurant.', estimatedCost: Math.floor(dailyBudget * 0.15) },
+      ]
+    },
+    {
+      activities: [
+        { time: '08:00 AM', title: 'Nature Walk', description: 'Morning nature walk or trek to nearby scenic spots.', estimatedCost: 0 },
+        { time: '01:00 PM', title: 'Lunch Break', description: 'Enjoy a relaxed lunch at a local eatery with views.', estimatedCost: Math.floor(dailyBudget * 0.1) },
+        { time: '03:00 PM', title: 'Departure Preparation', description: 'Visit remaining spots, shop for souvenirs, and prepare for departure.', estimatedCost: Math.floor(dailyBudget * 0.2) },
+      ]
+    }
+  ];
+
+  const days = [];
+  for (let i = 1; i <= duration; i++) {
+    const template = dayTemplates[(i - 1) % dayTemplates.length];
+    days.push({
+      dayNumber: i,
+      activities: template.activities
+    });
+  }
+
+  const totalEstimatedCost = days.reduce((sum, day) =>
+    sum + day.activities.reduce((s, a) => s + (a.estimatedCost || 0), 0), 0);
+
   return {
-    days: [
-      {
-        dayNumber: 1,
-        activities: [
-          {
-            time: "09:00 AM",
-            title: `Arrival in ${destination}`,
-            description: "Check into hotel and acclimatize. Explore nearby areas and local markets.",
-            estimatedCost: 0
-          },
-          {
-            time: "02:00 PM",
-            title: "Local Sightseeing",
-            description: "Visit popular landmarks and attractions nearby. Take photos and enjoy local cuisine.",
-            estimatedCost: Math.floor(budget * 0.1)
-          },
-          {
-            time: "07:00 PM",
-            title: "Evening Relaxation",
-            description: "Enjoy sunset views and try authentic local restaurants.",
-            estimatedCost: Math.floor(budget * 0.05)
-          }
-        ]
-      }
-    ],
+    days,
     metadata: {
       destination,
       budget,
       duration,
       interests,
       startDate,
-      totalEstimatedCost: Math.floor(budget * 0.15),
+      totalEstimatedCost,
       generatedAt: new Date().toISOString(),
       isFallback: true
     }
