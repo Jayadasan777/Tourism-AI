@@ -4,7 +4,7 @@ import { auth } from '../config/firebase';
 
 const AuthContext = createContext(null);
 
-function AuthProvider({ children }) {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -99,10 +99,10 @@ function AuthProvider({ children }) {
   );
 }
 
-function useAuth() {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 }
 
-export { AuthProvider, useAuth };
+export default AuthProvider;
