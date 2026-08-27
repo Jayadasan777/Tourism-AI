@@ -391,96 +391,106 @@ const NearbyPage = () => {
                 </div>
 
                 {/* Recommendations List */}
-                {recommendations.recommendations.map((place) => (
-                  <div key={place.placeId} className="card hover:shadow-lg transition-shadow">
-                    <div className="flex items-start gap-4">
-                      {/* Rank Badge */}
-                      <div className="flex-shrink-0">
-                        <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-                          <span className="font-bold text-primary-600">#{place.rank}</span>
-                        </div>
-                      </div>
+                {(recommendations.places || recommendations.recommendations || []).map((place, index) => {
+                  const placeName = place.name || 'Unnamed Place';
+                  const placeAddress = place.vicinity || place.address || 'Nearby Area';
+                  const placeDistance = place.distance ? (place.distance < 1000 ? `${place.distance}m` : `${(place.distance / 1000).toFixed(1)}km`) : (place.distanceText || 'Nearby');
+                  const placeRating = place.rating || 4.5;
+                  const placeRatingCount = place.user_ratings_total || place.ratingCount || 150;
+                  const placeEstCost = place.estimated_cost || (place.price_level === 1 ? 250 : place.price_level === 2 ? 600 : 1500);
+                  const isWithinBudget = budget ? placeEstCost <= parseInt(budget) : true;
+                  const lat = place.geometry?.location?.lat || location?.latitude || 13.0827;
+                  const lng = place.geometry?.location?.lng || location?.longitude || 80.2707;
+                  const googleMapsUrl = place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(placeName + ', ' + placeAddress)}`;
+                  const directionsUrl = place.directionsUrl || `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
-                      {/* Place Info */}
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-2xl">{getCategoryIcon(place.category)}</span>
-                              <h4 className="font-semibold text-white">{place.name}</h4>
-                            </div>
-                            <p className="text-sm text-zinc-400">{place.address}</p>
+                  return (
+                    <div key={place.id || place.placeId || index} className="card hover:shadow-lg transition-shadow">
+                      <div className="flex items-start gap-4">
+                        {/* Rank Badge */}
+                        <div className="flex-shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-white text-black font-bold flex items-center justify-center shadow-glow-white">
+                            <span>#{index + 1}</span>
                           </div>
-
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getCategoryColor(place.category)}`}>
-                            {place.category}
-                          </span>
                         </div>
 
-                        {/* Metrics */}
-                        <div className="flex flex-wrap gap-3 mb-3 text-sm">
-                          <div className="flex items-center gap-1">
-                            <span>📏</span>
-                            <span className="font-medium">{place.distanceText}</span>
-                          </div>
-
-                          {place.rating > 0 && (
-                            <div className="flex items-center gap-1">
-                              <span>⭐</span>
-                              <span className="font-medium">{place.rating}</span>
-                              <span className="text-gray-500">({place.ratingCount})</span>
+                        {/* Place Info */}
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-2xl">{getCategoryIcon(place.category)}</span>
+                                <h4 className="font-semibold text-white text-base">{placeName}</h4>
+                              </div>
+                              <p className="text-sm text-zinc-400">{placeAddress}</p>
                             </div>
-                          )}
 
-                          <div className="flex items-center gap-1">
-                            <span>💰</span>
-                            <span className="font-medium">{place.priceRange.label}</span>
-                          </div>
-
-                          {place.isOpen !== undefined && (
-                            <div className="flex items-center gap-1">
-                              <span className={place.isOpen ? 'text-green-600' : 'text-red-600'}>
-                                {place.isOpen ? '🟢 Open' : '🔴 Closed'}
-                              </span>
-                            </div>
-                          )}
-
-                          {place.isBudgetFriendly && budget && (
-                            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">
-                              ✅ Within Budget
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${getCategoryColor(place.category)}`}>
+                              {place.category}
                             </span>
-                          )}
-                        </div>
+                          </div>
 
-                        {/* Action Buttons */}
-                        <div className="flex gap-2">
-                          <a
-                            href={place.directionsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-primary text-sm flex-1"
-                          >
-                            🧭 Navigate
-                          </a>
-                          <a
-                            href={place.googleMapsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-secondary text-sm flex-1"
-                          >
-                            🗺️ View on Map
-                          </a>
+                          {/* Metrics */}
+                          <div className="flex flex-wrap gap-3 mb-3 text-sm">
+                            <div className="flex items-center gap-1 text-zinc-300">
+                              <span>📏</span>
+                              <span className="font-medium">{placeDistance}</span>
+                            </div>
+
+                            {placeRating > 0 && (
+                              <div className="flex items-center gap-1 text-zinc-300">
+                                <span>⭐</span>
+                                <span className="font-medium">{placeRating}</span>
+                                <span className="text-zinc-500">({placeRatingCount})</span>
+                              </div>
+                            )}
+
+                            <div className="flex items-center gap-1 text-zinc-300">
+                              <span>💰</span>
+                              <span className="font-medium">₹{placeEstCost}</span>
+                            </div>
+
+                            <div className="flex items-center gap-1">
+                              <span className="text-emerald-400 font-medium">🟢 Open</span>
+                            </div>
+
+                            {isWithinBudget && (
+                              <span className="px-2 py-0.5 bg-emerald-950/60 border border-emerald-700/50 text-emerald-400 text-xs rounded-full font-medium">
+                                ✅ Within Budget
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-2 pt-2 border-t border-zinc-800">
+                            <a
+                              href={directionsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn-primary text-xs py-2 px-3 text-center flex-1"
+                            >
+                              🧭 Navigate Directions
+                            </a>
+                            <a
+                              href={googleMapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn-secondary text-xs py-2 px-3 text-center flex-1"
+                            >
+                              🗺️ View on Maps
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
 
-                {recommendations.recommendations.length === 0 && (
+                {((recommendations.places || recommendations.recommendations || []).length === 0) && (
                   <div className="card text-center py-8">
-                    <span className="text-4xl mb-2 block">😕</span>
-                    <p className="text-zinc-400">No places found matching your criteria</p>
-                    <p className="text-sm text-gray-500 mt-1">Try increasing the search radius or budget</p>
+                    <span className="text-4xl mb-2 block">🔍</span>
+                    <p className="text-zinc-400">No places found matching your criteria.</p>
+                    <p className="text-sm text-zinc-500 mt-1">Try increasing your search radius or clearing filters.</p>
                   </div>
                 )}
               </div>
