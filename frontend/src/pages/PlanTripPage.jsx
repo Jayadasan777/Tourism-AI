@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ItineraryForm from '../components/itinerary/ItineraryForm';
 import GeneratingLoader from '../components/itinerary/GeneratingLoader';
 import ItineraryDisplay from '../components/itinerary/ItineraryDisplay';
+import TourismMotionCanvas from '../components/TourismMotionCanvas';
 import { generateItinerary } from '../services/itineraryService';
 import { useAuth } from '../context/AuthContext';
 
@@ -24,7 +25,6 @@ const PlanTripPage = () => {
 
       if (response.success) {
         setItinerary(response.data);
-        // If user is authenticated, backend auto-saves; show confirmation
         if (user && response.data?.itineraryId) {
           setSavedMessage(`✅ Itinerary saved! ID: ${response.data.itineraryId}`);
         }
@@ -34,7 +34,6 @@ const PlanTripPage = () => {
     } catch (err) {
       console.error('Error generating itinerary:', err);
 
-      // api.js interceptor transforms errors to { status, message, errors } format
       if (err.isNetworkError) {
         setError('Cannot reach server. Please check your internet connection and that the backend is running on port 5000.');
       } else if (err.status === 400) {
@@ -78,16 +77,28 @@ const PlanTripPage = () => {
   };
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 bg-base-bg text-text-primary">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">
-            Plan Your Perfect Trip
-          </h1>
-          <p className="text-zinc-400">
-            Tell us your preferences and our AI will create a personalized itinerary for you
-          </p>
+        {/* Luxury Hero Banner with 3D Mountain Motion Canvas */}
+        <div className="relative rounded-2xl bg-base-card border border-base-border p-6 sm:p-8 mb-10 overflow-hidden shadow-glow-violet">
+          <div className="grid md:grid-cols-12 gap-6 items-center relative z-10">
+            <div className="md:col-span-8 space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-violet/15 border border-accent-violet/30 text-xs font-mono text-accent-violet uppercase tracking-wider">
+                <span>🏔️ Topographic Intelligence</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-marigold" />
+                <span>38 Districts Supported</span>
+              </div>
+              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-primary">
+                Synthesize Your Journey
+              </h1>
+              <p className="text-text-muted text-sm sm:text-base leading-relaxed max-w-xl font-sans">
+                Algorithmic route curation powered by Gemini 2.5 Flash. Delivers conflict-free spatial scheduling, verified local culinary stops, and strict budget caps.
+              </p>
+            </div>
+            <div className="md:col-span-4 h-36 sm:h-44 relative flex items-center justify-center">
+              <TourismMotionCanvas type="mountains" />
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
