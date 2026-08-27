@@ -8,7 +8,8 @@ const router = express.Router();
 const {
   planCompleteTrip,
   executeBookings,
-  getAgentStatus
+  getAgentStatus,
+  automateRealBooking
 } = require('../controllers/agenticController');
 
 /**
@@ -31,5 +32,12 @@ router.post('/execute-bookings', executeBookings);
  * @access  Public
  */
 router.get('/status/:taskId', getAgentStatus);
+
+/**
+ * @route   POST /api/agentic/automate-booking
+ * @desc    Automate real booking on RedBus (browser automation)
+ * @access  Public
+ */
+router.post('/automate-booking', automateRealBooking);
 
 module.exports = router;

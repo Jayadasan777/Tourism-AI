@@ -1,0 +1,222 @@
+{
+  "name": "Smart Tour AI - Travel Booking",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "book-trip",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook - Receive Booking Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "smart-tour-booking"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "bookingId",
+              "value": "=BOOK{{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "status",
+              "value": "processing"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set - Generate Booking ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"type\": \"transport_booking\",\n  \"from\": \"{{ $json.from }}\",\n  \"to\": \"{{ $json.to }}\",\n  \"transport\": \"{{ $json.transport }}\",\n  \"cost\": {{ $json.transportCost }},\n  \"bookingId\": \"{{ $json.bookingId }}\",\n  \"status\": \"confirmed\"\n}"
+      },
+      "name": "HTTP - Book Transport (Mock)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"type\": \"hotel_booking\",\n  \"location\": \"{{ $json.to }}\",\n  \"hotel\": \"{{ $json.hotel }}\",\n  \"cost\": {{ $json.hotelCost }},\n  \"bookingId\": \"{{ $json.bookingId }}-HTL\",\n  \"status\": \"confirmed\"\n}"
+      },
+      "name": "HTTP - Book Hotel (Mock)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "transportBooking",
+              "value": "=CONFIRMED"
+            },
+            {
+              "name": "hotelBooking",
+              "value": "=CONFIRMED"
+            },
+            {
+              "name": "overallStatus",
+              "value": "=ALL_CONFIRMED"
+            },
+            {
+              "name": "confirmationMessage",
+              "value": "=🎉 All bookings confirmed! Booking ID: {{ $json.bookingId }}"
+            }
+          ],
+          "number": [
+            {
+              "name": "totalCost",
+              "value": "={{ $json.transportCost + $json.hotelCost }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set - Aggregate Results",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "content": "=# Your Trip is Booked! 🎉\n\n**Booking ID:** {{ $json.bookingId }}\n\n## Travel Details\n- From: {{ $json.from }}\n- To: {{ $json.to }}\n- Transport: {{ $json.transport }}\n- Cost: ₹{{ $json.transportCost }}\n\n## Hotel Details  \n- Hotel: {{ $json.hotel }}\n- Cost: ₹{{ $json.hotelCost }}\n\n## Total Cost\n**₹{{ $json.totalCost }}**\n\n*Booked via Smart Tour AI - Agentic Travel System*",
+        "options": {}
+      },
+      "name": "Generate - Confirmation Email",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Simulate sending email\nconst emailData = {\n  to: items[0].json.userEmail || 'user@example.com',\n  subject: 'Your Trip is Booked!',\n  body: items[0].json.content,\n  sent: true,\n  sentAt: new Date().toISOString()\n};\n\nreturn [{\n  json: {\n    ...items[0].json,\n    emailSent: true,\n    emailData\n  }\n}];"
+      },
+      "name": "Function - Mock Send Email",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"bookingId\": \"{{ $json.bookingId }}\",\n  \"status\": \"{{ $json.overallStatus }}\",\n  \"transportBooking\": \"{{ $json.transportBooking }}\",\n  \"hotelBooking\": \"{{ $json.hotelBooking }}\",\n  \"totalCost\": {{ $json.totalCost }},\n  \"emailSent\": {{ $json.emailSent }},\n  \"message\": \"{{ $json.confirmationMessage }}\",\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Receive Booking Request": {
+      "main": [
+        [
+          {
+            "node": "Set - Generate Booking ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Generate Booking ID": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Book Transport (Mock)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP - Book Hotel (Mock)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Book Transport (Mock)": {
+      "main": [
+        [
+          {
+            "node": "Set - Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Book Hotel (Mock)": {
+      "main": [
+        [
+          {
+            "node": "Set - Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Aggregate Results": {
+      "main": [
+        [
+          {
+            "node": "Generate - Confirmation Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Function - Mock Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate - Confirmation Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function - Mock Send Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

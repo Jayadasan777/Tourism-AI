@@ -131,8 +131,8 @@ const LandingPage = () => {
                 </motion.div>
 
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link 
-                    to="/nearby" 
+                  <Link
+                    to="/nearby"
                     className="btn-secondary text-base px-7 py-3.5 rounded-xl font-medium inline-flex items-center gap-2"
                   >
                     <span>🎯 Live Radar</span>
