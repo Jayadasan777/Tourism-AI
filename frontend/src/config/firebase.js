@@ -2,14 +2,21 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// Firebase configuration from environment variables (with production fallbacks)
+// Firebase configuration from environment variables (sanitized with .trim() for accidental spaces)
+const rawApiKey = (import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDb0qcMPM5W-cttr3ZHAwHp9RPwtPf9Tmc').trim();
+const rawAuthDomain = (import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'smart-tour-ai-b20ba.firebaseapp.com').trim();
+const rawProjectId = (import.meta.env.VITE_FIREBASE_PROJECT_ID || 'smart-tour-ai-b20ba').trim();
+const rawStorageBucket = (import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'smart-tour-ai-b20ba.firebasestorage.app').trim();
+const rawMessagingSenderId = (import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '793193364173').trim();
+const rawAppId = (import.meta.env.VITE_FIREBASE_APP_ID || '1:793193364173:web:6c1280221bea56a8e74784').trim();
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDb0qcMPM5W-cttr3ZHAwHp9RPwtPf9Tmc',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'smart-tour-ai-b20ba.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'smart-tour-ai-b20ba',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'smart-tour-ai-b20ba.firebasestorage.app',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '793193364173',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:793193364173:web:6c1280221bea56a8e74784'
+  apiKey: rawApiKey,
+  authDomain: rawAuthDomain,
+  projectId: rawProjectId,
+  storageBucket: rawStorageBucket,
+  messagingSenderId: rawMessagingSenderId,
+  appId: rawAppId
 };
 
 // Validate config
