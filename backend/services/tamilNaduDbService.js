@@ -9,10 +9,20 @@ const admin = require('firebase-admin');
 
 // Initialize Firebase if not already done
 if (!admin.apps.length) {
-  const serviceAccount = require('../config/serviceAccountKey.json');
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
+  // Use environment variables in production, file in development
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    // Production: Use environment variable (JSON string)
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+  } else {
+    // Development: Use local file
+    const serviceAccount = require('../config/serviceAccountKey.json');
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+  }
 }
 
 const db = admin.firestore();

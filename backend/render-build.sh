@@ -1,33 +1,9 @@
 #!/usr/bin/env bash
-# Render build script for Puppeteer support
+# Render build script - Simple version without apt-get
 
 echo "📦 Installing dependencies..."
 npm install
 
-echo "🎭 Installing Chromium dependencies for Puppeteer..."
-# Install Chromium dependencies
-apt-get update
-apt-get install -y \
-    chromium \
-    chromium-browser \
-    fonts-liberation \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libatspi2.0-0 \
-    libcups2 \
-    libdbus-1-3 \
-    libdrm2 \
-    libgbm1 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libwayland-client0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxkbcommon0 \
-    libxrandr2 \
-    xdg-utils
-
 echo "✅ Build complete!"
+echo "⚠️  Note: Puppeteer will download Chromium automatically"
+echo "    Browser automation will use mock mode on production"
