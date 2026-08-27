@@ -7,28 +7,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Design System Palette
+        // Nature & Expedition Luxury Palette
+        forest: {
+          950: '#030806', // Pitch Forest Night
+          900: '#06130E', // Deep Evergreen Canvas
+          850: '#0B1E17', // Pine Glass Surface
+          800: '#122C23', // Elevated Moss Hover
+          700: '#1C4235', // Subtle Border
+        },
+        nature: {
+          emerald: '#10B981', // Lush Rainforest Accent
+          mint: '#34D399',    // Vibrant Fern
+          amber: '#F59E0B',   // Sunrise Gold / Campfire
+          sand: '#E6DFD5',    // Himalayan Stone Off-white
+          sky: '#0284C7',     // Glacial River
+        },
         base: {
-          bg: '#0A0B10',       // near-black base
-          card: '#12131C',     // card surface
-          elevated: '#1A1B26', // elevated hover
-          border: '#232536',   // subtle border
+          bg: '#040B08',       // Deep Rainforest Night
+          card: '#081711',     // Moss Glass Surface
+          elevated: '#0E241B', // Elevated Hover Card
+          border: '#153629',   // Organic Border
         },
         accent: {
-          violet: '#7C5CFF',   // AI / tech accent — primary
-          marigold: '#FF8A3D', // India / warmth accent — secondary
-          teal: '#1DD3B0',     // safety / live-data elements only
+          violet: '#10B981',   // Mapped to Lush Emerald for global buttons
+          marigold: '#F59E0B', // Sunrise Amber
+          teal: '#34D399',     // Live Radar Mint
         },
         text: {
-          primary: '#F5F3EF',  // warm off-white
-          muted: '#9A9AA5',    // muted secondary text
+          primary: '#F2EFE9',  // Warm Stone Off-white
+          muted: '#8EA89D',    // Forest Mist Secondary
         },
-        // Backwards compatibility
         obsidian: {
-          950: '#0A0B10',
-          900: '#12131C',
-          850: '#1A1B26',
-          800: '#232536',
+          950: '#040B08',
+          900: '#081711',
+          850: '#0E241B',
+          800: '#153629',
         }
       },
       fontFamily: {
@@ -41,18 +54,17 @@ export default {
         tight: '-0.02em',
       },
       boxShadow: {
-        'glow-violet': '0 0 25px rgba(124, 92, 255, 0.25)',
-        'glow-violet-lg': '0 0 45px rgba(124, 92, 255, 0.4)',
-        'glow-marigold': '0 0 25px rgba(255, 138, 61, 0.25)',
-        'glow-teal': '0 0 25px rgba(29, 211, 176, 0.25)',
-        'glow-white': '0 0 20px rgba(245, 243, 239, 0.1)',
+        'glow-emerald': '0 0 30px rgba(16, 185, 129, 0.3)',
+        'glow-emerald-lg': '0 0 50px rgba(16, 185, 129, 0.45)',
+        'glow-amber': '0 0 30px rgba(245, 158, 11, 0.3)',
+        'glow-forest': '0 10px 40px -10px rgba(16, 185, 129, 0.25)',
       },
       animation: {
-        'pulse-teal': 'pulseTeal 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-emerald': 'pulseEmerald 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float-slow': 'float 6s ease-in-out infinite',
       },
       keyframes: {
-        pulseTeal: {
+        pulseEmerald: {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },
           '50%': { opacity: '0.6', transform: 'scale(1.05)' },
         },
