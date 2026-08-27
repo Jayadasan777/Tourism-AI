@@ -125,7 +125,7 @@ const ItineraryForm = ({ onSubmit, loading }) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Destination */}
       <div>
-        <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="destination" className="block text-sm font-medium text-zinc-400 mb-2">
           Destination *
         </label>
         <input
@@ -147,7 +147,7 @@ const ItineraryForm = ({ onSubmit, loading }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Budget */}
         <div>
-          <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="budget" className="block text-sm font-medium text-zinc-400 mb-2">
             Budget (₹) *
           </label>
           <input
@@ -165,12 +165,12 @@ const ItineraryForm = ({ onSubmit, loading }) => {
           {errors.budget && (
             <p className="mt-1 text-sm text-danger-600">{errors.budget}</p>
           )}
-          <p className="mt-1 text-xs text-gray-500">₹1,000 - ₹10,000,000</p>
+          <p className="mt-1 text-xs text-zinc-500">₹1,000 - ₹10,000,000</p>
         </div>
 
         {/* Duration */}
         <div>
-          <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="duration" className="block text-sm font-medium text-zinc-400 mb-2">
             Duration (days) *
           </label>
           <input
@@ -188,13 +188,13 @@ const ItineraryForm = ({ onSubmit, loading }) => {
           {errors.duration && (
             <p className="mt-1 text-sm text-danger-600">{errors.duration}</p>
           )}
-          <p className="mt-1 text-xs text-gray-500">1 - 30 days</p>
+          <p className="mt-1 text-xs text-zinc-500">1 - 30 days</p>
         </div>
       </div>
 
       {/* Start Date */}
       <div>
-        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="startDate" className="block text-sm font-medium text-zinc-400 mb-2">
           Start Date *
         </label>
         <input
@@ -214,8 +214,8 @@ const ItineraryForm = ({ onSubmit, loading }) => {
 
       {/* Interests */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Interests * <span className="text-gray-500 font-normal">(Select 1-5)</span>
+        <label className="block text-sm font-medium text-zinc-400 mb-2">
+          Interests * <span className="text-zinc-500 font-normal">(Select 1-5)</span>
         </label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {INTEREST_OPTIONS.map(option => (
@@ -228,7 +228,7 @@ const ItineraryForm = ({ onSubmit, loading }) => {
                 px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all
                 ${formData.interests.includes(option.value)
                   ? 'bg-primary-500 text-white border-primary-500'
-                  : 'bg-white text-gray-700 border-gray-300 hover:border-primary-300'
+                  : 'bg-white text-zinc-400 border-gray-300 hover:border-primary-300'
                 }
                 ${loading || (formData.interests.length >= 5 && !formData.interests.includes(option.value))
                   ? 'opacity-50 cursor-not-allowed'
@@ -244,7 +244,7 @@ const ItineraryForm = ({ onSubmit, loading }) => {
           <p className="mt-2 text-sm text-danger-600">{errors.interests}</p>
         )}
         {formData.interests.length > 0 && (
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-zinc-400">
             Selected: {formData.interests.length}/5
           </p>
         )}
@@ -271,7 +271,7 @@ const ItineraryForm = ({ onSubmit, loading }) => {
         </button>
       </div>
 
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-xs text-zinc-500 text-center">
         * Required fields. Itinerary generation takes 3-7 seconds.
       </p>
     </form>

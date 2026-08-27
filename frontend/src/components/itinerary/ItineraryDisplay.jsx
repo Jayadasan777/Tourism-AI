@@ -23,8 +23,8 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
       <div className="card">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{destination}</h2>
-            <p className="text-gray-600">{duration} {duration === 1 ? 'Day' : 'Days'} Trip</p>
+            <h2 className="text-2xl font-bold text-white">{destination}</h2>
+            <p className="text-zinc-400">{duration} {duration === 1 ? 'Day' : 'Days'} Trip</p>
           </div>
 
           {/* Action Buttons */}
@@ -50,19 +50,19 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
         </div>
 
         {/* Budget Summary */}
-        <div className="bg-gray-50 rounded-lg p-4">
+        <div className="bg-zinc-900 rounded-lg p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Total Budget */}
             <div>
-              <p className="text-sm text-gray-600">Total Budget</p>
-              <p className="text-xl font-semibold text-gray-900">
+              <p className="text-sm text-zinc-400">Total Budget</p>
+              <p className="text-xl font-semibold text-white">
                 ₹{budget.toLocaleString('en-IN')}
               </p>
             </div>
 
             {/* Estimated Cost */}
             <div>
-              <p className="text-sm text-gray-600">Estimated Cost</p>
+              <p className="text-sm text-zinc-400">Estimated Cost</p>
               <p className={`text-xl font-semibold ${isOverBudget ? 'text-danger-600' : 'text-secondary-600'}`}>
                 ₹{totalEstimatedCost.toLocaleString('en-IN')}
               </p>
@@ -70,7 +70,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
 
             {/* Difference */}
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-zinc-400">
                 {isOverBudget ? 'Over Budget' : 'Under Budget'}
               </p>
               <p className={`text-xl font-semibold ${isOverBudget ? 'text-danger-600' : 'text-secondary-600'}`}>
@@ -82,7 +82,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
           {/* Progress Bar */}
           <div className="mt-4">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-xs text-gray-600">Budget Utilization</span>
+              <span className="text-xs text-zinc-400">Budget Utilization</span>
               <span className={`text-xs font-medium ${isOverBudget ? 'text-danger-600' : 'text-secondary-600'}`}>
                 {budgetPercentage.toFixed(1)}%
               </span>
@@ -111,7 +111,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
       {/* Interactive Map */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-gray-900">
+          <h3 className="text-xl font-semibold text-white">
             🗺️ Interactive Map
           </h3>
           <button
@@ -127,7 +127,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
         )}
 
         {!showMap && (
-          <div className="bg-gray-50 rounded-lg p-6 text-center text-gray-600">
+          <div className="bg-zinc-900 rounded-lg p-6 text-center text-zinc-400">
             <span className="text-4xl mb-2 block">🗺️</span>
             <p>Click "Show Map View" to see all places on an interactive map</p>
             <p className="text-sm mt-1">View routes, distances, and navigate to each location</p>
@@ -137,7 +137,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
 
       {/* Day-wise Itinerary */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-gray-900">
+        <h3 className="text-xl font-semibold text-white">
           📅 Day-wise Itinerary
         </h3>
 
@@ -147,7 +147,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
           ))
         ) : (
           <div className="card">
-            <p className="text-gray-600">No itinerary data available.</p>
+            <p className="text-zinc-400">No itinerary data available.</p>
           </div>
         )}
       </div>

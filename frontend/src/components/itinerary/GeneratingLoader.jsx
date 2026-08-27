@@ -32,7 +32,7 @@ const GeneratingLoader = () => {
         Planning Your Perfect Trip...
       </h3>
 
-      <p className="text-gray-600 text-center max-w-md mb-4">
+      <p className="text-zinc-400 text-center max-w-md mb-4">
         Our AI is analyzing your preferences and creating a personalized itinerary
       </p>
 
@@ -45,7 +45,7 @@ const GeneratingLoader = () => {
       </div>
 
       {/* Estimated Time */}
-      <p className="mt-6 text-sm text-gray-500">
+      <p className="mt-6 text-sm text-zinc-500">
         This usually takes 3-7 seconds
       </p>
     </div>
@@ -59,7 +59,7 @@ const LoadingStep = ({ children, delay }) => {
       style={{ animationDelay: `${delay}ms`, animationFillMode: 'forwards' }}
     >
       <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
-      <span className="text-sm text-gray-600">{children}</span>
+      <span className="text-sm text-zinc-400">{children}</span>
     </div>
   );
 };
