@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 // Get API URL from environment (defaulting to live Render backend in production)
+const envApiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '';
 const defaultApiUrl = import.meta.env.DEV
   ? 'http://localhost:5000/api'
   : 'https://smart-tour-ai-backend.onrender.com/api';
 
-const apiUrl = import.meta.env.VITE_API_URL || defaultApiUrl;
+const apiUrl = envApiUrl || defaultApiUrl;
 
 console.log('🌐 Using API URL:', apiUrl);
 
