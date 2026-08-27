@@ -38,7 +38,8 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: false, // Visible Chrome browser on screen for live evaluation & demo
+      headless: false, // Visible Chrome window for live demo
+      slowMo: 100, // Slows down actions by 100ms so you and judges can visually track every click and type action!
       defaultViewport: null,
       args: [
         '--no-sandbox',
@@ -220,8 +221,11 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
 
     console.log('\n================================================================');
     console.log('🎯 [Autonomous RedBus Agent] REACHED PAYMENT GATEWAY SCREEN!');
-    console.log('   Browser window paused safely at payment portal.');
+    console.log('   Browser window is active & paused for 3 minutes for judge review/payment!');
     console.log('================================================================\n');
+
+    // Keep browser window open for 180 seconds so you and judges can inspect the payment page
+    await delay(180000);
 
     return {
       success: true,
