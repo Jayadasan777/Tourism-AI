@@ -73,8 +73,16 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
     console.log(`🤖 Generating itinerary for ${destination}...`);
     const startTime = Date.now();
 
-    // List of model names to try in order
-    const candidateModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-pro'];
+    // List of model names to try in order (using verified supported models)
+    const candidateModels = [
+      'gemini-2.5-flash',
+      'gemini-3.7-flash',
+      'gemini-flash-latest',
+      'gemini-2.5-pro',
+      'gemini-pro-latest',
+      'gemini-2.5-flash-lite',
+      'gemini-1.5-flash'
+    ];
     let result = null;
     let lastModelError = null;
 
@@ -86,7 +94,8 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
             temperature: 0.7,
             topP: 0.95,
             topK: 40,
-            maxOutputTokens: 2048,
+            maxOutputTokens: 8192,
+            responseMimeType: 'application/json'
           }
         });
         result = await model.generateContent(prompt);
@@ -133,9 +142,25 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
 
     console.log(`💰 Total itinerary cost: ₹${totalCost.toLocaleString('en-IN')} (Budget: ₹${budget.toLocaleString('en-IN')})`);
 
-    // Add metadata
+    // Add metadata and enrich activities with maps links and categories
+    const enrichedDays = (itineraryData.days || []).map(day => ({
+      ...day,
+      activities: (day.activities || []).map(act => {
+        const query = encodeURIComponent(`${act.title} ${act.placeName || ''} ${destination}`);
+        return {
+          ...act,
+          category: act.category || (
+            act.title.toLowerCase().includes('hotel') || act.title.toLowerCase().includes('stay') ? 'hotel' :
+            act.title.toLowerCase().includes('lunch') || act.title.toLowerCase().includes('dinner') || act.title.toLowerCase().includes('breakfast') || act.title.toLowerCase().includes('restaurant') || act.title.toLowerCase().includes('mess') ? 'restaurant' :
+            act.title.toLowerCase().includes('trek') || act.title.toLowerCase().includes('boating') || act.title.toLowerCase().includes('sports') || act.title.toLowerCase().includes('shopping') ? 'activity' : 'attraction'
+          ),
+          googleMapsUrl: act.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${query}`
+        };
+      })
+    }));
+
     return {
-      ...itineraryData,
+      days: enrichedDays,
       metadata: {
         destination,
         budget,
@@ -143,7 +168,9 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
         interests,
         startDate,
         totalEstimatedCost: totalCost,
-        generatedAt: new Date().toISOString()
+        generatedAt: new Date().toISOString(),
+        isFallback: false,
+        aiModel: 'gemini-2.5-flash-live'
       }
     };
 
