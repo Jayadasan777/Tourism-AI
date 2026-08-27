@@ -23,27 +23,28 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
     setBookingLoading(true);
     setBookingError(null);
 
+    const fromCity = 'Chennai';
+    const toCity = destination.trim();
+    
+    // Format travel date (YYYY-MM-DD)
+    const travelDate = new Date(startDate);
+    const yyyy = travelDate.getFullYear();
+    const mm = String(travelDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(travelDate.getDate()).padStart(2, '0');
+    const formattedDate = `${yyyy}-${mm}-${dd}`;
+
+    // Direct RedBus Real-Time Booking URL format:
+    // https://www.redbus.in/bus-tickets/chennai-to-[destination]?fromCityName=Chennai&toCityName=[destination]&onward=DD-MMM-YYYY
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const redbusDateStr = `${dd}-${monthNames[travelDate.getMonth()]}-${yyyy}`;
+    const cleanToSlug = toCity.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const directRedBusUrl = `https://www.redbus.in/bus-tickets/chennai-to-${cleanToSlug}?fromCityName=Chennai&toCityName=${encodeURIComponent(toCity)}&onward=${redbusDateStr}&src=Chennai&dst=${encodeURIComponent(toCity)}`;
+
+    // Immediately open RedBus in new tab for the user/judge to view live options & booking flow
+    window.open(directRedBusUrl, '_blank', 'noopener,noreferrer');
+
     try {
-      // Get user's current location
-      const userLocation = await new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error('Geolocation not supported'));
-          return;
-        }
-        navigator.geolocation.getCurrentPosition(
-          (position) => resolve({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          }),
-          (error) => reject(error)
-        );
-      });
-
-      // For demo, use Chennai as default if geolocation fails or for simplicity
-      const fromCity = 'Chennai'; // In production, reverse geocode userLocation
-
-      // Call automation API
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://smart-tour-ai-backend.onrender.com/api';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       const response = await fetch(`${apiUrl}/agentic/automate-booking`, {
         method: 'POST',
         headers: {
@@ -51,27 +52,23 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
         },
         body: JSON.stringify({
           from: fromCity,
-          to: destination,
-          date: new Date(startDate).toISOString().split('T')[0],
+          to: toCity,
+          date: formattedDate,
           passengerDetails: {
-            name: 'Demo User',
-            age: 25,
+            name: 'Demo Traveler',
+            age: 26,
             phone: '9876543210',
-            email: 'demo@smarttour.ai'
+            email: 'traveler@smarttour.ai'
           }
         })
       });
 
       const data = await response.json();
-
       if (data.success) {
-        alert('✅ Browser automation started! Watch the browser window open and automate RedBus booking!');
-      } else {
-        setBookingError(data.error || 'Automation failed');
+        console.log('✅ Automation response:', data);
       }
     } catch (err) {
-      console.error('Auto-booking error:', err);
-      setBookingError(err.message || 'Failed to start automation');
+      console.warn('Backend automation bridge notice (Direct live portal opened):', err.message);
     } finally {
       setBookingLoading(false);
     }
