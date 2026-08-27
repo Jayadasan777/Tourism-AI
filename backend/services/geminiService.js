@@ -23,40 +23,27 @@ const generateItinerary = async ({ destination, budget, duration, interests, sta
       initializeGemini();
     }
 
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      generationConfig: {
-        temperature: 0.7,
-        topP: 0.95,
-        topK: 40,
-        maxOutputTokens: 2048,
-      }
-    });
+    let model;
+    try {
+      model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    } catch {
+      model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+    }
 
     const interestsString = interests.join(', ');
     const dailyBudget = Math.floor(budget / duration);
 
-    const prompt = `You are an expert Indian travel planner with deep knowledge of tourist destinations, local experiences, and budget planning.
+    const prompt = `You are a world-class Indian travel guide and local explorer.
+Create an authentic, real-world, conflict-free ${duration}-day travel itinerary for ${destination}, India.
 
-Create a detailed ${duration}-day travel itinerary for ${destination} with the following requirements:
+CRITICAL RULES FOR REAL-WORLD AUTHENTICITY:
+1. Every activity MUST specify the EXACT REAL-WORLD VENUE NAME (e.g., "Meenakshi Amman Temple", "Murugan Idli Shop", "Heritage Madurai Hotel", "Thirumalai Nayakkar Mahal"), NOT generic text like "Morning Exploration" or "Local Sightseeing".
+2. Include authentic hotel stays, popular iconic food spots with real local dishes, exact street names, and verified entry fees / food costs in INR (₹).
+3. Schedule activities in a geographically logical sequence (morning to night) to avoid traffic and backtracking.
+4. Total estimated cost across all days must stay within ₹${budget.toLocaleString('en-IN')} (Daily ~₹${dailyBudget.toLocaleString('en-IN')}).
+5. Tailor experiences to these interests: ${interestsString}.
 
-**Budget Constraint (STRICT):**
-- Total budget: ₹${budget.toLocaleString('en-IN')}
-- Daily budget: ~₹${dailyBudget.toLocaleString('en-IN')}
-- Total cost across all days MUST NOT exceed ₹${budget.toLocaleString('en-IN')}
-
-**Traveler Interests:** ${interestsString}
-
-**Start Date:** ${new Date(startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
-
-**Instructions:**
-1. Create ${duration} days of activities (2-4 activities per day)
-2. Each activity must include: time, title, description, and realistic cost estimate
-3. Mix of paid attractions and free experiences
-4. Consider local transportation, meals, and accommodation in budget
-5. Prioritize activities matching user interests: ${interestsString}
-6. Include practical tips (best time to visit, booking requirements)
-7. Ensure activities are geographically logical (minimize backtracking)
+Start Date: ${new Date(startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
 
 **Response Format:**
 Return ONLY valid JSON (no markdown, no explanations) in this exact structure:

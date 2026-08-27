@@ -207,6 +207,196 @@ const CITY_LANDMARKS = {
       ]
     }
   ],
+  madurai: [
+    {
+      activities: [
+        {
+          time: '06:00 AM',
+          title: 'Meenakshi Amman Temple Morning Darshan & Hall of 1000 Pillars',
+          placeName: 'Arulmigu Meenakshi Sundareswarar Temple',
+          address: 'Madurai Main, Madurai, Tamil Nadu 625001',
+          category: 'attraction',
+          coordinates: [9.9195, 78.1193],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Meenakshi+Amman+Temple+Madurai',
+          description: 'Explore the 2500-year-old architectural jewel of Tamil Nadu. 14 towering Gopurams, Hall of Thousand Pillars, and the sacred Golden Lotus Tank (Porthamarai Kulam). Free entry, camera fee ₹50.',
+          estimatedCost: 50
+        },
+        {
+          time: '09:00 AM',
+          title: 'Legendary Breakfast at Murugan Idli Shop (West Masi St)',
+          placeName: 'Murugan Idli Shop, West Masi Street',
+          address: '196, West Masi St, Madurai Main, Madurai 625001',
+          category: 'restaurant',
+          coordinates: [9.9184, 78.1158],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Murugan+Idli+Shop+West+Masi+Madurai',
+          description: 'The birthplace of world-famous pillow-soft Madurai idlis served with coriander, coconut, tomato, and mint chutneys and pure ghee podi.',
+          estimatedCost: 160
+        },
+        {
+          time: '11:00 AM',
+          title: 'Thirumalai Nayakkar Palace (17th-Century Indo-Saracenic Marvel)',
+          placeName: 'Thirumalai Nayakkar Mahal',
+          address: 'Panthadi 1st St, Mahal Area, Madurai 625001',
+          category: 'attraction',
+          coordinates: [9.9150, 78.1243],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Thirumalai+Nayakkar+Mahal+Madurai',
+          description: 'Built in 1636 AD by King Thirumalai Nayak. Marvel at the 82-foot grand dome supported by massive white pillars. Entry ₹20.',
+          estimatedCost: 80
+        },
+        {
+          time: '01:30 PM',
+          title: 'Authentic Madurai Non-Veg Lunch at Amma Mess or Kumar Mess',
+          placeName: 'Kumar Mess / Amma Mess, Madurai',
+          address: '144, Alagar Kovil Main Rd, Tallakulam, Madurai 625002',
+          category: 'restaurant',
+          coordinates: [9.9328, 78.1362],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kumar+Mess+Madurai',
+          description: 'Famous Madurai mutton chukka, ayirai meen kuzhambu, kari dosai, and bone marrow omelette on banana leaf.',
+          estimatedCost: 450
+        },
+        {
+          time: '04:30 PM',
+          title: 'Famous Madurai Famous Jigarthanda Stall',
+          placeName: 'Famous Jigarthanda Shop (Est. 1977)',
+          address: 'East Marret Street, Madurai Main, Madurai 625001',
+          category: 'restaurant',
+          coordinates: [9.9172, 78.1235],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Famous+Jigarthanda+East+Marret+Madurai',
+          description: 'Sip Madurai\'s GI-tagged royal royal beverage made of almond gum (badam pisin), nannari syrup, reduced milk, and basundi ice cream. ₹70-120.',
+          estimatedCost: 100
+        },
+        {
+          time: '07:30 PM',
+          title: 'Evening Chithirai Street Shopping & Night Ceremony at Meenakshi Temple',
+          placeName: 'East Chithirai Street Brass & Textile Bazaar',
+          address: 'East Chithirai St, Madurai Main, Madurai 625001',
+          category: 'activity',
+          coordinates: [9.9202, 78.1205],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=East+Chithirai+Street+Madurai',
+          description: 'Witness the nightly Palliyarai Pooja (procession of Lord Sundareswarar to Meenakshi\'s shrine with silver palanquin, nadaswaram, and drums at 9:00 PM). Shop for Sungudi cotton sarees and bronze lamps.',
+          estimatedCost: 250
+        }
+      ]
+    },
+    {
+      activities: [
+        {
+          time: '07:30 AM',
+          title: 'Alagar Kovil Temple & Scenic Foot-hills of Alagar Hills',
+          placeName: 'Arulmigu Kallazhagar Temple, Alagar Hills',
+          address: 'Alagar Kovil, Madurai District, Tamil Nadu 625301',
+          category: 'attraction',
+          coordinates: [10.0768, 78.2144],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Alagar+Kovil+Madurai',
+          description: 'Ancient Vishnu temple situated amidst dense forested hills 21km from Madurai. Famous for exquisite stone sculptures of avatars and the sacred Silambaru spring.',
+          estimatedCost: 100
+        },
+        {
+          time: '11:00 AM',
+          title: 'Pazhamudhircholai (One of the 6 Sacred Murugan Arupadaiveedu)',
+          placeName: 'Pazhamudhircholai Murugan Temple',
+          address: 'Alagar Hills, Madurai 625301',
+          category: 'attraction',
+          coordinates: [10.0898, 78.2257],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pazhamudircholai+Murugan+Temple',
+          description: 'The sixth abode of Lord Murugan surrounded by dense mango and teak forests where Lord Murugan tested poetess Avvaiyar under the naval tree.',
+          estimatedCost: 50
+        },
+        {
+          time: '01:30 PM',
+          title: 'Traditional Lunch at Madurai Sree Sabarees / Heritage Madurai',
+          placeName: 'Hotel Sree Sabarees Pure Veg',
+          address: 'West Perumal Maistry St, Madurai 625001',
+          category: 'restaurant',
+          coordinates: [9.9168, 78.1132],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Sree+Sabarees+Madurai',
+          description: 'Pure vegetarian South Indian feast featuring Chettinad mushroom biryani, ghee roast dosa, and filter coffee.',
+          estimatedCost: 280
+        },
+        {
+          time: '04:00 PM',
+          title: 'Gandhi Memorial Museum & Rani Mangammal Palace',
+          placeName: 'Gandhi Memorial Museum Madurai',
+          address: 'Collector Office Rd, Tamukkam, Madurai 625020',
+          category: 'attraction',
+          coordinates: [9.9324, 78.1368],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Gandhi+Memorial+Museum+Madurai',
+          description: 'Housed in the 17th-century palace of Nayak Queen Rani Mangammal. Contains Mahatma Gandhi\'s blood-stained dhoti and rare freedom struggle photos. Free entry.',
+          estimatedCost: 20
+        },
+        {
+          time: '07:30 PM',
+          title: 'Night Street Food at Madurai Simmakkal & Kari Dosa Experience',
+          placeName: 'Konar Mess / Simmakkal Food Street',
+          address: 'North Veli St, Simmakkal, Madurai 625001',
+          category: 'restaurant',
+          coordinates: [9.9256, 78.1218],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Konar+Mess+Simmakkal+Madurai',
+          description: 'Try the iconic Madurai Kari Dosa (three-layer thick dosa topped with fluffy egg and spicy minced mutton or chicken). ₹220-350.',
+          estimatedCost: 350
+        }
+      ]
+    },
+    {
+      activities: [
+        {
+          time: '08:30 AM',
+          title: 'Vandiyur Mariamman Teppakulam (Giant Temple Water Tank)',
+          placeName: 'Vandiyur Mariamman Teppakulam',
+          address: 'Teppakulam, Madurai, Tamil Nadu 625009',
+          category: 'attraction',
+          coordinates: [9.9126, 78.1511],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Vandiyur+Mariamman+Teppakulam+Madurai',
+          description: 'Built in 1645 AD. One of the largest temple tanks in South India (300m x 300m) with an island pavilion (Maiya Mandapam) in the center.',
+          estimatedCost: 30
+        },
+        {
+          time: '11:00 AM',
+          title: 'Koodal Azhagar 108 Divya Desam 3-Tier Temple',
+          placeName: 'Arulmigu Koodal Azhagar Temple',
+          address: 'Near Periyar Bus Stand, Madurai Main, Madurai 625001',
+          category: 'attraction',
+          coordinates: [9.9142, 78.1139],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Koodal+Azhagar+Temple+Madurai',
+          description: 'Architectural wonder with Lord Vishnu depicted in 3 postures on 3 floors: Sitting (ground), Standing (1st floor), and Reclining (2nd floor).',
+          estimatedCost: 40
+        },
+        {
+          time: '01:30 PM',
+          title: 'Lunch at Sree Mohan Bhojanalay / Modern Restaurant',
+          placeName: 'Modern Restaurant, Netaji Road',
+          address: 'Netaji Rd, Madurai Main, Madurai 625001',
+          category: 'restaurant',
+          coordinates: [9.9177, 78.1171],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Modern+Restaurant+Madurai',
+          description: 'Historic mess operating since 1940. Try hot pooris, channa masala, and traditional curd vada.',
+          estimatedCost: 200
+        },
+        {
+          time: '04:30 PM',
+          title: 'St. Mary\'s Cathedral & Vilakkuthoon (Historic Lamp Post)',
+          placeName: 'St Mary\'s Cathedral Church',
+          address: 'East Veli St, Madurai 625001',
+          category: 'attraction',
+          coordinates: [9.9178, 78.1284],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=St+Marys+Cathedral+Madurai',
+          description: 'Stunning Roman Catholic cathedral built in 1840 blending Roman, Continental, and Gothic styles with 42m twin bell towers.',
+          estimatedCost: 30
+        },
+        {
+          time: '07:30 PM',
+          title: 'Farewell Royal Dinner at Heritage Madurai & Banyan Tree Courtyard',
+          placeName: 'Heritage Madurai Luxury Resort & Dining',
+          address: '11, Melakkal Main Rd, Kochadai, Madurai 625016',
+          category: 'hotel',
+          coordinates: [9.9392, 78.0825],
+          googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Heritage+Madurai',
+          description: 'Designed by legendary architect Geoffrey Bawa. Enjoy Chettinad royal cuisine under 200-year-old banyan trees with classical Carnatic music.',
+          estimatedCost: 950
+        }
+      ]
+    }
+  ],
   rishikesh: [
     {
       activities: [
