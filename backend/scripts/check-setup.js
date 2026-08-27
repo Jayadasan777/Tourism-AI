@@ -16,6 +16,13 @@ const RESET = '\x1b[0m';
 console.log('\n🔍 Smart Tour AI - Setup Verification\n');
 console.log('=' .repeat(50));
 
+// Skip checks in production (Render/Heroku/etc)
+if (process.env.NODE_ENV === 'production') {
+  console.log('\n✅ Production environment detected - skipping local setup checks\n');
+  console.log('Using environment variables from hosting platform...\n');
+  process.exit(0);
+}
+
 let allChecksPass = true;
 
 // Check 1: Node version
