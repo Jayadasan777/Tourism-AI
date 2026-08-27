@@ -17,7 +17,11 @@ const initializeFirebase = () => {
     // Production: Use environment variable (for Render/Heroku/etc)
     if (process.env.FIREBASE_SERVICE_ACCOUNT) {
       console.log('📦 Loading Firebase credentials from environment variable');
-      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      // Fix escaped newlines in private key
+      const jsonString = process.env.FIREBASE_SERVICE_ACCOUNT
+        .replace(/\\n/g, '\n')
+        .replace(/\n\s+/g, '\n');
+      serviceAccount = JSON.parse(jsonString);
     }
     // Development: Use file path
     else {
