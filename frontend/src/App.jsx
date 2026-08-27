@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import PlanTripPage from './pages/PlanTripPage';
 import StatusPage from './pages/StatusPage';
+import NearbyPage from './pages/NearbyPage';
 
 const NotFoundPage = () => (
   <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -29,6 +30,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/status" element={<StatusPage />} />
+              <Route path="/nearby" element={<NearbyPage />} />
               <Route
                 path="/plan"
                 element={

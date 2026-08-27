@@ -7,57 +7,50 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+        // Obsidian Black & White Palette
+        obsidian: {
+          950: '#050505', // Pitch Black Canvas
+          900: '#09090b', // Deep Obsidian
+          850: '#121215', // Dark Charcoal Surface
+          800: '#18181b', // Elevated Hover
         },
-        secondary: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+        // Keep zinc for borders and muted elements
+        // White stays as #ffffff
+        // Custom semantic colors
+        success: {
+          950: '#0a2f1f', // Emerald dark bg
+          800: '#14532d', // Emerald dark border
+          400: '#4ade80', // Emerald text
         },
-        accent: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
-        },
-        danger: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
+        warning: {
+          950: '#2f0a0a', // Crimson dark bg
+          800: '#7f1d1d', // Crimson dark border
+          400: '#f87171', // Crimson text
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      letterSpacing: {
+        tighter: '-0.05em',
+      },
+      backdropBlur: {
+        xs: '2px',
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'spin-slow': 'spin 3s linear infinite',
+        'glow': 'glow 2s ease-in-out infinite',
+      },
+      keyframes: {
+        glow: {
+          '0%, 100%': { opacity: 0.5 },
+          '50%': { opacity: 1 },
+        },
+      },
+      boxShadow: {
+        'glow-white': '0 0 20px rgba(255, 255, 255, 0.1)',
+        'glow-white-lg': '0 0 40px rgba(255, 255, 255, 0.15)',
       },
     },
   },

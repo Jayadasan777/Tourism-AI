@@ -11,29 +11,46 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200">
+    <nav className="sticky top-0 z-50 glass-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">🗺️</span>
-            <span className="font-bold text-xl text-primary-700">Smart Tour AI</span>
+          {/* Brand Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="text-2xl group-hover:scale-110 transition-transform duration-200">
+              🗺️
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-lg text-white tracking-tight">
+                Smart Tour AI
+              </span>
+              <span className="text-[10px] text-zinc-500 tracking-wider uppercase">
+                SIH 2026
+              </span>
+            </div>
           </Link>
 
+          {/* Navigation Controls */}
           <div className="flex items-center gap-4">
             {user ? (
               <>
                 <Link
                   to="/plan"
-                  className="text-gray-600 hover:text-primary-600 transition-colors font-medium"
+                  className="text-zinc-400 hover:text-white transition-colors font-medium text-sm"
                 >
                   Plan Trip
                 </Link>
-                <span className="text-sm text-gray-500 hidden sm:block">
+                <Link
+                  to="/nearby"
+                  className="text-zinc-400 hover:text-white transition-colors font-medium text-sm"
+                >
+                  🎯 Nearby
+                </Link>
+                <span className="text-xs text-zinc-500 hidden sm:block max-w-[120px] truncate">
                   {user.displayName || user.email}
                 </span>
                 <button
                   onClick={handleSignOut}
-                  className="btn-secondary text-sm px-3 py-1.5"
+                  className="btn-secondary text-xs px-4 py-2"
                 >
                   Sign Out
                 </button>
@@ -42,11 +59,11 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="text-gray-600 hover:text-primary-600 transition-colors font-medium"
+                  className="text-zinc-400 hover:text-white transition-colors font-medium text-sm"
                 >
                   Login
                 </Link>
-                <Link to="/register" className="btn-primary text-sm">
+                <Link to="/register" className="btn-primary text-sm px-5 py-2">
                   Get Started
                 </Link>
               </>
