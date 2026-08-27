@@ -7,6 +7,7 @@ const { errorHandler } = require('./utils/errorHandler');
 const authRoutes = require('./routes/authRoutes');
 const itineraryRoutes = require('./routes/itineraryRoutes');
 const safetyRoutes = require('./routes/safetyRoutes');
+const recommendationRoutes = require('./routes/recommendationRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -50,7 +51,8 @@ app.get('/', (req, res) => {
       health: '/health',
       auth: '/api/auth',
       itinerary: '/api/itinerary',
-      safety: '/api/safety'
+      safety: '/api/safety',
+      recommendations: '/api/recommendations'
     }
   });
 });
@@ -68,6 +70,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/safety', safetyRoutes);
+app.use('/api/recommendations', recommendationRoutes);
 
 // 404 handler
 app.use((req, res) => {
