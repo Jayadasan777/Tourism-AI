@@ -10,6 +10,7 @@ const NearbyPage = () => {
   const [category, setCategory] = useState('all');
   const [sortBy, setSortBy] = useState('distance');
   const [loading, setLoading] = useState(false);
+  const [gettingLocation, setGettingLocation] = useState(false);
   const [recommendations, setRecommendations] = useState(null);
   const [error, setError] = useState(null);
   const [currentAddress, setCurrentAddress] = useState('');
