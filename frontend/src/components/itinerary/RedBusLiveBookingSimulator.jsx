@@ -410,45 +410,89 @@ export default function RedBusLiveBookingSimulator({ isOpen, onClose, destinatio
               </motion.div>
             )}
 
-            {/* STEP 5: Live Payment Gateway Checkout Screen */}
+            {/* STEP 5: Live Payment Gateway & Checkout Screen */}
             {currentStep === 5 && (
               <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
                 <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/60 shadow-glow-white space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                      <span>💳 5. REACHED REDBUS PAYMENT GATEWAY</span>
+                      <span>💳 REDBUS SECURE PAYMENT GATEWAY (PAUSED FOR USER AUTHORIZATION)</span>
                     </span>
-                    <span className="bg-emerald-500 text-black text-[10px] font-extrabold px-2 py-0.5 rounded-full">
-                      SAFELY PAUSED
+                    <span className="bg-emerald-500 text-black text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">
+                      READY TO PAY
                     </span>
                   </div>
 
+                  {/* Booking Summary Box */}
                   <div className="p-3 bg-black/60 rounded-lg border border-white/10 space-y-2 text-xs font-mono">
                     <div className="flex justify-between text-zinc-300">
-                      <span>Operator / Bus:</span>
-                      <span className="font-bold text-white">SBM TRAANSPORT (A/C Sleeper)</span>
+                      <span>Operator:</span>
+                      <span className="font-bold text-white">SBM TRAANSPORT (A/C Sleeper 2+1)</span>
                     </div>
                     <div className="flex justify-between text-zinc-300">
                       <span>Seat Berth:</span>
-                      <span className="font-bold text-emerald-400">U16 (Upper Deck Window)</span>
+                      <span className="font-bold text-emerald-400">U16 (Upper Deck Window Sleeper)</span>
                     </div>
                     <div className="flex justify-between text-zinc-300">
-                      <span>Passenger Name:</span>
+                      <span>Passenger:</span>
                       <span className="font-bold text-white">Jayadasan S (Age 22, Male)</span>
                     </div>
                     <div className="flex justify-between text-zinc-300">
-                      <span>Boarding Time & Point:</span>
-                      <span className="font-bold text-white">19:00 - Koyambedu CMBT</span>
+                      <span>Boarding:</span>
+                      <span className="font-bold text-white">19:00 - Koyambedu SBM Office (CMBT)</span>
+                    </div>
+                    <div className="flex justify-between text-zinc-300">
+                      <span>Dropping:</span>
+                      <span className="font-bold text-white">07:00 - Pasupathi Mahal Mahadhanapuram</span>
                     </div>
                     <div className="flex justify-between text-sm pt-2 border-t border-white/10">
-                      <span className="text-zinc-400 font-bold">Total Payable:</span>
-                      <span className="text-emerald-400 font-extrabold text-base">₹1,699</span>
+                      <span className="text-zinc-400 font-bold">Total Amount Payable:</span>
+                      <span className="text-emerald-400 font-extrabold text-lg">₹1,699</span>
+                    </div>
+                  </div>
+
+                  {/* Payment Options (UPI / QR / Cards) */}
+                  <div className="space-y-2 pt-1">
+                    <div className="text-xs font-bold text-white">Choose Payment Method:</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <div className="p-2.5 bg-[#18181b] border-2 border-emerald-500 rounded-lg flex items-center justify-between text-xs cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">📱</span>
+                          <div>
+                            <div className="font-bold text-white">UPI / QR Code</div>
+                            <div className="text-[10px] text-zinc-400">GPay, PhonePe, Paytm</div>
+                          </div>
+                        </div>
+                        <span className="text-emerald-400 font-bold">🔘</span>
+                      </div>
+
+                      <div className="p-2.5 bg-[#18181b] border border-white/10 rounded-lg flex items-center justify-between text-xs opacity-60">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">💳</span>
+                          <div>
+                            <div className="font-bold text-white">Credit / Debit Card</div>
+                            <div className="text-[10px] text-zinc-400">Visa, Mastercard, RuPay</div>
+                          </div>
+                        </div>
+                        <span>⚪</span>
+                      </div>
+
+                      <div className="p-2.5 bg-[#18181b] border border-white/10 rounded-lg flex items-center justify-between text-xs opacity-60">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">🏦</span>
+                          <div>
+                            <div className="font-bold text-white">Net Banking</div>
+                            <div className="text-[10px] text-zinc-400">SBI, HDFC, ICICI, Axis</div>
+                          </div>
+                        </div>
+                        <span>⚪</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#18181b] rounded-lg border border-white/10 text-center text-xs text-zinc-300">
-                  🎯 <span className="font-bold text-white">Agent Execution Complete:</span> All steps automated with zero manual typing.
+                <div className="p-3 bg-emerald-950/20 border border-emerald-500/30 rounded-lg text-center text-xs text-emerald-300 font-mono">
+                  ✅ <span className="font-bold">Autonomous Booking Completed:</span> Agent auto-selected bus, locked Seat U16, confirmed Koyambedu boarding point, filled passenger credentials, and safely stopped at the Payment Gateway!
                 </div>
               </motion.div>
             )}
