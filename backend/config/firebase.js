@@ -39,10 +39,14 @@ const initializeFirebase = () => {
     return firebaseApp;
   } catch (error) {
     console.error('❌ Firebase initialization failed:', error.message);
+    console.error('⚠️  Continuing WITHOUT Firebase (some features disabled)');
     console.error('Make sure you have:');
     console.error('  - FIREBASE_SERVICE_ACCOUNT env variable (production), OR');
     console.error('  - serviceAccountKey.json file at: backend/config/serviceAccountKey.json (development)');
-    throw new Error('Firebase configuration error');
+
+    // Return null instead of throwing - app will work without Firebase
+    firebaseApp = null;
+    return null;
   }
 };
 
@@ -53,7 +57,7 @@ const getFirestore = () => {
   if (!firebaseApp) {
     initializeFirebase();
   }
-  return admin.firestore();
+  return firebaseApp ? admin.firestore() : null;
 };
 
 /**
