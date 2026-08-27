@@ -25,7 +25,7 @@ const getNearbyRecommendations = async (req, res, next) => {
     }
 
     const parsedBudget = budget ? parseInt(budget) : null;
-    const parsedRadius = radius ? parseInt(radius) : 5000; // Default 5km
+    const parsedRadius = radius ? parseInt(radius) : 50000; // Default 50km HUGE!
 
     console.log(`📍 Recommendations request: (${lat}, ${lng}), budget: ₹${parsedBudget || 'None'}, radius: ${parsedRadius}m`);
 

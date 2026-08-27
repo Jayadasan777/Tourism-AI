@@ -11,7 +11,7 @@ const FOURSQUARE_API_BASE = 'https://api.foursquare.com/v3';
 /**
  * Search for venues near a location with detailed filters
  */
-const searchVenues = async ({ latitude, longitude, query, categories, radius = 5000, limit = 50 }) => {
+const searchVenues = async ({ latitude, longitude, query, categories, radius = 50000, limit = 100 }) => {
   try {
     const apiKey = process.env.FOURSQUARE_API_KEY;
     if (!apiKey) {
@@ -256,7 +256,7 @@ const getVenuesByCategory = async ({ latitude, longitude, category, budget, limi
       longitude,
       categories: categoryMap[category],
       limit,
-      radius: 10000 // 10km default
+      radius: 100000 // 100km HUGE radius!
     });
 
     if (!venues || venues.length === 0) return [];
@@ -311,12 +311,12 @@ const getPlacesForItinerary = async (destination) => {
 
     console.log(`📍 Coordinates: ${lat}, ${lng}`);
 
-    // Fetch different categories in parallel
+    // Fetch different categories in parallel with HUGE limits
     const [attractions, restaurants, hotels, cafes] = await Promise.all([
-      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'attraction', limit: 30 }),
-      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'restaurant', limit: 25 }),
-      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'hotel', limit: 15 }),
-      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'cafe', limit: 15 })
+      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'attraction', limit: 100 }),
+      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'restaurant', limit: 100 }),
+      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'hotel', limit: 50 }),
+      getVenuesByCategory({ latitude: lat, longitude: lng, category: 'cafe', limit: 50 })
     ]);
 
     const placesData = {
