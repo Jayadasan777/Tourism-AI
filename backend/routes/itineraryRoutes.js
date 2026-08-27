@@ -16,11 +16,18 @@ const { validateRequest, itineraryRequestSchema } = require('../utils/validateSc
 router.post(
   '/generate',
   validateRequest(itineraryRequestSchema),
-  (req, res, next) => {
-    // Try to verify token, but don't fail if not present
+  async (req, res, next) => {
+    // Optional auth: try to verify token, but never fail itinerary generation if token is expired/invalid
     const token = req.headers.authorization?.split('Bearer ')[1];
     if (token) {
-      return verifyToken(req, res, next);
+      try {
+        const { getAuth } = require('../config/firebase');
+        const decodedToken = await getAuth().verifyIdToken(token);
+        req.user = decodedToken;
+      } catch (err) {
+        console.warn('⚠️ Stale or invalid token, proceeding as guest:', err.message);
+        req.user = null;
+      }
     }
     next();
   },
