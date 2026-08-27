@@ -5,27 +5,9 @@
  * Provides real, verified data for all 38 districts
  */
 
-const admin = require('firebase-admin');
+const { getFirestore } = require('../config/firebase');
 
-// Initialize Firebase if not already done
-if (!admin.apps.length) {
-  // Use environment variables in production, file in development
-  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-    // Production: Use environment variable (JSON string)
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
-    });
-  } else {
-    // Development: Use local file
-    const serviceAccount = require('../config/serviceAccountKey.json');
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
-    });
-  }
-}
-
-const db = admin.firestore();
+const db = getFirestore();
 
 /**
  * Get all districts with stats
