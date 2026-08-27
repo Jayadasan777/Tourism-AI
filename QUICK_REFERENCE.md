@@ -3,22 +3,44 @@
 **Print this out or keep it open!**
 
 ## 🚨 CRITICAL RULE
-**⚠️ ALWAYS work on `working` branch, NEVER on `main`!**
+**⚠️ Work on YOUR branch (`feature/YOUR-NAME`), create PRs to `working`!**
+
+**NEVER commit directly to `main` or `working`!**
 
 Check your branch before every commit:
 ```bash
-git branch    # Must show: * working
+git branch    # Must show: * feature/YOUR-NAME
 ```
 
 ---
 
-## 👥 Who Owns What
+## 🌿 Branch Strategy
 
-| Person | Components | Backend |
-|--------|-----------|---------|
-| **A** | `components/itinerary/*`, `pages/PlanTripPage.jsx`, `pages/MyItinerariesPage.jsx` | `data/hidden-destinations.json`, `services/destinationService.js` |
-| **B** | `components/safety/*`, `components/common/*`, `pages/LandingPage.jsx`, `Navbar.jsx`, `Footer.jsx` | None |
-| **C** | `components/auth/*`, `contexts/AuthContext.jsx`, `pages/Login+Register`, `components/map/*` | None |
+```
+main → DO NOT TOUCH
+  ↓
+working → PR target only (don't commit directly)
+  ↓
+feature/YOUR-NAME → WORK HERE! (your personal branch)
+```
+
+**Your workflow:**
+1. Work on `feature/YOUR-NAME`
+2. Push to `feature/YOUR-NAME`
+3. Create PR to `working` (NOT main)
+4. Get review & approval
+5. Merge PR
+6. Sync YOUR branch with working
+
+---
+
+## 👥 Who Owns What (Avoid Conflicts!)
+
+| Person | Branch | Components | Backend |
+|--------|--------|-----------|---------|
+| **A** | `feature/person-a` | `components/itinerary/*`, `pages/PlanTripPage.jsx`, `pages/MyItinerariesPage.jsx` | `data/hidden-destinations.json`, `services/destinationService.js` |
+| **B** | `feature/person-b` | `components/safety/*`, `components/common/*`, `pages/LandingPage.jsx`, `Navbar.jsx`, `Footer.jsx` | None |
+| **C** | `feature/person-c` | `components/auth/*`, `contexts/AuthContext.jsx`, `pages/Login+Register`, `components/map/*` | None |
 
 ---
 
@@ -26,32 +48,46 @@ git branch    # Must show: * working
 
 ### Morning (9:00 AM)
 ```bash
-# 1. Pull latest
+# 1. Sync with working
 git checkout working
 git pull origin working
 
-# 2. Daily standup (15 min)
-# 3. Update WORK_MODULES.md
-# 4. Start coding
+# 2. Merge into YOUR branch
+git checkout feature/YOUR-NAME
+git merge working
+
+# 3. Push YOUR branch
+git push origin feature/YOUR-NAME
+
+# 4. Daily standup (15 min)
+# 5. Update WORK_MODULES.md
+# 6. Start coding on YOUR branch
 ```
 
 ### During Work
 ```bash
+# Verify YOUR branch
+git branch    # Must show: * feature/YOUR-NAME
+
 # Every 2-3 hours
 git add .
 git commit -m "Module X: What you did"
-git push origin working
+git push origin feature/YOUR-NAME    # ← YOUR branch!
 ```
 
 ### Evening (6:00 PM)
 ```bash
-# 1. Final push
+# 1. Final push to YOUR branch
 git add .
 git commit -m "Module X: Complete Day Y"
-git push origin working
+git push origin feature/YOUR-NAME
 
-# 2. Update team in chat
-# 3. Update WORK_MODULES.md
+# 2. If feature complete: Create PR on GitHub
+# Base: working ← Compare: feature/YOUR-NAME
+# Request review from teammates
+
+# 3. Update team in chat
+# 4. Update WORK_MODULES.md
 ```
 
 ---
@@ -91,21 +127,22 @@ http://localhost:5173
 ## 🔀 Git Commands
 
 ```bash
-# Start day
-git checkout working
-git pull origin working
+# Start day - Sync with working
+git checkout working && git pull origin working
+git checkout feature/YOUR-NAME && git merge working
+git push origin feature/YOUR-NAME
 
-# Save work
+# Save work to YOUR branch
 git add .
 git commit -m "Module X: Description"
-git push origin working
+git push origin feature/YOUR-NAME    # ← YOUR branch!
 
-# If conflict
-git pull origin working
-# Fix conflicts in VS Code
+# If conflict during merge
+git merge working
+# Fix conflicts in VS Code (remove <<<, ===, >>> markers)
 git add .
-git commit -m "Merge: Resolve conflicts"
-git push origin working
+git commit -m "Merge working, resolve conflicts"
+git push origin feature/YOUR-NAME
 
 # See your changes
 git status
@@ -113,6 +150,17 @@ git log --oneline -5
 
 # Undo last commit (not pushed)
 git reset --soft HEAD~1
+
+# Create PR (on GitHub)
+# 1. Push to YOUR branch
+# 2. GitHub → "Compare & pull request"
+# 3. Base: working ← Compare: feature/YOUR-NAME
+# 4. Fill title, description, request reviewers
+# 5. Create pull request
+
+# After PR merged
+git checkout working && git pull origin working
+git checkout feature/YOUR-NAME && git merge working
 ```
 
 ---
