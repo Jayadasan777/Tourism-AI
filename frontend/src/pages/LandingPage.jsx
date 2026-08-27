@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAuth } from '../context/AuthContext';
-import Hero3DScene from '../components/Hero3DScene';
+import IndianTourismGlobe3D from '../components/IndianTourismGlobe3D';
 import MotionTourismGallery from '../components/MotionTourismGallery';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -157,7 +157,7 @@ const LandingPage = () => {
               </div>
             </motion.div>
 
-            {/* Right Column: 3D Topographic Terrain-Compass Signature Element */}
+            {/* Right Column: 3D Indian Tourism Globe with Waypoints and Routing Arcs */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -165,21 +165,21 @@ const LandingPage = () => {
               className="lg:col-span-6 relative flex items-center justify-center"
             >
               <div className="w-full relative">
-                {/* 3D Canvas */}
-                <Hero3DScene scrollProgress={scrollProgress} />
+                {/* 3D Indian Tourism Globe Canvas */}
+                <IndianTourismGlobe3D scrollProgress={scrollProgress} />
 
                 {/* Floating Intelligence Overlay Card */}
                 <div className="absolute -bottom-4 -left-2 sm:bottom-4 sm:left-4 card p-4 backdrop-blur-xl border border-accent-violet/30 shadow-glow-violet">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-accent-violet/20 border border-accent-violet/40 flex items-center justify-center text-accent-violet text-xl">
-                      🧭
+                      🇮🇳
                     </div>
                     <div>
                       <div className="text-text-primary font-semibold text-sm flex items-center gap-2">
-                        <span>Topographic Geo-Route</span>
+                        <span>Pan-India Spatial Mesh</span>
                         <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse" />
                       </div>
-                      <div className="text-text-muted text-xs font-mono">Real Indian Waypoints & Elevation</div>
+                      <div className="text-text-muted text-xs font-mono">Live Waypoints, Coastlines & Hills</div>
                     </div>
                   </div>
                 </div>

@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const itineraryRoutes = require('./routes/itineraryRoutes');
 const safetyRoutes = require('./routes/safetyRoutes');
 const recommendationRoutes = require('./routes/recommendationRoutes');
+const databaseRoutes = require('./routes/database');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -52,7 +53,8 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       itinerary: '/api/itinerary',
       safety: '/api/safety',
-      recommendations: '/api/recommendations'
+      recommendations: '/api/recommendations',
+      database: '/api/database'
     }
   });
 });
@@ -71,6 +73,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/itinerary', itineraryRoutes);
 app.use('/api/safety', safetyRoutes);
 app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/database', databaseRoutes);
 
 // 404 handler
 app.use((req, res) => {

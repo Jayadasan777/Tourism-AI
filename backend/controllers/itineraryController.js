@@ -1,4 +1,5 @@
-const { generateItinerary } = require('../services/geminiService');
+// Use enhanced service with Tamil Nadu database integration
+const { generateItinerary } = require('../services/enhancedGeminiService');
 const { getFirestore } = require('../config/firebase');
 const { AppError } = require('../utils/errorHandler');
 
