@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+// Placeholder image (using a public image URL)
+const heroImg = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&h=400&fit=crop';
+
 const features = [
   {
     icon: '🤖',
