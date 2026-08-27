@@ -49,6 +49,8 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await signUp(email, password, name.trim());
+      // Small delay to ensure auth state is set
+      await new Promise(resolve => setTimeout(resolve, 100));
       navigate('/plan', { replace: true });
     } catch (err) {
       setError(getErrorMessage(err.code));
@@ -62,6 +64,8 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await signInWithGoogle();
+      // Small delay to ensure auth state is set
+      await new Promise(resolve => setTimeout(resolve, 100));
       navigate('/plan', { replace: true });
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {

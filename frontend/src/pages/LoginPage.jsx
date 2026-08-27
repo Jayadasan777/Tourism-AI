@@ -41,6 +41,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signIn(email, password);
+      // Small delay to ensure auth state is set
+      await new Promise(resolve => setTimeout(resolve, 100));
       navigate(from, { replace: true });
     } catch (err) {
       setError(getErrorMessage(err.code));
@@ -54,6 +56,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithGoogle();
+      // Small delay to ensure auth state is set
+      await new Promise(resolve => setTimeout(resolve, 100));
       navigate(from, { replace: true });
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
