@@ -25,6 +25,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to Smart Tour AI Backend API',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      itinerary: '/api/itinerary',
+      safety: '/api/safety'
+    }
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({
