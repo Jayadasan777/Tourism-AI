@@ -174,38 +174,130 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
  */
 const getFallbackItinerary = ({ destination, budget, duration, interests, startDate }) => {
   const dailyBudget = Math.floor(budget / duration);
-  const dayTemplates = [
-    {
-      activities: [
-        { time: '09:00 AM', title: `Arrival in ${destination}`, description: 'Check into hotel and acclimatize. Explore nearby areas and local markets.', estimatedCost: 0 },
-        { time: '02:00 PM', title: 'Local Sightseeing', description: 'Visit popular landmarks and attractions nearby. Take photos and enjoy local cuisine.', estimatedCost: Math.floor(dailyBudget * 0.3) },
-        { time: '07:00 PM', title: 'Evening Relaxation', description: 'Enjoy sunset views and try authentic local restaurants.', estimatedCost: Math.floor(dailyBudget * 0.2) },
-      ]
-    },
-    {
-      activities: [
-        { time: '07:00 AM', title: 'Morning Exploration', description: 'Start your day early with a guided tour of the main attractions.', estimatedCost: Math.floor(dailyBudget * 0.25) },
-        { time: '12:00 PM', title: 'Cultural Experience', description: 'Visit museums, temples, or local markets to experience the culture.', estimatedCost: Math.floor(dailyBudget * 0.15) },
-        { time: '04:00 PM', title: 'Adventure Activity', description: `Enjoy an adventure activity suited to ${destination}'s terrain and your interests.`, estimatedCost: Math.floor(dailyBudget * 0.35) },
-        { time: '08:00 PM', title: 'Dinner', description: 'Try local specialties at a recommended restaurant.', estimatedCost: Math.floor(dailyBudget * 0.15) },
-      ]
-    },
-    {
-      activities: [
-        { time: '08:00 AM', title: 'Nature Walk', description: 'Morning nature walk or trek to nearby scenic spots.', estimatedCost: 0 },
-        { time: '01:00 PM', title: 'Lunch Break', description: 'Enjoy a relaxed lunch at a local eatery with views.', estimatedCost: Math.floor(dailyBudget * 0.1) },
-        { time: '03:00 PM', title: 'Departure Preparation', description: 'Visit remaining spots, shop for souvenirs, and prepare for departure.', estimatedCost: Math.floor(dailyBudget * 0.2) },
-      ]
+  const destLower = (destination || '').toLowerCase().trim();
+
+  // Real landmark databases for popular destinations
+  const cityData = {
+    chennai: [
+      {
+        dayNumber: 1,
+        activities: [
+          { time: '07:30 AM', title: 'Marina Beach & Morning Sunrise Walk', description: 'Experience the world\'s second-longest natural urban beach. Enjoy hot filter coffee and ocean breeze.', estimatedCost: 50 },
+          { time: '10:00 AM', title: 'Kapaleeshwarar Temple, Mylapore', description: '7th-century Dravidian architecture dedicated to Lord Shiva. Marvel at the intricate Gopuram towers.', estimatedCost: 100 },
+          { time: '01:00 PM', title: 'Authentic South Indian Lunch at Saravana Bhavan', description: 'Traditional banana-leaf meals with unlimited thali, sambar, and rasam.', estimatedCost: 250 },
+          { time: '03:30 PM', title: 'San Thome Cathedral Basilica & Light House', description: 'Neo-Gothic church built over St. Thomas\'s tomb, followed by panoramic views from Chennai Lighthouse.', estimatedCost: 100 },
+          { time: '06:30 PM', title: 'Sunset at Eliot\'s Beach (Besant Nagar)', description: 'Relaxed beach vibe, Schmidt Memorial, and vibrant street food stalls.', estimatedCost: 150 }
+        ]
+      },
+      {
+        dayNumber: 2,
+        activities: [
+          { time: '09:00 AM', title: 'Fort St. George & Government Museum', description: 'Explore India\'s first British fortress built in 1644 and the Bronze Gallery museum.', estimatedCost: 150 },
+          { time: '12:30 PM', title: 'DakshinaChitra Living Traditions Village', description: 'Heritage museum showcasing traditional architecture and crafts of South India on ECR.', estimatedCost: 250 },
+          { time: '03:30 PM', title: 'Shore Temple & Pancha Rathas, Mahabalipuram', description: 'UNESCO World Heritage rock-cut monuments carved out of monolithic granite.', estimatedCost: 350 },
+          { time: '07:30 PM', title: 'Coastal Seafood Dinner along East Coast Road (ECR)', description: 'Enjoy fresh Bay of Bengal catch with traditional spices at a sea-view restaurant.', estimatedCost: 600 }
+        ]
+      },
+      {
+        dayNumber: 3,
+        activities: [
+          { time: '08:30 AM', title: 'Guindy National Park & Children\'s Park', description: 'One of the few national parks situated inside a major Indian metro city.', estimatedCost: 50 },
+          { time: '11:30 AM', title: 'Shopping at T. Nagar (Ranganathan Street)', description: 'Bustling shopping hub for silk sarees, handicrafts, and local souvenirs.', estimatedCost: 500 },
+          { time: '03:00 PM', title: 'Phoenix Marketcity or Express Avenue', description: 'Premier shopping and entertainment destination with air-conditioned comfort.', estimatedCost: 300 },
+          { time: '06:30 PM', title: 'Valluvar Kottam & Evening Departure', description: 'Monument dedicated to classical Tamil poet Thiruvalluvar shaped like a temple chariot.', estimatedCost: 50 }
+        ]
+      }
+    ],
+    rishikesh: [
+      {
+        dayNumber: 1,
+        activities: [
+          { time: '08:00 AM', title: 'Laxman Jhula & Ram Jhula Suspension Bridges', description: 'Walk across iconic iron suspension bridges spanning the holy Ganges river.', estimatedCost: 0 },
+          { time: '11:00 AM', title: 'Beatles Ashram (Chaurasi Kutia)', description: 'Historic eco-center where The Beatles stayed in 1968 to learn Transcendental Meditation.', estimatedCost: 150 },
+          { time: '02:00 PM', title: 'Cafe Hopping in Tapovan', description: 'Organic smoothie bowls and wood-fired pizzas with river views.', estimatedCost: 400 },
+          { time: '06:00 PM', title: 'Triveni Ghat Evening Ganga Aarti', description: 'Witness spiritual oil lamp ceremony accompanied by chanting and bells.', estimatedCost: 100 }
+        ]
+      },
+      {
+        dayNumber: 2,
+        activities: [
+          { time: '08:00 AM', title: 'White Water River Rafting at Shivpuri', description: '16 km thrill down Grade III & IV Ganges rapids including Roller Coaster & Golf Course.', estimatedCost: 1000 },
+          { time: '01:30 PM', title: 'Lunch at Little Buddha Cafe', description: 'Famous balcony cafe directly overlooking the Ganges river.', estimatedCost: 350 },
+          { time: '04:00 PM', title: 'Neer Garh Waterfall Trek', description: 'Short scenic nature trail up to cascading natural turquoise pools.', estimatedCost: 100 }
+        ]
+      }
+    ],
+    goa: [
+      {
+        dayNumber: 1,
+        activities: [
+          { time: '09:00 AM', title: 'Baga & Calangute Beach Sunbathing', description: 'Famous North Goa beaches with water sports and beach shacks.', estimatedCost: 200 },
+          { time: '01:00 PM', title: 'Goan Fish Curry Thali at Britto\'s', description: 'Authentic kingfish curry with coconut rice and local spices.', estimatedCost: 500 },
+          { time: '04:30 PM', title: 'Fort Aguada & Lighthouse Sunset', description: '17th-century Portuguese fortress commanding panoramic Arabian Sea views.', estimatedCost: 100 },
+          { time: '08:00 PM', title: 'Tito\'s Lane Nightlife & Beach Shacks', description: 'Vibrant music and evening seaside ambiance.', estimatedCost: 800 }
+        ]
+      },
+      {
+        dayNumber: 2,
+        activities: [
+          { time: '09:30 AM', title: 'Basilica of Bom Jesus & Old Goa Churches', description: 'UNESCO World Heritage site holding the mortal remains of St. Francis Xavier.', estimatedCost: 50 },
+          { time: '02:00 PM', title: 'Spice Plantation Tour with Buffet Lunch', description: 'Guided tour of cardamom, vanilla, and pepper farms with traditional Goan lunch.', estimatedCost: 600 },
+          { time: '06:00 PM', title: 'Mandovi River Sunset Sunset Cruise', description: '1-hour boat cruise with live traditional Dekhnni & Fugdi folk dances.', estimatedCost: 500 }
+        ]
+      }
+    ]
+  };
+
+  // Find matching city data or fallback to generic N-day template
+  let selectedDays = null;
+  for (const cityKey in cityData) {
+    if (destLower.includes(cityKey)) {
+      selectedDays = cityData[cityKey];
+      break;
     }
-  ];
+  }
 
   const days = [];
-  for (let i = 1; i <= duration; i++) {
-    const template = dayTemplates[(i - 1) % dayTemplates.length];
-    days.push({
-      dayNumber: i,
-      activities: template.activities
-    });
+  if (selectedDays) {
+    for (let i = 1; i <= duration; i++) {
+      const template = selectedDays[(i - 1) % selectedDays.length];
+      days.push({
+        dayNumber: i,
+        activities: template.activities.map(act => ({
+          ...act,
+          // Scale cost according to budget ratio if needed
+          estimatedCost: Math.min(act.estimatedCost, Math.floor(dailyBudget * 0.4))
+        }))
+      });
+    }
+  } else {
+    // Universal template for any other city
+    const genericTemplates = [
+      {
+        activities: [
+          { time: '09:00 AM', title: `Morning Sightseeing in ${destination}`, description: `Explore primary historic landmarks, heritage monuments, and central square in ${destination}.`, estimatedCost: Math.floor(dailyBudget * 0.2) },
+          { time: '01:00 PM', title: 'Local Cuisine Lunch', description: `Savor famous regional specialties and street food at popular local eateries.`, estimatedCost: Math.floor(dailyBudget * 0.25) },
+          { time: '04:00 PM', title: 'Cultural Center & Local Markets', description: `Browse traditional bazaars, artisan shops, and regional craft centers.`, estimatedCost: Math.floor(dailyBudget * 0.2) },
+          { time: '07:30 PM', title: 'Evening Viewpoint & Dinner', description: `Enjoy sunset views from a prominent viewpoint followed by local dinner.`, estimatedCost: Math.floor(dailyBudget * 0.25) }
+        ]
+      },
+      {
+        activities: [
+          { time: '08:30 AM', title: 'Nature Trail & Garden Visit', description: `Morning visit to top botanical gardens, lakes, or eco-parks in ${destination}.`, estimatedCost: Math.floor(dailyBudget * 0.15) },
+          { time: '12:30 PM', title: 'Museum & Art Gallery Tour', description: `Discover the art, history, and royal heritage of the region.`, estimatedCost: Math.floor(dailyBudget * 0.2) },
+          { time: '04:30 PM', title: 'Adventure / Outdoor Experience', description: `Enjoy regional outdoor activities tailored to ${destination}'s geography.`, estimatedCost: Math.floor(dailyBudget * 0.3) },
+          { time: '08:00 PM', title: 'Dinner & Evening Promenade Walk', description: `Relaxed evening walk along popular city promenades and vibrant night markets.`, estimatedCost: Math.floor(dailyBudget * 0.2) }
+        ]
+      }
+    ];
+
+    for (let i = 1; i <= duration; i++) {
+      const template = genericTemplates[(i - 1) % genericTemplates.length];
+      days.push({
+        dayNumber: i,
+        activities: template.activities
+      });
+    }
   }
 
   const totalEstimatedCost = days.reduce((sum, day) =>
