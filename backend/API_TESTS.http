@@ -1,0 +1,227 @@
+### Smart Tour AI - API Testing File
+### Use with REST Client extension in VS Code or copy to Postman
+
+### Variables
+@baseUrl = http://localhost:5000
+@token = your-firebase-token-here
+
+###############################################
+# HEALTH CHECK
+###############################################
+
+### Health Check
+GET {{baseUrl}}/health
+
+###############################################
+# ITINERARY ENDPOINTS
+###############################################
+
+### Generate Itinerary - Rishikesh (Adventure)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Rishikesh",
+  "budget": 25000,
+  "duration": 4,
+  "interests": ["adventure", "nature", "food"],
+  "startDate": "2026-09-15"
+}
+
+### Generate Itinerary - Ladakh (Nature + Culture)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Ladakh",
+  "budget": 50000,
+  "duration": 7,
+  "interests": ["adventure", "nature", "culture"],
+  "startDate": "2026-09-20"
+}
+
+### Generate Itinerary - Goa (Relaxation + Food)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Goa",
+  "budget": 30000,
+  "duration": 5,
+  "interests": ["relaxation", "food", "nature"],
+  "startDate": "2026-10-01"
+}
+
+### Generate Itinerary - Kerala (Nature + Culture + Spiritual)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Kerala",
+  "budget": 40000,
+  "duration": 6,
+  "interests": ["nature", "culture", "spiritual"],
+  "startDate": "2026-09-25"
+}
+
+### Get User's Itineraries (Requires Auth)
+GET {{baseUrl}}/api/itinerary/my
+Authorization: Bearer {{token}}
+
+### Get Specific Itinerary by ID
+GET {{baseUrl}}/api/itinerary/abc123
+
+### Delete Itinerary (Requires Auth)
+DELETE {{baseUrl}}/api/itinerary/abc123
+Authorization: Bearer {{token}}
+
+###############################################
+# SAFETY ENDPOINTS
+###############################################
+
+### Get Complete Safety Info - Ladakh
+GET {{baseUrl}}/api/safety?destination=Ladakh
+
+### Get Complete Safety Info - Kerala
+GET {{baseUrl}}/api/safety?destination=Kerala
+
+### Get Complete Safety Info - Rishikesh
+GET {{baseUrl}}/api/safety?destination=Rishikesh
+
+### Get Complete Safety Info - Goa
+GET {{baseUrl}}/api/safety?destination=Goa
+
+### Get Only Weather - Manali
+GET {{baseUrl}}/api/safety/weather?destination=Manali
+
+### Get Only Weather - Mumbai
+GET {{baseUrl}}/api/safety/weather?destination=Mumbai
+
+### Get Only Hazard Alerts - Uttarakhand
+GET {{baseUrl}}/api/safety/hazards?destination=Uttarakhand
+
+### Get Only Hazard Alerts - Himachal Pradesh
+GET {{baseUrl}}/api/safety/hazards?destination=Himachal Pradesh
+
+### Get Emergency Contacts - Ladakh
+GET {{baseUrl}}/api/safety/emergency?destination=Ladakh
+
+### Get Emergency Contacts - Kerala
+GET {{baseUrl}}/api/safety/emergency?destination=Kerala
+
+###############################################
+# AUTH ENDPOINTS (Require Firebase Token)
+###############################################
+
+### Verify User Token
+GET {{baseUrl}}/api/auth/verify
+Authorization: Bearer {{token}}
+
+### Get User Profile
+GET {{baseUrl}}/api/auth/profile
+Authorization: Bearer {{token}}
+
+### Update User Profile
+PUT {{baseUrl}}/api/auth/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "displayName": "John Doe",
+  "preferences": {
+    "language": "en",
+    "currency": "INR",
+    "notifications": true
+  }
+}
+
+###############################################
+# VALIDATION TESTS (Should Return Errors)
+###############################################
+
+### Invalid Budget (Too Low)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Goa",
+  "budget": 500,
+  "duration": 3,
+  "interests": ["relaxation"],
+  "startDate": "2026-09-15"
+}
+
+### Invalid Duration (Too Long)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Goa",
+  "budget": 50000,
+  "duration": 50,
+  "interests": ["relaxation"],
+  "startDate": "2026-09-15"
+}
+
+### Invalid Interests (Empty Array)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Goa",
+  "budget": 30000,
+  "duration": 5,
+  "interests": [],
+  "startDate": "2026-09-15"
+}
+
+### Invalid Start Date (In the Past)
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Goa",
+  "budget": 30000,
+  "duration": 5,
+  "interests": ["relaxation"],
+  "startDate": "2020-01-01"
+}
+
+### Missing Required Fields
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Goa"
+}
+
+###############################################
+# EDGE CASES
+###############################################
+
+### Destination Not Found
+GET {{baseUrl}}/api/safety?destination=Narnia
+
+### Very Long Destination Name
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "This is a very very very very very very long destination name that should be validated",
+  "budget": 30000,
+  "duration": 5,
+  "interests": ["relaxation"],
+  "startDate": "2026-09-15"
+}
+
+### Maximum Budget
+POST {{baseUrl}}/api/itinerary/generate
+Content-Type: application/json
+
+{
+  "destination": "Maldives",
+  "budget": 5000000,
+  "duration": 10,
+  "interests": ["relaxation", "nature"],
+  "startDate": "2026-12-20"
+}

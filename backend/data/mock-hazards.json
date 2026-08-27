@@ -1,0 +1,178 @@
+{
+  "_comment": "⚠️ SIMULATED DATA FOR DEMONSTRATION PURPOSES - Based on historical patterns",
+  "_disclaimer": "This hazard data is simulated and should not be used for real travel decisions",
+  "_lastUpdated": "2026-08-27",
+
+  "ladakh": {
+    "region": "Ladakh, Jammu & Kashmir",
+    "alerts": [
+      {
+        "id": "LAD001",
+        "type": "Road Closure",
+        "severity": "high",
+        "title": "Khardung La Pass Temporarily Closed",
+        "message": "Heavy snowfall has led to temporary closure of Khardung La Pass. Expected to reopen in 48-72 hours.",
+        "affectedAreas": ["Khardung La", "Nubra Valley route"],
+        "validFrom": "2026-08-25",
+        "validUntil": "2026-08-30",
+        "season": "winter",
+        "historicalPattern": "Frequent closures Oct-Mar due to snow"
+      }
+    ],
+    "generalRisks": {
+      "altitudeSickness": "High risk above 3500m",
+      "extremeCold": "Temperatures drop to -20°C in winter",
+      "limitedMedical": "Medical facilities scarce in remote areas"
+    }
+  },
+
+  "kerala": {
+    "region": "Kerala",
+    "alerts": [
+      {
+        "id": "KER001",
+        "type": "Monsoon Warning",
+        "severity": "medium",
+        "title": "Heavy Rainfall Expected",
+        "message": "IMD predicts heavy to very heavy rainfall in Kerala. Landslide risk in hilly areas. Avoid trekking and outdoor activities.",
+        "affectedAreas": ["Wayanad", "Idukki", "Munnar", "Thekkady"],
+        "validFrom": "2026-08-26",
+        "validUntil": "2026-09-05",
+        "season": "monsoon",
+        "historicalPattern": "Heavy rains June-September, landslides in Western Ghats"
+      }
+    ],
+    "generalRisks": {
+      "flooding": "Low-lying coastal areas prone to flooding during monsoon",
+      "landslides": "Hilly regions at risk June-September"
+    }
+  },
+
+  "uttarakhand": {
+    "region": "Uttarakhand",
+    "alerts": [
+      {
+        "id": "UTK001",
+        "type": "Landslide Risk",
+        "severity": "high",
+        "title": "Char Dham Yatra Route Disruption",
+        "message": "Recent landslides reported on Rishikesh-Badrinath highway. BRO working on restoration. Check road status before travel.",
+        "affectedAreas": ["Kedarnath route", "Badrinath highway", "Gangotri road"],
+        "validFrom": "2026-08-20",
+        "validUntil": "2026-09-10",
+        "season": "monsoon",
+        "historicalPattern": "Landslides common July-September during monsoon"
+      }
+    ],
+    "generalRisks": {
+      "earthquakeZone": "Seismically active region (Zone IV-V)",
+      "flashFloods": "Risk near rivers during heavy rainfall"
+    }
+  },
+
+  "rajasthan": {
+    "region": "Rajasthan",
+    "alerts": [],
+    "generalRisks": {
+      "extremeHeat": "Summer temperatures exceed 45°C (Apr-Jun)",
+      "dehydration": "Stay hydrated in desert areas",
+      "sandstorms": "Occasional dust storms in desert regions"
+    }
+  },
+
+  "himachal pradesh": {
+    "region": "Himachal Pradesh",
+    "alerts": [
+      {
+        "id": "HP001",
+        "type": "Snow Warning",
+        "severity": "medium",
+        "title": "Snowfall Expected in Upper Regions",
+        "message": "Rohtang Pass and Spiti Valley expecting fresh snowfall. Carry chains for vehicles. Check with local authorities before travel.",
+        "affectedAreas": ["Rohtang Pass", "Spiti Valley", "Kinnaur"],
+        "validFrom": "2026-08-27",
+        "validUntil": "2026-09-02",
+        "season": "pre-winter",
+        "historicalPattern": "Early snow possible in high-altitude areas from September"
+      }
+    ],
+    "generalRisks": {
+      "roadClosures": "Rohtang Pass closed Nov-May",
+      "altitudeSickness": "Risk in Spiti and Kinnaur (>3000m)"
+    }
+  },
+
+  "goa": {
+    "region": "Goa",
+    "alerts": [],
+    "generalRisks": {
+      "strongCurrents": "Beach safety - check for red flags before swimming",
+      "monsoonBeaches": "Many beaches unsafe during monsoon (Jun-Sep)",
+      "waterSafety": "Avoid swimming after consuming alcohol"
+    }
+  },
+
+  "sikkim": {
+    "region": "Sikkim",
+    "alerts": [
+      {
+        "id": "SKM001",
+        "type": "Border Restriction",
+        "severity": "medium",
+        "title": "Protected Area Permit Required",
+        "message": "Travel to North Sikkim (Gurudongmar Lake, Yumthang Valley) requires Protected Area Permit. Apply 15 days in advance.",
+        "affectedAreas": ["North Sikkim", "Nathula Pass", "Tsomgo Lake"],
+        "validFrom": "2026-01-01",
+        "validUntil": "2026-12-31",
+        "season": "all-year",
+        "historicalPattern": "Permit requirement year-round due to proximity to international border"
+      }
+    ],
+    "generalRisks": {
+      "landslides": "Monsoon landslides common on mountain roads",
+      "altitudeSickness": "Risk above 3500m"
+    }
+  },
+
+  "andaman": {
+    "region": "Andaman & Nicobar Islands",
+    "alerts": [],
+    "generalRisks": {
+      "cycloneRisk": "Cyclone season Nov-Jan and Apr-May",
+      "marineLife": "Jellyfish and sea urchins - follow lifeguard instructions",
+      "restrictedAreas": "Tribal reserves strictly off-limits"
+    }
+  },
+
+  "rishikesh": {
+    "region": "Rishikesh, Uttarakhand",
+    "alerts": [
+      {
+        "id": "RSH001",
+        "type": "River Safety",
+        "severity": "medium",
+        "title": "High Water Levels in Ganges",
+        "message": "River rafting operations temporarily suspended due to high water flow after upstream rainfall. Expected to resume in 2-3 days.",
+        "affectedAreas": ["Rafting points", "River beaches", "Laxman Jhula area"],
+        "validFrom": "2026-08-26",
+        "validUntil": "2026-08-30",
+        "season": "monsoon",
+        "historicalPattern": "River levels fluctuate during monsoon; rafting suspended when flow exceeds safety limits"
+      }
+    ],
+    "generalRisks": {
+      "raftingSafety": "Use licensed operators only",
+      "currentStrength": "Strong currents near bridges"
+    }
+  },
+
+  "manali": {
+    "region": "Manali, Himachal Pradesh",
+    "alerts": [],
+    "generalRisks": {
+      "winterRoads": "Rohtang Pass closed Nov-May",
+      "altitudeSickness": "Risk if ascending too quickly to Rohtang/Spiti",
+      "coldWeather": "Carry winter gear Oct-Mar"
+    }
+  }
+}
