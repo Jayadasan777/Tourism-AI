@@ -1,8 +1,17 @@
 import axios from 'axios';
 
+// Get API URL from environment (defaulting to live Render backend in production)
+const defaultApiUrl = import.meta.env.DEV
+  ? 'http://localhost:5000/api'
+  : 'https://smart-tour-ai-backend.onrender.com/api';
+
+const apiUrl = import.meta.env.VITE_API_URL || defaultApiUrl;
+
+console.log('🌐 Using API URL:', apiUrl);
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: apiUrl,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
@@ -36,9 +45,16 @@ api.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // Unauthorized - clear token and redirect to login
+          // Unauthorized - clear stale token
           localStorage.removeItem('authToken');
-          window.location.href = '/login';
+          // Only redirect to login for protected routes, not public endpoints
+          // (e.g. /itinerary/generate works without auth, so don't redirect)
+          if (error.config?.url && (
+            error.config.url.includes('/auth/') ||
+            error.config.url.includes('/itinerary/my')
+          )) {
+            window.location.href = '/login';
+          }
           break;
         case 403:
           console.error('Forbidden:', data.error || 'Access denied');
