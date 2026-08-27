@@ -1,5 +1,5 @@
 const ActivityCard = ({ activity, isLast }) => {
-  const { time, title, description, estimatedCost, placeName, address, googleMapsUrl, category } = activity;
+  const { time = '09:00 AM', title = 'Activity', description = '', estimatedCost = 0, placeName, address, googleMapsUrl, category } = activity || {};
 
   const getCategoryIcon = (cat) => {
     switch (cat) {
@@ -12,13 +12,15 @@ const ActivityCard = ({ activity, isLast }) => {
     }
   };
 
+  const timeDisplay = (time && typeof time === 'string') ? time.split(' ')[0] : '09:00';
+
   return (
     <div className={`flex ${!isLast ? 'pb-3 border-b border-gray-100' : ''}`}>
       {/* Timeline indicator */}
       <div className="flex flex-col items-center mr-4">
         <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
           <span className="text-xs font-semibold text-primary-600">
-            {time.split(' ')[0]}
+            {timeDisplay}
           </span>
         </div>
         {!isLast && (
