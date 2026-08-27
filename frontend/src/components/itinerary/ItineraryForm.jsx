@@ -225,10 +225,10 @@ const ItineraryForm = ({ onSubmit, loading }) => {
               onClick={() => handleInterestToggle(option.value)}
               disabled={loading || (formData.interests.length >= 5 && !formData.interests.includes(option.value))}
               className={`
-                px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all
+                px-4 py-2 rounded-lg border text-sm font-medium transition-all duration-200
                 ${formData.interests.includes(option.value)
-                  ? 'bg-primary-500 text-white border-primary-500'
-                  : 'bg-white text-zinc-400 border-gray-300 hover:border-primary-300'
+                  ? 'bg-white text-black border-white font-semibold shadow-glow-white'
+                  : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:border-zinc-500 hover:text-white'
                 }
                 ${loading || (formData.interests.length >= 5 && !formData.interests.includes(option.value))
                   ? 'opacity-50 cursor-not-allowed'
