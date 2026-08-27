@@ -2,19 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design System Exact CSS Variables */
+/* Nature & Travel Expedition CSS Variables */
 :root {
-  --bg-base: #0A0B10;
-  --accent-violet: #7C5CFF;
-  --accent-marigold: #FF8A3D;
-  --accent-teal: #1DD3B0;
-  --text-primary: #F5F3EF;
-  --text-muted: #9A9AA5;
+  --bg-base: #040B08;          /* Deep Rainforest Night */
+  --accent-emerald: #10B981;   /* Lush Emerald */
+  --accent-mint: #34D399;      /* Vibrant Fern */
+  --accent-amber: #F59E0B;     /* Sunrise Gold */
+  --text-primary: #F2EFE9;     /* Warm Himalayan Stone */
+  --text-muted: #8EA89D;       /* Forest Mist */
+  --accent-violet: #10B981;    /* Emerald mapping */
+  --accent-marigold: #F59E0B;  /* Amber mapping */
+  --accent-teal: #34D399;      /* Mint mapping */
 }
 
 @layer base {
   body {
     background-color: var(--bg-base);
+    background-image: 
+      radial-gradient(at 15% 10%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+      radial-gradient(at 85% 25%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
+      radial-gradient(at 50% 80%, rgba(6, 19, 14, 1) 0px, transparent 100%);
     color: var(--text-primary);
     font-family: 'Inter', 'Satoshi', sans-serif;
     overflow-x: hidden;
@@ -26,100 +33,90 @@
     letter-spacing: -0.03em;
   }
 
-  /* Custom Smooth Scrollbar */
+  /* Custom Forest Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #0A0B10;
+    background: #040B08;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #232536;
+    background: #153629;
     border-radius: 9999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #7C5CFF;
+    background: #10B981;
   }
 
   ::selection {
-    background: rgba(124, 92, 255, 0.3);
-    color: #F5F3EF;
+    background: rgba(16, 185, 129, 0.35);
+    color: #F2EFE9;
   }
 }
 
 @layer components {
-  /* Primary Button - Violet glow */
+  /* Primary Button - Lush Emerald Glow */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200;
-    background: linear-gradient(135deg, #7C5CFF 0%, #6342E8 100%);
-    color: #F5F3EF;
-    box-shadow: 0 0 20px rgba(124, 92, 255, 0.35);
+    @apply relative inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #040B08;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+    font-weight: 700;
   }
   .btn-primary:hover {
     transform: scale(1.02);
-    box-shadow: 0 0 30px rgba(124, 92, 255, 0.55);
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.55);
+    background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
   }
   .btn-primary:active {
     transform: scale(0.98);
   }
 
-  /* Secondary Button - Subtle Marigold / Dark border */
+  /* Secondary Button - Forest Pine Outline with Amber Glow */
   .btn-secondary {
-    @apply relative inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200;
-    background: #12131C;
+    @apply relative inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200;
+    background: #081711;
     color: var(--text-primary);
-    border: 1px solid #232536;
+    border: 1px solid #153629;
   }
   .btn-secondary:hover {
-    border-color: rgba(255, 138, 61, 0.4);
-    background: #1A1B26;
-    box-shadow: 0 0 20px rgba(255, 138, 61, 0.2);
+    border-color: rgba(245, 158, 11, 0.5);
+    background: #0E241B;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
     transform: scale(1.02);
   }
   .btn-secondary:active {
     transform: scale(0.98);
   }
 
-  /* Safety / Live Action Button */
-  .btn-safety {
-    @apply relative inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200;
-    background: #12131C;
-    color: #1DD3B0;
-    border: 1px solid rgba(29, 211, 176, 0.4);
-  }
-  .btn-safety:hover {
-    background: rgba(29, 211, 176, 0.1);
-    box-shadow: 0 0 25px rgba(29, 211, 176, 0.3);
-    transform: scale(1.02);
-  }
-
-  /* Masterpiece Card with lift & glow on hover */
+  /* Nature Glass Card with Organic Forest Border */
   .card {
-    @apply rounded-xl p-6 transition-all duration-200;
-    background: #12131C;
-    border: 1px solid #232536;
+    @apply rounded-2xl p-6 transition-all duration-300;
+    background: rgba(8, 23, 17, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid #153629;
   }
   .card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(124, 92, 255, 0.4);
-    box-shadow: 0 10px 30px -10px rgba(124, 92, 255, 0.2);
+    transform: translateY(-5px);
+    border-color: rgba(16, 185, 129, 0.45);
+    box-shadow: 0 15px 35px -10px rgba(16, 185, 129, 0.2);
   }
 
   .card-safety:hover {
-    border-color: rgba(29, 211, 176, 0.4);
-    box-shadow: 0 10px 30px -10px rgba(29, 211, 176, 0.2);
+    border-color: rgba(52, 211, 153, 0.5);
+    box-shadow: 0 15px 35px -10px rgba(52, 211, 153, 0.25);
   }
 
   .card-discovery:hover {
-    border-color: rgba(255, 138, 61, 0.4);
-    box-shadow: 0 10px 30px -10px rgba(255, 138, 61, 0.2);
+    border-color: rgba(245, 158, 11, 0.5);
+    box-shadow: 0 15px 35px -10px rgba(245, 158, 11, 0.25);
   }
 
-  /* Nav link with drawing underline on hover */
+  /* Nav link with drawing Emerald/Amber underline */
   .nav-link {
     @apply relative text-sm font-medium transition-colors duration-200;
     color: var(--text-muted);
@@ -134,52 +131,59 @@
     left: 0;
     width: 0%;
     height: 2px;
-    background: linear-gradient(90deg, #7C5CFF, #FF8A3D);
+    background: linear-gradient(90deg, #10B981, #F59E0B);
     transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .nav-link:hover::after {
     width: 100%;
   }
 
+  .glass-surface {
+    background: rgba(4, 11, 8, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #153629;
+  }
+
   /* Luxury Input Field */
   .input,
   .input-field {
-    @apply w-full px-4 py-2.5 rounded-lg transition-all duration-200;
-    background: #12131C;
-    border: 1px solid #232536;
-    color: #F5F3EF !important;
+    @apply w-full px-4 py-2.5 rounded-xl transition-all duration-200;
+    background: #081711;
+    border: 1px solid #153629;
+    color: #F2EFE9 !important;
   }
   .input:focus,
   .input-field:focus {
-    border-color: #7C5CFF;
+    border-color: #10B981;
     outline: none;
-    box-shadow: 0 0 15px rgba(124, 92, 255, 0.3);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
   }
 
   /* Interest Pill Selector */
   .pill-selector {
     @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer;
-    background: #12131C;
-    border: 1px solid #232536;
+    background: #081711;
+    border: 1px solid #153629;
     color: var(--text-muted);
   }
   .pill-selector:hover {
-    border-color: rgba(124, 92, 255, 0.5);
+    border-color: rgba(16, 185, 129, 0.6);
     color: var(--text-primary);
   }
   .pill-selector-active {
-    background: #7C5CFF;
-    color: #F5F3EF;
-    border-color: #7C5CFF;
-    box-shadow: 0 0 20px rgba(124, 92, 255, 0.4);
+    background: #10B981;
+    color: #040B08;
+    border-color: #10B981;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.45);
+    font-weight: 700;
   }
 
   /* Translucent Badges */
   .badge-glass {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
-    background: rgba(124, 92, 255, 0.1);
-    border: 1px solid rgba(124, 92, 255, 0.3);
-    color: #F5F3EF;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #F2EFE9;
   }
 }
 

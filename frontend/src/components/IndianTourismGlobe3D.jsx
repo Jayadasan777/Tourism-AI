@@ -33,10 +33,10 @@ export default function IndianTourismGlobe3D({ scrollProgress = 0 }) {
     // 1. Central Holographic Planet Sphere
     const sphereGeo = new THREE.SphereGeometry(2.1, 48, 48);
     const sphereMat = new THREE.MeshStandardMaterial({
-      color: 0x0E101A,
-      roughness: 0.2,
-      metalness: 0.8,
-      emissive: 0x05060A
+      color: 0x06140E,
+      roughness: 0.25,
+      metalness: 0.75,
+      emissive: 0x020805
     });
     const globe = new THREE.Mesh(sphereGeo, sphereMat);
     mainGroup.add(globe);
@@ -44,22 +44,22 @@ export default function IndianTourismGlobe3D({ scrollProgress = 0 }) {
     // 2. Glowing Topographic Wireframe Grid
     const wireGeo = new THREE.WireframeGeometry(new THREE.SphereGeometry(2.12, 28, 28));
     const wireMat = new THREE.LineBasicMaterial({
-      color: 0x7C5CFF,
+      color: 0x10B981,
       transparent: true,
-      opacity: 0.35
+      opacity: 0.4
     });
     const wireframe = new THREE.LineSegments(wireGeo, wireMat);
     globe.add(wireframe);
 
     // 3. Indian Geo-Hotspots (Madurai, Chennai, Varanasi, Munnar, Himalayas, Jaipur, Goa)
     const indianLocations = [
-      { name: 'Madurai & Meenakshi', lat: 9.92, lon: 78.12, color: 0xFF8A3D, label: '🏛️' },
-      { name: 'Chennai Coast', lat: 13.08, lon: 80.27, color: 0x1DD3B0, label: '🌊' },
-      { name: 'Varanasi Ghats', lat: 25.31, lon: 82.97, color: 0xFF8A3D, label: '🪔' },
-      { name: 'Munnar Tea Hills', lat: 10.08, lon: 77.06, color: 0x1DD3B0, label: '🌿' },
-      { name: 'Himalayan Ridge', lat: 32.24, lon: 77.18, color: 0x7C5CFF, label: '🏔️' },
-      { name: 'Jaipur Palaces', lat: 26.91, lon: 75.78, color: 0xFF8A3D, label: '🏰' },
-      { name: 'Goa Beaches', lat: 15.29, lon: 74.12, color: 0x1DD3B0, label: '🌴' }
+      { name: 'Madurai & Meenakshi', lat: 9.92, lon: 78.12, color: 0xF59E0B, label: '🏛️' },
+      { name: 'Chennai Coast', lat: 13.08, lon: 80.27, color: 0x34D399, label: '🌊' },
+      { name: 'Varanasi Ghats', lat: 25.31, lon: 82.97, color: 0xF59E0B, label: '🪔' },
+      { name: 'Munnar Tea Hills', lat: 10.08, lon: 77.06, color: 0x10B981, label: '🌿' },
+      { name: 'Himalayan Ridge', lat: 32.24, lon: 77.18, color: 0x34D399, label: '🏔️' },
+      { name: 'Jaipur Palaces', lat: 26.91, lon: 75.78, color: 0xF59E0B, label: '🏰' },
+      { name: 'Goa Beaches', lat: 15.29, lon: 74.12, color: 0x10B981, label: '🌴' }
     ];
 
     // Helper: Convert Lat/Lon to 3D Sphere Coordinates
@@ -114,32 +114,32 @@ export default function IndianTourismGlobe3D({ scrollProgress = 0 }) {
     };
 
     if (pinPoints.length >= 4) {
-      globe.add(createCurvedRoute(pinPoints[0], pinPoints[1], 0xFF8A3D)); // Madurai -> Chennai
-      globe.add(createCurvedRoute(pinPoints[1], pinPoints[2], 0x7C5CFF)); // Chennai -> Varanasi
-      globe.add(createCurvedRoute(pinPoints[2], pinPoints[4], 0x1DD3B0)); // Varanasi -> Himalayas
-      globe.add(createCurvedRoute(pinPoints[4], pinPoints[5], 0xFF8A3D)); // Himalayas -> Jaipur
-      globe.add(createCurvedRoute(pinPoints[0], pinPoints[3], 0x1DD3B0)); // Madurai -> Munnar
+      globe.add(createCurvedRoute(pinPoints[0], pinPoints[1], 0xF59E0B)); // Madurai -> Chennai
+      globe.add(createCurvedRoute(pinPoints[1], pinPoints[2], 0x10B981)); // Chennai -> Varanasi
+      globe.add(createCurvedRoute(pinPoints[2], pinPoints[4], 0x34D399)); // Varanasi -> Himalayas
+      globe.add(createCurvedRoute(pinPoints[4], pinPoints[5], 0xF59E0B)); // Himalayas -> Jaipur
+      globe.add(createCurvedRoute(pinPoints[0], pinPoints[3], 0x10B981)); // Madurai -> Munnar
     }
 
     // 5. Orbital Compass Navigation Ring
     const orbitRingGeo = new THREE.RingGeometry(2.7, 2.74, 64);
     const orbitRingMat = new THREE.MeshBasicMaterial({
-      color: 0x7C5CFF,
+      color: 0x10B981,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.45
+      opacity: 0.5
     });
     const orbitRing = new THREE.Mesh(orbitRingGeo, orbitRingMat);
     orbitRing.rotation.x = Math.PI / 2.3;
     mainGroup.add(orbitRing);
 
-    // Outer Teal Atmosphere Ring
+    // Outer Amber Sunrise Atmosphere Ring
     const outerRingGeo = new THREE.RingGeometry(3.1, 3.12, 64);
     const outerRingMat = new THREE.MeshBasicMaterial({
-      color: 0x1DD3B0,
+      color: 0xF59E0B,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.25
+      opacity: 0.3
     });
     const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
     outerRing.rotation.x = -Math.PI / 3;
@@ -148,13 +148,13 @@ export default function IndianTourismGlobe3D({ scrollProgress = 0 }) {
     // 6. Ambient Floating Particles
     const particleCount = 18;
     const particleGeo = new THREE.SphereGeometry(0.035, 8, 8);
-    const pMatViolet = new THREE.MeshBasicMaterial({ color: 0x7C5CFF, transparent: true, opacity: 0.7 });
-    const pMatAmber = new THREE.MeshBasicMaterial({ color: 0xFF8A3D, transparent: true, opacity: 0.7 });
-    const pMatTeal = new THREE.MeshBasicMaterial({ color: 0x1DD3B0, transparent: true, opacity: 0.7 });
+    const pMatEmerald = new THREE.MeshBasicMaterial({ color: 0x10B981, transparent: true, opacity: 0.7 });
+    const pMatAmber = new THREE.MeshBasicMaterial({ color: 0xF59E0B, transparent: true, opacity: 0.7 });
+    const pMatMint = new THREE.MeshBasicMaterial({ color: 0x34D399, transparent: true, opacity: 0.7 });
     const particles = new THREE.Group();
 
     for (let i = 0; i < particleCount; i++) {
-      const mat = i % 3 === 0 ? pMatViolet : i % 3 === 1 ? pMatAmber : pMatTeal;
+      const mat = i % 3 === 0 ? pMatEmerald : i % 3 === 1 ? pMatAmber : pMatMint;
       const p = new THREE.Mesh(particleGeo, mat);
       p.position.set(
         (Math.random() - 0.5) * 8.5,
@@ -166,20 +166,20 @@ export default function IndianTourismGlobe3D({ scrollProgress = 0 }) {
     mainGroup.add(particles);
 
     // 7. Lighting System
-    const ambLight = new THREE.AmbientLight(0xffffff, 0.8);
+    const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambLight);
 
-    const dirLightViolet = new THREE.DirectionalLight(0x7C5CFF, 3.0);
-    dirLightViolet.position.set(5, 4, 4);
-    scene.add(dirLightViolet);
+    const dirLightEmerald = new THREE.DirectionalLight(0x10B981, 3.2);
+    dirLightEmerald.position.set(5, 4, 4);
+    scene.add(dirLightEmerald);
 
-    const dirLightAmber = new THREE.DirectionalLight(0xFF8A3D, 2.5);
+    const dirLightAmber = new THREE.DirectionalLight(0xF59E0B, 2.8);
     dirLightAmber.position.set(-5, -3, -2);
     scene.add(dirLightAmber);
 
-    const dirLightTeal = new THREE.DirectionalLight(0x1DD3B0, 1.8);
-    dirLightTeal.position.set(0, -4, 3);
-    scene.add(dirLightTeal);
+    const dirLightMint = new THREE.DirectionalLight(0x34D399, 2.0);
+    dirLightMint.position.set(0, -4, 3);
+    scene.add(dirLightMint);
 
     // 8. Mouse Tilt & Parallax Interactivity
     let mouseX = 0;

@@ -94,28 +94,28 @@ const LandingPage = () => {
               className="lg:col-span-6 space-y-7 text-left"
             >
               {/* SIH / National Intelligence Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-base-card border border-base-border backdrop-blur-md shadow-glow-violet">
-                <span className="text-xs font-semibold uppercase tracking-wider text-accent-violet">
-                  ✦ Smart Tour AI 2026
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-base-card border border-base-border backdrop-blur-md shadow-glow-emerald">
+                <span className="text-xs font-semibold uppercase tracking-wider text-nature-emerald">
+                  🌿 Smart Tour AI 2026
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-marigold" />
-                <span className="text-xs text-text-muted">Govt of India Innovation</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-nature-amber" />
+                <span className="text-xs text-text-muted">Eco-Tourism & Expedition OS</span>
               </div>
 
               {/* Display Headline with Clash/Syne font */}
               <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-primary leading-[1.08]">
-                Intelligent
+                Explore India's
                 <br />
-                <span className="bg-gradient-to-r from-accent-violet via-[#A088FF] to-accent-marigold bg-clip-text text-transparent">
-                  Indian Tourism
+                <span className="bg-gradient-to-r from-nature-emerald via-nature-mint to-nature-amber bg-clip-text text-transparent">
+                  Living Nature
                 </span>
                 <br />
-                & Safety OS.
+                & Heritage Trails.
               </h1>
 
               {/* Subtitle */}
               <p className="text-lg text-text-muted leading-relaxed max-w-lg font-sans">
-                Generates authentic, conflict-free travel itineraries across all 38 districts with live GPS tracking, verified local menus, and active hazard defense.
+                Algorithmic travel planning crafted for nature explorers, rainforest drives, and sacred heritage corridors across all 38 districts with live hazard radar.
               </p>
 
               {/* CTA Action Buttons with Framer Motion hover states */}
@@ -123,9 +123,9 @@ const LandingPage = () => {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Link 
                     to={user ? "/plan" : "/register"} 
-                    className="btn-primary text-base px-8 py-3.5 rounded-xl font-semibold inline-flex items-center gap-2"
+                    className="btn-primary text-base px-8 py-3.5 rounded-xl font-bold inline-flex items-center gap-2"
                   >
-                    <span>Start Planning Free</span>
+                    <span>Start Your Expedition</span>
                     <span className="text-lg">→</span>
                   </Link>
                 </motion.div>
@@ -135,7 +135,7 @@ const LandingPage = () => {
                     to="/nearby" 
                     className="btn-secondary text-base px-7 py-3.5 rounded-xl font-medium inline-flex items-center gap-2"
                   >
-                    <span>🎯 Live Radar</span>
+                    <span>🎯 Live Eco-Radar</span>
                   </Link>
                 </motion.div>
               </div>
@@ -143,15 +143,15 @@ const LandingPage = () => {
               {/* Live Status Readouts */}
               <div className="flex items-center gap-6 pt-4 text-xs font-mono text-text-muted border-t border-base-border/70">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse-teal" />
-                  <span>GPS RADAR: ONLINE</span>
+                  <span className="w-2 h-2 rounded-full bg-nature-mint animate-pulse-emerald" />
+                  <span>GPS RADAR: ACTIVE</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent-violet" />
+                  <span className="w-2 h-2 rounded-full bg-nature-emerald" />
                   <span>GEMINI 2.5 FLASH</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent-marigold" />
+                  <span className="w-2 h-2 rounded-full bg-nature-amber" />
                   <span>100% BUDGET LOCKED</span>
                 </div>
               </div>
