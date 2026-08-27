@@ -12,6 +12,12 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// Validate config
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  console.error('❌ Firebase config is missing! Check environment variables.');
+  console.error('Required: VITE_FIREBASE_API_KEY, VITE_FIREBASE_PROJECT_ID');
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
