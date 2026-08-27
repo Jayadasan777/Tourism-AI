@@ -51,7 +51,8 @@ app.get('/', (req, res) => {
       health: '/health',
       auth: '/api/auth',
       itinerary: '/api/itinerary',
-      safety: '/api/safety'
+      safety: '/api/safety',
+      recommendations: '/api/recommendations'
     }
   });
 });
