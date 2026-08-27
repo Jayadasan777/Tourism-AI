@@ -86,7 +86,35 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
     console.log(`🤖 Generating itinerary for ${destination}...`);
     const startTime = Date.now();
 
-    const result = await model.generateContent(prompt);
+    // List of model names to try in order
+    const candidateModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-pro'];
+    let result = null;
+    let lastModelError = null;
+
+    for (const modelName of candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            temperature: 0.7,
+            topP: 0.95,
+            topK: 40,
+            maxOutputTokens: 2048,
+          }
+        });
+        result = await model.generateContent(prompt);
+        console.log(`✅ Gemini model '${modelName}' succeeded!`);
+        break;
+      } catch (err) {
+        console.warn(`⚠️ Gemini model '${modelName}' failed:`, err.message);
+        lastModelError = err;
+      }
+    }
+
+    if (!result) {
+      throw lastModelError || new Error('All Gemini model attempts failed');
+    }
+
     const response = await result.response;
     const text = response.text();
 
@@ -134,21 +162,10 @@ Return ONLY valid JSON (no markdown, no explanations) in this exact structure:
 
   } catch (error) {
     console.error('Gemini API Error message:', error.message);
-    console.error('Gemini API Error status:', error.status || error.statusCode || 'unknown');
-    if (error.errorDetails) {
-      console.error('Gemini API Error details:', JSON.stringify(error.errorDetails));
-    }
 
-    // Return fallback for demo purposes if API fails
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('⚠️ Using fallback itinerary due to API error');
-      return getFallbackItinerary({ destination, budget, duration, interests, startDate });
-    }
-
-    throw new AppError(
-      error.message || 'Failed to generate itinerary. Please try again.',
-      error.statusCode || 500
-    );
+    // Return fallback itinerary if API fails so user never gets a 500 error
+    console.warn('⚠️ Serving structured fallback itinerary');
+    return getFallbackItinerary({ destination, budget, duration, interests, startDate });
   }
 };
 
