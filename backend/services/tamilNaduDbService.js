@@ -9,10 +9,18 @@ const { getFirestore } = require('../config/firebase');
 
 const db = getFirestore();
 
+// Check if Firebase is available
+const isFirebaseAvailable = () => db !== null;
+
 /**
  * Get all districts with stats
  */
 const getAllDistricts = async () => {
+  if (!isFirebaseAvailable()) {
+    console.log('⚠️  Firebase not available, returning empty districts');
+    return [];
+  }
+
   try {
     const snapshot = await db.collection('districts')
       .where('id', '!=', '_metadata')
@@ -35,6 +43,11 @@ const getAllDistricts = async () => {
  * Get district by ID
  */
 const getDistrict = async (districtId) => {
+  if (!isFirebaseAvailable()) {
+    console.log('⚠️  Firebase not available, returning null for district');
+    return null;
+  }
+
   try {
     const doc = await db.collection('districts').doc(districtId).get();
     if (!doc.exists) return null;
