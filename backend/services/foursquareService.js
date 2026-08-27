@@ -11,7 +11,7 @@ const FOURSQUARE_API_BASE = 'https://api.foursquare.com/v3';
 /**
  * Search for venues near a location with detailed filters
  */
-const searchVenues = async ({ latitude, longitude, query, categories, radius = 50000, limit = 100 }) => {
+const searchVenues = async ({ latitude, longitude, query, categories, radius = 50000000, limit = 100 }) => {
   try {
     const apiKey = process.env.FOURSQUARE_API_KEY;
     if (!apiKey) {
@@ -256,7 +256,7 @@ const getVenuesByCategory = async ({ latitude, longitude, category, budget, limi
       longitude,
       categories: categoryMap[category],
       limit,
-      radius: 100000 // 100km HUGE radius!
+      radius: 50000000 // 50,000 km - GLOBAL radius!
     });
 
     if (!venues || venues.length === 0) return [];
