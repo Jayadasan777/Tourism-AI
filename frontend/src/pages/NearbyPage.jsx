@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import TourismMotionCanvas from '../components/TourismMotionCanvas';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -316,16 +317,29 @@ const NearbyPage = () => {
   };
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 bg-base-bg text-text-primary">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            🎯 Nearby Recommendations
-          </h1>
-          <p className="text-zinc-400">
-            Find the best places near you based on your budget and preferences
-          </p>
+        {/* Luxury Hero Banner with 3D Geographic Radar Canvas */}
+        <div className="relative rounded-2xl bg-base-card border border-base-border p-6 sm:p-8 mb-10 overflow-hidden shadow-glow-teal">
+          <div className="grid md:grid-cols-12 gap-6 items-center relative z-10">
+            <div className="md:col-span-8 space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-teal/15 border border-accent-teal/30 text-xs font-mono text-accent-teal uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse" />
+                <span>Real-Time Spatial Radar</span>
+                <span className="text-text-muted">|</span>
+                <span>OpenStreetMap Live POIs</span>
+              </div>
+              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-primary">
+                Hyperlocal Discovery & Radar
+              </h1>
+              <p className="text-text-muted text-sm sm:text-base leading-relaxed max-w-xl font-sans">
+                Pinpoint genuine dining spots, heritage landmarks, and lodging within meters of your current coordinates with live turn-by-turn navigation.
+              </p>
+            </div>
+            <div className="md:col-span-4 h-36 sm:h-44 relative flex items-center justify-center">
+              <TourismMotionCanvas type="radar" />
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
