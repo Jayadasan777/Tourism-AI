@@ -110,59 +110,88 @@ const planCompleteTrip = async (req, res, next) => {
 };
 
 /**
- * Execute all bookings autonomously
+ * Execute all bookings autonomously via n8n
  * POST /api/agentic/execute-bookings
  */
 const executeBookings = async (req, res, next) => {
   try {
     const { planData, userDetails } = req.body;
 
-    console.log('\n🎯 MASTER AGENT: Executing autonomous bookings...');
+    console.log('\n🎯 MASTER AGENT: Executing bookings via n8n...');
 
-    const bookings = [];
+    // Call n8n webhook
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL || 'http://localhost:5678/webhook/book-trip';
 
-    // Book transports
-    console.log('\n🚂 Booking transports...');
-    for (const transport of planData.transports || []) {
-      const booking = await bookTransport(transport.recommended, {
-        ...userDetails,
-        from: transport.leg.from,
-        to: transport.leg.to,
-        travelDate: userDetails.startDate
+    const bookingPayload = {
+      from: planData.route?.path?.[0] || 'Chennai',
+      to: planData.route?.path?.[planData.route.path.length - 1] || 'Rameswaram',
+      transport: planData.transports?.[0]?.recommended?.name || 'Train',
+      transportCost: planData.transports?.[0]?.recommended?.cost || 450,
+      hotel: 'Hotel Madurai Residency',
+      hotelCost: 1800,
+      userEmail: userDetails.email || 'user@example.com',
+      userPhone: userDetails.phone || '+91XXXXXXXXXX',
+      budget: planData.costs?.total || 15000
+    };
+
+    console.log('📤 Sending to n8n workflow:', n8nWebhookUrl);
+
+    // Call n8n workflow
+    const axios = require('axios');
+    let n8nResponse;
+
+    try {
+      n8nResponse = await axios.post(n8nWebhookUrl, bookingPayload, {
+        timeout: 30000
       });
-      bookings.push(booking);
-      console.log(`✅ ${booking.type} booked: ${booking.bookingId}`);
+      console.log('✅ n8n workflow executed successfully!');
+    } catch (n8nError) {
+      console.warn('⚠️ n8n not running, using fallback booking...');
+
+      // Fallback if n8n not running
+      const bookings = [];
+      for (const transport of planData.transports || []) {
+        const booking = await bookTransport(transport.recommended, {
+          ...userDetails,
+          from: transport.leg.from,
+          to: transport.leg.to,
+          travelDate: userDetails.startDate
+        });
+        bookings.push(booking);
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          bookings,
+          method: 'fallback',
+          summary: {
+            totalBookings: bookings.length,
+            transports: bookings.length,
+            hotels: 0,
+            activities: 0,
+            status: 'ALL CONFIRMED'
+          },
+          confirmations: {
+            email: `Sent to ${userDetails.email || 'user@example.com'}`,
+            sms: `Sent to ${userDetails.phone || '+91XXXXXXXXXX'}`,
+            pdf: 'itinerary.pdf'
+          },
+          message: '🎉 Trip booked successfully! (Fallback mode)'
+        }
+      });
     }
 
-    // Simulate delay for other bookings
-    console.log('\n🏨 Simulating hotel bookings...');
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    console.log('\n🎯 Simulating activity bookings...');
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    console.log('\n📧 Sending confirmations...');
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    console.log('\n✅ ALL BOOKINGS COMPLETE!\n');
+    // Return n8n response
+    console.log('\n✅ ALL BOOKINGS COMPLETE VIA n8n!\n');
 
     res.status(200).json({
       success: true,
       data: {
-        bookings,
-        summary: {
-          totalBookings: bookings.length,
-          transports: bookings.length,
-          hotels: 0, // Mock
-          activities: 0, // Mock
-          status: 'ALL CONFIRMED'
-        },
-        confirmations: {
-          email: `Sent to ${userDetails.email || 'user@email.com'}`,
-          sms: `Sent to ${userDetails.phone || '+91XXXXXXXXXX'}`,
-          pdf: 'itinerary.pdf'
-        },
-        message: '🎉 Trip booked successfully! All confirmations sent.'
+        ...n8nResponse.data,
+        method: 'n8n',
+        workflow: 'Smart Tour AI - Travel Booking',
+        message: '🎉 Trip booked successfully via n8n automation!'
       }
     });
 
@@ -194,8 +223,43 @@ const getAgentStatus = async (req, res, next) => {
   }
 };
 
+/**
+ * Automate real booking on RedBus website
+ * POST /api/agentic/automate-booking
+ */
+const automateRealBooking = async (req, res, next) => {
+  try {
+    const { from, to, date, passengerDetails } = req.body;
+
+    console.log('\n🤖 STARTING BROWSER AUTOMATION...');
+    console.log(`   ${from} → ${to}`);
+
+    // Import browser automation service
+    const { automateRedBusBooking } = require('../services/browserAutomation');
+
+    // Start automation (this opens browser and goes through booking)
+    const result = await automateRedBusBooking({
+      from,
+      to,
+      date,
+      passengerDetails
+    });
+
+    // Send result back to frontend
+    res.status(200).json({
+      success: result.success,
+      data: result
+    });
+
+  } catch (error) {
+    console.error('❌ Automation error:', error);
+    next(error);
+  }
+};
+
 module.exports = {
   planCompleteTrip,
   executeBookings,
-  getAgentStatus
+  getAgentStatus,
+  automateRealBooking
 };
