@@ -1,9 +1,27 @@
 # 🚀 Smart Tour AI - Team Workflow (3-Person Parallel Development)
 
-**Branch:** `working`
+**Branch:** `working` ⚠️ **WORK ONLY ON THIS BRANCH!**
 **Team:** Black Forge (3 developers)
 **Timeline:** 2 weeks (10 working days)
 **Strategy:** Parallel development with minimal blocking
+
+## 🚨 CRITICAL: Branch Rules
+
+**✅ ALWAYS:**
+- Work on `working` branch
+- Commit to `working` branch
+- Push to `working` branch: `git push origin working`
+- Pull from `working` branch: `git pull origin working`
+
+**❌ NEVER:**
+- Work on `main` branch
+- Commit to `main` branch
+- Push to `main` branch
+
+**Before every session, verify your branch:**
+```bash
+git branch    # Must show: * working
+```
 
 ---
 

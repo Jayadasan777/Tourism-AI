@@ -2,6 +2,14 @@
 
 **Print this out or keep it open!**
 
+## 🚨 CRITICAL RULE
+**⚠️ ALWAYS work on `working` branch, NEVER on `main`!**
+
+Check your branch before every commit:
+```bash
+git branch    # Must show: * working
+```
+
 ---
 
 ## 👥 Who Owns What
