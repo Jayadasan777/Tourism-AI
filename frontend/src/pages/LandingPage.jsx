@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAuth } from '../context/AuthContext';
 import Hero3DScene from '../components/Hero3DScene';
+import MotionTourismGallery from '../components/MotionTourismGallery';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -258,6 +259,9 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Dynamic Nature & Heritage Visual Showcase */}
+      <MotionTourismGallery />
 
       {/* Live Stats & Metrics Grid */}
       <section ref={statsRef} className="py-20 px-4 bg-base-card/40 border-t border-base-border">
