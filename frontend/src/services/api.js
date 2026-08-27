@@ -36,9 +36,16 @@ api.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // Unauthorized - clear token and redirect to login
+          // Unauthorized - clear stale token
           localStorage.removeItem('authToken');
-          window.location.href = '/login';
+          // Only redirect to login for protected routes, not public endpoints
+          // (e.g. /itinerary/generate works without auth, so don't redirect)
+          if (error.config?.url && (
+            error.config.url.includes('/auth/') ||
+            error.config.url.includes('/itinerary/my')
+          )) {
+            window.location.href = '/login';
+          }
           break;
         case 403:
           console.error('Forbidden:', data.error || 'Access denied');

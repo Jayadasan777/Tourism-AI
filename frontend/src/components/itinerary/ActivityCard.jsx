@@ -20,7 +20,7 @@ const ActivityCard = ({ activity, isLast }) => {
         <div className="flex items-start justify-between mb-1">
           <h5 className="font-semibold text-gray-900">{title}</h5>
           <span className="text-sm font-medium text-secondary-600 ml-4 flex-shrink-0">
-            ₹{estimatedCost.toLocaleString('en-IN')}
+            ₹{(estimatedCost ?? 0).toLocaleString('en-IN')}
           </span>
         </div>
 

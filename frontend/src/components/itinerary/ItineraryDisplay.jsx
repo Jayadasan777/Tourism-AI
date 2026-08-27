@@ -1,7 +1,14 @@
 import DayCard from './DayCard';
 
 const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
-  const { destination, days, totalEstimatedCost, budget, duration } = itinerary;
+  // API returns data as { days, metadata: { destination, budget, ... } }
+  // Support both flat (authenticated/saved) and nested (anonymous) structures
+  const days = itinerary.days;
+  const destination = itinerary.destination || itinerary.metadata?.destination;
+  const budget = itinerary.budget || itinerary.metadata?.budget;
+  const duration = itinerary.duration || itinerary.metadata?.duration;
+  const totalEstimatedCost = itinerary.totalEstimatedCost || itinerary.metadata?.totalEstimatedCost || 0;
+  const startDate = itinerary.startDate || itinerary.metadata?.startDate;
 
   const budgetComparison = totalEstimatedCost - budget;
   const isOverBudget = budgetComparison > 0;
@@ -106,7 +113,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
 
         {days && days.length > 0 ? (
           days.map((day) => (
-            <DayCard key={day.dayNumber} day={day} startDate={itinerary.startDate} />
+            <DayCard key={day.dayNumber} day={day} startDate={startDate} />
           ))
         ) : (
           <div className="card">

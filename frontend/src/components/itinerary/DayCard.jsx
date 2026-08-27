@@ -1,7 +1,9 @@
 import ActivityCard from './ActivityCard';
 
 const DayCard = ({ day, startDate }) => {
-  const { dayNumber, activities } = day;
+  const { dayNumber } = day;
+  // Guard: activities might be a string or null in fallback mode
+  const activities = Array.isArray(day.activities) ? day.activities : [];
 
   // Calculate the actual date for this day
   const getDateForDay = () => {

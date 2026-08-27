@@ -3,16 +3,20 @@ import ItineraryForm from '../components/itinerary/ItineraryForm';
 import GeneratingLoader from '../components/itinerary/GeneratingLoader';
 import ItineraryDisplay from '../components/itinerary/ItineraryDisplay';
 import { generateItinerary } from '../services/itineraryService';
+import { useAuth } from '../context/AuthContext';
 
 const PlanTripPage = () => {
   const [loading, setLoading] = useState(false);
   const [itinerary, setItinerary] = useState(null);
   const [error, setError] = useState(null);
   const [lastRequestData, setLastRequestData] = useState(null);
+  const [savedMessage, setSavedMessage] = useState(null);
+  const { user } = useAuth();
 
   const handleGenerateItinerary = async (formData) => {
     setLoading(true);
     setError(null);
+    setSavedMessage(null);
     setLastRequestData(formData);
 
     try {
@@ -20,27 +24,27 @@ const PlanTripPage = () => {
 
       if (response.success) {
         setItinerary(response.data);
+        // If user is authenticated, backend auto-saves; show confirmation
+        if (user && response.data?.itineraryId) {
+          setSavedMessage(`✅ Itinerary saved! ID: ${response.data.itineraryId}`);
+        }
       } else {
         setError(response.error || 'Failed to generate itinerary');
       }
     } catch (err) {
       console.error('Error generating itinerary:', err);
 
-      // Handle specific error cases
-      if (err.response) {
-        // Server responded with error
-        if (err.response.status === 400) {
-          setError(err.response.data.error || 'Invalid input. Please check your details.');
-        } else if (err.response.status === 500) {
-          setError('Server error. Please try again in a moment.');
-        } else {
-          setError('Something went wrong. Please try again.');
-        }
-      } else if (err.request) {
-        // Request made but no response
-        setError('Cannot reach server. Please check your internet connection.');
+      // api.js interceptor transforms errors to { status, message, errors } format
+      if (err.isNetworkError) {
+        setError('Cannot reach server. Please check your internet connection and that the backend is running on port 5000.');
+      } else if (err.status === 400) {
+        const errorMessages = err.errors?.length > 0 ? err.errors.join(', ') : err.message;
+        setError(`Invalid input: ${errorMessages}`);
+      } else if (err.status === 500) {
+        setError('Server error. Please try again in a moment.');
+      } else if (err.message) {
+        setError(err.message);
       } else {
-        // Something else happened
         setError('An unexpected error occurred. Please try again.');
       }
     } finally {
@@ -55,14 +59,22 @@ const PlanTripPage = () => {
   };
 
   const handleSave = () => {
-    // TODO: Implement save functionality in Module 2 (requires auth)
-    alert('Save functionality will be available after authentication is implemented.');
+    if (!user) {
+      setError('Please log in to save itineraries permanently.');
+      return;
+    }
+    if (savedMessage) {
+      alert(savedMessage);
+    } else {
+      alert('Your itinerary is automatically saved to your account when you are logged in.');
+    }
   };
 
   const handleStartOver = () => {
     setItinerary(null);
     setError(null);
     setLastRequestData(null);
+    setSavedMessage(null);
   };
 
   return (
