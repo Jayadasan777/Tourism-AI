@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import TourismMotionCanvas from '../components/TourismMotionCanvas';
 
@@ -16,57 +16,6 @@ const NearbyPage = () => {
   const [error, setError] = useState(null);
   const [currentAddress, setCurrentAddress] = useState('');
 
-  const getMyLocation = () => {
-    setGettingLocation(true);
-    setError(null);
-
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser');
-      setGettingLocation(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        const accuracy = position.coords.accuracy;
-
-        setLocation({
-          latitude: lat,
-          longitude: lng,
-          accuracy: accuracy ? Math.round(accuracy) : null
-        });
-
-        // Live Reverse Geocoding via OpenStreetMap Nominatim API for exact address confirmation
-        try {
-          const geoRes = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
-            headers: { 'Accept-Language': 'en' },
-            timeout: 5000
-          });
-          if (geoRes.data && geoRes.data.display_name) {
-            setCurrentAddress(geoRes.data.display_name);
-          }
-        } catch (geoErr) {
-          console.warn('Reverse geocoding note:', geoErr.message);
-        }
-
-        setGettingLocation(false);
-        console.log('📍 High-Accuracy Location obtained:', lat, lng, `(±${accuracy}m)`);
-      },
-      (error) => {
-        setError('Unable to get your location. Please ensure location permission is allowed in your browser.');
-        setGettingLocation(false);
-        console.error('Geolocation error:', error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 12000,
-        maximumAge: 0
-      }
-    );
-  };
-
   // Calculate real haversine distance between two coordinates in meters
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371e3; // Earth radius in meters
@@ -83,41 +32,38 @@ const NearbyPage = () => {
     return Math.round(R * c);
   };
 
-  const searchNearby = async () => {
-    if (!location) {
-      setError('Please get your location first');
-      return;
-    }
-
+  const performSearch = useCallback(async (lat, lng, searchRadiusKm, currentCategory, currentBudget, currentSortBy) => {
     setLoading(true);
     setError(null);
 
-    try {
-      const lat = location.latitude;
-      const lng = location.longitude;
-      const searchRadiusMeters = radius * 1000;
+    const radKm = searchRadiusKm || radius;
+    const cat = currentCategory || category;
+    const bud = currentBudget !== undefined ? currentBudget : budget;
+    const sort = currentSortBy || sortBy;
+    const searchRadiusMeters = radKm * 1000;
 
-      // Call backend API with Foursquare integration (REAL data!)
-      console.log(`🔍 Searching radius: ${radius}km (${searchRadiusMeters}m)`);
+    try {
+      console.log(`🔍 Searching radius: ${radKm}km (${searchRadiusMeters}m) at [${lat}, ${lng}]`);
 
       const response = await axios.get(`${API_URL}/recommendations/nearby`, {
         params: {
           latitude: lat,
           longitude: lng,
           radius: searchRadiusMeters,
-          budget: budget || undefined,
-          category: category,
-          sortBy: sortBy
+          budget: bud || undefined,
+          category: cat,
+          sortBy: sort
         },
         timeout: 15000
       });
 
+      let livePlaces = [];
+
       // Handle backend response
       if (response.data?.success && response.data.places && response.data.places.length > 0) {
-        console.log(`✅ Found ${response.data.places.length} REAL places from Foursquare!`);
+        console.log(`✅ Found ${response.data.places.length} REAL places!`);
 
-        // Format Foursquare data to match UI expectations
-        const livePlaces = response.data.places.map(place => ({
+        livePlaces = response.data.places.map(place => ({
           id: place.id,
           name: place.name,
           category: place.venueType || place.category,
@@ -139,19 +85,9 @@ const NearbyPage = () => {
           photos: place.photos || [],
           verified: place.verified || false
         }));
-
-        setRecommendations({
-          location: { lat, lng },
-          radius: searchRadiusMeters,
-          places: livePlaces,
-          total: livePlaces.length
-        });
-        setLoading(false);
-        return;
       }
 
-      // Fallback to mock data if API fails
-      let livePlaces = [];
+      // Fallback to rich regional data if API returns empty
       if (livePlaces.length === 0) {
         const isSRMRegion = Math.abs(lat - 12.82) < 0.4 && Math.abs(lng - 80.04) < 0.4;
         const isChennai = Math.abs(lat - 13.0) < 0.8 && Math.abs(lng - 80.2) < 0.8;
@@ -245,29 +181,29 @@ const NearbyPage = () => {
       }
 
       let filtered = livePlaces;
-      if (category && category !== 'all') {
-        filtered = filtered.filter(p => p.category === category || (category === 'hotel' && p.category === 'lodging'));
+      if (cat && cat !== 'all') {
+        filtered = filtered.filter(p => p.category === cat || (cat === 'hotel' && p.category === 'lodging') || (cat === 'attraction' && p.category === 'tourist_attraction'));
       }
-      if (budget) {
-        const numBudget = parseInt(budget);
+      if (bud) {
+        const numBudget = parseInt(bud);
         filtered = filtered.filter(p => !p.estimated_cost || p.estimated_cost <= numBudget);
       }
-      if (sortBy === 'rating') {
+      if (sort === 'rating') {
         filtered.sort((a, b) => b.rating - a.rating);
+      } else if (sort === 'budget') {
+        filtered.sort((a, b) => (a.estimated_cost || 0) - (b.estimated_cost || 0));
+      } else {
+        filtered.sort((a, b) => (a.distance || 0) - (b.distance || 0));
       }
 
       setRecommendations({
         success: true,
+        count: filtered.length,
+        radius: `${radKm} km`,
+        budget: bud || 'No budget specified',
         total: filtered.length,
         places: filtered,
-        metadata: {
-          latitude: lat,
-          longitude: lng,
-          radius: radius * 1000,
-          category,
-          budget: budget ? parseInt(budget) : null,
-          source: 'live_osm_and_geo_engine'
-        }
+        location: { lat, lng }
       });
     } catch (err) {
       console.error('Search error:', err);
@@ -275,6 +211,71 @@ const NearbyPage = () => {
     } finally {
       setLoading(false);
     }
+  }, [radius, category, budget, sortBy]);
+
+  const getMyLocation = useCallback(() => {
+    setGettingLocation(true);
+    setError(null);
+
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by your browser');
+      setGettingLocation(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
+
+        setLocation({
+          latitude: lat,
+          longitude: lng,
+          accuracy: accuracy ? Math.round(accuracy) : null
+        });
+
+        // Live Reverse Geocoding via OpenStreetMap Nominatim API for exact address confirmation
+        try {
+          const geoRes = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
+            headers: { 'Accept-Language': 'en' },
+            timeout: 5000
+          });
+          if (geoRes.data && geoRes.data.display_name) {
+            setCurrentAddress(geoRes.data.display_name);
+          }
+        } catch (geoErr) {
+          console.warn('Reverse geocoding note:', geoErr.message);
+        }
+
+        setGettingLocation(false);
+        console.log('📍 High-Accuracy Location obtained:', lat, lng, `(±${accuracy}m)`);
+        // Immediately trigger nearby search upon GPS lock
+        performSearch(lat, lng, radius, category, budget, sortBy);
+      },
+      (error) => {
+        setError('Unable to get your location. Please ensure location permission is allowed in your browser.');
+        setGettingLocation(false);
+        console.error('Geolocation error:', error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 12000,
+        maximumAge: 0
+      }
+    );
+  }, [radius, category, budget, sortBy, performSearch]);
+
+  useEffect(() => {
+    getMyLocation();
+  }, []);
+
+  const searchNearby = () => {
+    if (!location) {
+      setError('Please get your location first');
+      return;
+    }
+    performSearch(location.latitude, location.longitude, radius, category, budget, sortBy);
   };
 
   const getCategoryIcon = (cat) => {
@@ -449,6 +450,25 @@ const NearbyPage = () => {
                 <p className="text-zinc-400 mb-4">
                   Click "Get My Location" to find the best places near you
                 </p>
+              </div>
+            )}
+
+            {location && !recommendations && !loading && !error && (
+              <div className="card text-center py-12">
+                <span className="text-6xl mb-4 block animate-bounce">📡</span>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  GPS Locked & Radar Ready
+                </h3>
+                <p className="text-zinc-400 mb-6 max-w-md mx-auto">
+                  Click the button below to scan for top-rated dining spots, heritage attractions, and hotels around your live coordinates.
+                </p>
+                <button
+                  onClick={searchNearby}
+                  className="btn-primary inline-flex items-center gap-2 px-6 py-2.5 text-sm font-bold shadow-glow-white"
+                >
+                  <span>🔍</span>
+                  <span>Scan Nearby Places</span>
+                </button>
               </div>
             )}
 
