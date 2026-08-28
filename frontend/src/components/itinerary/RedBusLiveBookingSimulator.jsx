@@ -102,15 +102,15 @@ export default function RedBusLiveBookingSimulator({ isOpen, onClose, destinatio
   const ss = (n) => n < step ? "done" : n === step ? "active" : "pending";
 
   const handleOpenAbhiBus = () => {
-    // Build tomorrow's date in DD-MM-YYYY format (AbhiBus URL format)
+    // Correct AbhiBus URL format: /bus_search/{from}/{fromId}/{to}/{toId}/{YYYY-MM-DD}/O
+    // Chennai city ID = 6, Kanyakumari city ID = 1667
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const dd = String(tomorrow.getDate()).padStart(2, '0');
-    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
     const yyyy = tomorrow.getFullYear();
-    const dateStr = `${dd}-${mm}-${yyyy}`;
-    // Correct AbhiBus URL: /bus_tickets/from-to/DD-MM-YYYY/ONEWAY
-    const url = `https://www.abhibus.com/bus_tickets/chennai-to-kanyakumari/${dateStr}/ONEWAY`;
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    const dateStr = `${yyyy}-${mm}-${dd}`;
+    const url = `https://www.abhibus.com/bus_search/Chennai/6/Kanyakumari/1667/${dateStr}/O`;
     window.open(url, '_blank');
   };
 
