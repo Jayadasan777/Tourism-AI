@@ -82,42 +82,33 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
 
     // STEP 3: Click "View Seats" on the Top / Selected Operator
     console.log('💺 Step 3: Triggering "View Seats" on chosen bus operator...');
-    const viewSeatsClicked = await page.evaluate(() => {
-      // Look for the red "View Seats" button seen in user screenshots
-      const allButtons = Array.from(document.querySelectorAll('button, div, a'));
-      const viewSeatBtn = allButtons.find(b => 
-        (b.innerText && b.innerText.trim().toLowerCase().includes('view seat')) ||
-        (b.className && typeof b.className === 'string' && b.className.toLowerCase().includes('view-seat'))
-      );
-
+    await page.evaluate(() => {
+      // Find the red "View seats" button directly
+      const buttons = Array.from(document.querySelectorAll('div, button, a, span'));
+      const viewSeatBtn = buttons.find(el => el.innerText && el.innerText.trim().toLowerCase() === 'view seats');
       if (viewSeatBtn) {
+        viewSeatBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
         viewSeatBtn.click();
-        return true;
       }
-      return false;
     });
-    console.log(`👉 View Seats Click Status: ${viewSeatsClicked}`);
 
-    await delay(5000);
+    await delay(6000);
 
     // STEP 4: Select Sleeper Berth on Layout
-    console.log('🎫 Step 4: Selecting available sleeper berth (Upper / Lower deck)...');
-    const seatSelected = await page.evaluate(() => {
-      // Find available seat elements from layout (green bordered rectangles / svgs / canvas)
-      const seatElements = Array.from(document.querySelectorAll('[class*="seat"], [class*="Seat"], [class*="sleeper"], canvas, svg'));
-      
-      // Click first available seat
-      for (const el of seatElements) {
-        if (el.offsetWidth > 0 && el.offsetHeight > 0) {
-          el.click();
-          return true;
+    console.log('🎫 Step 4: Selecting available sleeper berth (Seat U16 / Window)...');
+    await page.evaluate(() => {
+      // Find green available seat borders or canvases
+      const seats = Array.from(document.querySelectorAll('canvas, svg, div[class*="seat"], span[class*="seat"]'));
+      for (const s of seats) {
+        const rect = s.getBoundingClientRect();
+        if (rect.width > 15 && rect.height > 15) {
+          s.click();
+          break;
         }
       }
-      return false;
     });
-    console.log(`👉 Seat Click Status: ${seatSelected}`);
 
-    await delay(3000);
+    await delay(4000);
 
     // STEP 5: Click "Select boarding & dropping points" button
     console.log('📍 Step 5: Clicking "Select boarding & dropping points"...');
@@ -126,22 +117,24 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
       const boardBtn = allButtons.find(b => 
         b.innerText && b.innerText.trim().toLowerCase().includes('select boarding')
       );
-      if (boardBtn) boardBtn.click();
+      if (boardBtn) {
+        boardBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        boardBtn.click();
+      }
     });
 
-    await delay(3500);
+    await delay(4000);
 
     // STEP 6: Select Boarding Point Radio & Dropping Point Radio
-    console.log('🏢 Step 6: Confirming Boarding (Koyambedu/Porur) & Dropping Points...');
+    console.log('🏢 Step 6: Confirming Boarding (Koyambedu SBM Office) & Dropping Points...');
     await page.evaluate(() => {
-      // Click first boarding point radio button
-      const radios = Array.from(document.querySelectorAll('input[type="radio"], [class*="radio"], span[class*="radio"]'));
+      const radios = Array.from(document.querySelectorAll('input[type="radio"], [class*="radio"], span[class*="radio"], div[class*="radio"]'));
       if (radios.length > 0) {
         radios[0].click();
       }
     });
 
-    await delay(2000);
+    await delay(3000);
 
     // STEP 7: Click "Fill passenger details" button
     console.log('✍️ Step 7: Clicking "Fill passenger details"...');
@@ -150,60 +143,72 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
       const fillDetailsBtn = allButtons.find(b => 
         b.innerText && b.innerText.trim().toLowerCase().includes('fill passenger details')
       );
-      if (fillDetailsBtn) fillDetailsBtn.click();
+      if (fillDetailsBtn) {
+        fillDetailsBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        fillDetailsBtn.click();
+      }
     });
 
-    await delay(4000);
+    await delay(5000);
 
-    // STEP 8: Fill Contact Info & Passenger Form
-    console.log('📝 Step 8: Autofilling Passenger & Contact Form:');
+    // STEP 8: Fill Contact Info & Passenger Form visibly
+    console.log('📝 Step 8: Autofilling Passenger & Contact Form visibly:');
     console.log(`   - Mobile: ${passenger.phone}`);
     console.log(`   - Email: ${passenger.email}`);
     console.log(`   - Name: ${passenger.name}`);
     console.log(`   - Age: ${passenger.age}`);
     console.log(`   - Gender: ${passenger.gender}`);
 
-    await page.evaluate((p) => {
-      const typeInto = (selectors, val) => {
-        for (const s of selectors) {
-          const el = document.querySelector(s);
-          if (el) {
-            el.value = val;
-            el.dispatchEvent(new Event('input', { bubbles: true }));
-            el.dispatchEvent(new Event('change', { bubbles: true }));
-            el.dispatchEvent(new Event('blur', { bubbles: true }));
-            return true;
-          }
-        }
-        return false;
-      };
+    // Click and visibly type mobile
+    try {
+      const phoneInput = await page.$('input[placeholder*="Phone"], input[placeholder*="Mobile"], input[type="tel"], input[name="mobile"]');
+      if (phoneInput) {
+        await phoneInput.click();
+        await page.keyboard.type(passenger.phone, { delay: 60 });
+      }
+    } catch (e) {}
 
-      // 1. Contact Phone
-      typeInto(['input[placeholder*="Phone"]', 'input[placeholder*="Mobile"]', 'input[type="tel"]', 'input[name="mobile"]', 'input[name="phone"]'], p.phone);
+    // Click and visibly type email
+    try {
+      const emailInput = await page.$('input[placeholder*="Email"], input[type="email"], input[name="email"]');
+      if (emailInput) {
+        await emailInput.click();
+        await page.keyboard.type(passenger.email, { delay: 60 });
+      }
+    } catch (e) {}
 
-      // 2. Contact Email
-      typeInto(['input[placeholder*="Email"]', 'input[type="email"]', 'input[name="email"]'], p.email);
+    // Click and visibly type name
+    try {
+      const nameInput = await page.$('input[placeholder*="Name"], input[name="passengerName"], input[name="name"]');
+      if (nameInput) {
+        await nameInput.click();
+        await page.keyboard.type(passenger.name, { delay: 60 });
+      }
+    } catch (e) {}
 
-      // 3. Passenger 1 Name (Name *)
-      typeInto(['input[placeholder*="Name"]', 'input[name="passengerName"]', 'input[name="name"]', 'input[class*="name"]'], p.name);
+    // Click and visibly type age
+    try {
+      const ageInput = await page.$('input[placeholder*="Age"], input[name="passengerAge"], input[name="age"]');
+      if (ageInput) {
+        await ageInput.click();
+        await page.keyboard.type(passenger.age, { delay: 60 });
+      }
+    } catch (e) {}
 
-      // 4. Passenger 1 Age (Age *)
-      typeInto(['input[placeholder*="Age"]', 'input[name="passengerAge"]', 'input[name="age"]', 'input[class*="age"]'], p.age);
-
-      // 5. Gender Radio (Male)
+    // Select Male and decline insurance
+    await page.evaluate(() => {
       const maleRadios = Array.from(document.querySelectorAll('input[type="radio"], label, span, div'));
       const maleOption = maleRadios.find(r => r.innerText && r.innerText.trim().toLowerCase() === 'male');
       if (maleOption) maleOption.click();
 
-      // 6. Travel Insurance selection ("Don't add Travel Insurance")
       const insuranceOptions = Array.from(document.querySelectorAll('label, div, span, input[type="radio"]'));
       const noInsuranceBtn = insuranceOptions.find(el => 
         el.innerText && el.innerText.toLowerCase().includes("don't add travel insurance")
       );
       if (noInsuranceBtn) noInsuranceBtn.click();
-    }, passenger);
+    });
 
-    await delay(3000);
+    await delay(4000);
 
     // STEP 9: Advance to Payment Gateway via "Continue booking" button
     console.log('💳 Step 9: Clicking "Continue booking" to advance straight to live Payment Gateway / Checkout...');
@@ -216,7 +221,10 @@ const automateRedBusBooking = async ({ from = 'Chennai', to = 'Kanyakumari', dat
           b.innerText.trim().toLowerCase().includes('pay now')
         )
       );
-      if (continueBookingBtn) continueBookingBtn.click();
+      if (continueBookingBtn) {
+        continueBookingBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        continueBookingBtn.click();
+      }
     });
 
     console.log('\n================================================================');
