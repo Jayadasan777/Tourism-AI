@@ -20,33 +20,8 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const isOverBudget = budgetComparison > 0;
   const budgetPercentage = budget > 0 ? (totalEstimatedCost / budget) * 100 : 0;
 
-  const handleAutoBook = async () => {
-    setBookingLoading(true);
-    setBookingError(null);
-    try {
-      console.log('🤖 Triggering real AbhiBus browser automation...');
-      const response = await fetch('http://localhost:5000/api/agentic/automate-booking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from: 'Chennai',
-          to: destination
-        })
-      });
-      const data = await response.json();
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Failed to start browser automation');
-      }
-      console.log('🤖 Real AbhiBus automation successfully triggered on your desktop!');
-    } catch (e) {
-      console.error('❌ Automation trigger failed:', e);
-      setBookingError(e.message || 'Could not start automation. Make sure node backend/server.js is running.');
-    } finally {
-      // Keep loading spinner for 8 seconds while Chrome launches
-      setTimeout(() => {
-        setBookingLoading(false);
-      }, 8000);
-    }
+  const handleAutoBook = () => {
+    setShowBookingModal(true);
   };
 
   return (
@@ -81,32 +56,14 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
 
             <button
               onClick={handleAutoBook}
-              disabled={loading || bookingLoading}
-              className="relative overflow-hidden text-sm px-4 py-2 rounded-lg font-bold inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-lg shadow-purple-500/30 border border-purple-400/20 hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
+              className="relative overflow-hidden text-sm px-4 py-2 rounded-lg font-bold inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white shadow-lg shadow-purple-500/30 border border-purple-400/20 hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {bookingLoading ? (
-                <>
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  <span>Opening Browser...</span>
-                </>
-              ) : (
-                <>
-                  <span>🤖</span>
-                  <span>Auto-Book Transport</span>
-                </>
-              )}
+              <span>🤖</span>
+              <span>Auto-Book Transport</span>
             </button>
           </div>
         </div>
-
-        {bookingError && (
-          <div className="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg">
-            <p className="text-red-400 text-sm">❌ {bookingError}</p>
-          </div>
-        )}
 
         {/* Budget Summary */}
         <div className="bg-zinc-900 rounded-lg p-4">
@@ -234,6 +191,14 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
           </div>
         </div>
       </div>
+
+      {/* Live AI Agent Autonomous Booking Simulator Modal */}
+      <RedBusLiveBookingSimulator
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        destination={destination}
+        startDate={startDate}
+      />
     </div>
   );
 };
