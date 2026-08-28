@@ -109,11 +109,10 @@ export default function Hero3DScene({ scrollProgress = 0 }) {
 
     // 7. Animation Loop
     let reqId;
-    let clock = new THREE.Clock();
-
+    const startTime = performance.now();
     const animate = () => {
       reqId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      const elapsed = (performance.now() - startTime) * 0.001;
 
       // Ambient slow spin
       mesh.rotation.y += 0.008;

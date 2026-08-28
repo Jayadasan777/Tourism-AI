@@ -1,3 +1,5 @@
+import api from './api';
+
 // Rich Real-World Landmark Database with exact geo-coordinates, addresses, Google Maps links & live flow
 const CITY_LANDMARKS = {
   chennai: [

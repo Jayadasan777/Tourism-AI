@@ -107,11 +107,11 @@ export default function TourismMotionCanvas({ type = 'mountains', className = ''
     scene.add(dirLight2);
 
     let reqId;
-    let clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       reqId = requestAnimationFrame(animate);
-      const time = clock.getElapsedTime();
+      const time = (performance.now() - startTime) * 0.001;
 
       if (type === 'mountains') {
         animatedGroup.rotation.y = Math.sin(time * 0.4) * 0.15;
