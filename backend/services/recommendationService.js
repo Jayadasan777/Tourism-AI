@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { searchNearbyPlaces } = require('./placesService');
+const { searchVenues, getVenuesByCategory } = require('./foursquareService');
 
 // Realistic nearby template databases centered around coordinates
 const getSmartFallbackNearby = (lat, lng, radius = 5000, category = 'all', budget = null) => {
@@ -124,25 +125,52 @@ const getSmartFallbackNearby = (lat, lng, radius = 5000, category = 'all', budge
  * Get smart recommendations (Google Places with automated fallback)
  */
 const getSmartRecommendations = async ({ latitude, longitude, budget, radius = 5000, category = 'all', sortBy = 'distance' }) => {
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+  console.log(`🔍 Getting recommendations: lat=${latitude}, lng=${longitude}, radius=${radius}m, category=${category}`);
 
-  if (!apiKey) {
-    return getSmartFallbackNearby(latitude, longitude, radius, category, budget);
-  }
-
+  // Use Foursquare API for REAL data
   try {
-    let types = ['tourist_attraction', 'restaurant', 'lodging'];
-    if (category === 'restaurant') types = ['restaurant', 'cafe', 'bakery'];
-    else if (category === 'attraction') types = ['tourist_attraction', 'museum', 'park', 'amusement_park'];
-    else if (category === 'hotel') types = ['lodging', 'hotel'];
+    let venues = [];
 
-    const searchPromises = types.map(type => searchNearbyPlaces(latitude, longitude, type, radius));
-    const results = await Promise.all(searchPromises);
-    const combinedPlaces = results.flat();
+    if (category === 'all') {
+      // Get multiple categories in parallel
+      const [attractions, restaurants, hotels] = await Promise.all([
+        getVenuesByCategory({ latitude, longitude, category: 'attraction', limit: 50 }),
+        getVenuesByCategory({ latitude, longitude, category: 'restaurant', limit: 50 }),
+        getVenuesByCategory({ latitude, longitude, category: 'hotel', limit: 30 })
+      ]);
+      venues = [...(attractions || []), ...(restaurants || []), ...(hotels || [])];
+    } else {
+      // Get specific category
+      venues = await getVenuesByCategory({ latitude, longitude, category, budget, limit: 100 });
+    }
 
-    if (!combinedPlaces || combinedPlaces.length === 0) {
+    if (!venues || venues.length === 0) {
+      console.warn('⚠️ No venues from Foursquare, using fallback');
       return getSmartFallbackNearby(latitude, longitude, radius, category, budget);
     }
+
+    console.log(`✅ Found ${venues.length} venues from Foursquare`);
+
+    // Convert Foursquare format to our format
+    const combinedPlaces = venues.map(venue => ({
+      id: venue.id,
+      name: venue.name,
+      category: venue.venueType,
+      rating: venue.rating || 4.0,
+      user_ratings_total: venue.popularity || 100,
+      vicinity: venue.location?.address || venue.location?.city || 'Tamil Nadu',
+      geometry: {
+        location: {
+          lat: venue.location?.lat,
+          lng: venue.location?.lng
+        }
+      },
+      distance: venue.distance || 0,
+      price_level: venue.priceLevel || 2,
+      estimated_cost: venue.estimatedCost || 500,
+      open_now: venue.isOpen !== false,
+      types: venue.categories || [venue.category]
+    }));
 
     // Format & deduplicate
     const seen = new Set();
