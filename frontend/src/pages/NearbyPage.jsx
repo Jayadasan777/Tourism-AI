@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const NearbyPage = () => {
   const [location, setLocation] = useState(null);
   const [budget, setBudget] = useState('');
-  const [radius, setRadius] = useState(5); // km
+  const [radius, setRadius] = useState(500); // km - Tamil Nadu coverage!
   const [category, setCategory] = useState('all');
   const [sortBy, setSortBy] = useState('distance');
   const [loading, setLoading] = useState(false);
@@ -96,84 +96,63 @@ const NearbyPage = () => {
       const lat = location.latitude;
       const lng = location.longitude;
       const searchRadiusMeters = radius * 1000;
-      let livePlaces = [];
 
-      // 1. Query live real places from Overpass API (OpenStreetMap real-world POI database)
-      try {
-        let tagFilter = `node["amenity"~"restaurant|cafe|fast_food|hotel|guest_house|museum|place_of_worship|viewpoint|tourism"](around:${searchRadiusMeters},${lat},${lng});
-        way["amenity"~"restaurant|cafe|fast_food|hotel|guest_house|museum|place_of_worship|viewpoint|tourism"](around:${searchRadiusMeters},${lat},${lng});`;
+      // Call backend API with Foursquare integration (REAL data!)
+      console.log(`🔍 Searching radius: ${radius}km (${searchRadiusMeters}m)`);
 
-        if (category === 'restaurant') {
-          tagFilter = `node["amenity"~"restaurant|cafe|fast_food"](around:${searchRadiusMeters},${lat},${lng});
-          way["amenity"~"restaurant|cafe|fast_food"](around:${searchRadiusMeters},${lat},${lng});`;
-        } else if (category === 'lodging' || category === 'hotel') {
-          tagFilter = `node["tourism"~"hotel|guest_house|hostel|motel|resort"](around:${searchRadiusMeters},${lat},${lng});
-          way["tourism"~"hotel|guest_house|hostel|motel|resort"](around:${searchRadiusMeters},${lat},${lng});`;
-        } else if (category === 'attraction') {
-          tagFilter = `node["tourism"~"attraction|museum|viewpoint|zoo|theme_park"](around:${searchRadiusMeters},${lat},${lng});
-          node["amenity"~"place_of_worship"](around:${searchRadiusMeters},${lat},${lng});
-          way["tourism"~"attraction|museum|viewpoint"](around:${searchRadiusMeters},${lat},${lng});`;
-        }
+      const response = await axios.get(`${API_URL}/recommendations/nearby`, {
+        params: {
+          latitude: lat,
+          longitude: lng,
+          radius: searchRadiusMeters,
+          budget: budget || undefined,
+          category: category,
+          sortBy: sortBy
+        },
+        timeout: 15000
+      });
 
-        const overpassQuery = `[out:json][timeout:8];(${tagFilter});out center 25;`;
-        const overpassRes = await axios.post(
-          'https://overpass-api.de/api/interpreter',
-          `data=${encodeURIComponent(overpassQuery)}`,
-          { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 8000 }
-        );
+      // Handle backend response
+      if (response.data?.success && response.data.places && response.data.places.length > 0) {
+        console.log(`✅ Found ${response.data.places.length} REAL places from Foursquare!`);
 
-        if (overpassRes.data && Array.isArray(overpassRes.data.elements) && overpassRes.data.elements.length > 0) {
-          livePlaces = overpassRes.data.elements
-            .filter(el => el.tags && (el.tags.name || el.tags['name:en']))
-            .map((el, i) => {
-              const elLat = el.lat || el.center?.lat || lat;
-              const elLng = el.lon || el.center?.lon || lng;
-              const dist = calculateDistance(lat, lng, elLat, elLng);
-              const name = el.tags.name || el.tags['name:en'];
-              const amenity = el.tags.amenity || el.tags.tourism || '';
-              const cuisine = el.tags.cuisine || '';
-              const street = el.tags['addr:street'] || el.tags['addr:suburb'] || el.tags['addr:city'] || '';
+        // Format Foursquare data to match UI expectations
+        const livePlaces = response.data.places.map(place => ({
+          id: place.id,
+          name: place.name,
+          category: place.venueType || place.category,
+          rating: place.rating || 4.0,
+          user_ratings_total: place.popularity || 100,
+          vicinity: place.location?.address || place.location?.city || 'Tamil Nadu',
+          geometry: {
+            location: {
+              lat: place.location?.lat,
+              lng: place.location?.lng
+            }
+          },
+          distance: place.distance || calculateDistance(lat, lng, place.location?.lat, place.location?.lng),
+          price_level: place.priceLevel || 2,
+          estimated_cost: place.estimatedCost || 500,
+          open_now: place.isOpen !== false,
+          types: place.categories || [place.category],
+          source_db: 'Foursquare Real Data',
+          photos: place.photos || [],
+          verified: place.verified || false
+        }));
 
-              const placeCategory =
-                amenity.includes('restaurant') || amenity.includes('cafe') || amenity.includes('food') ? 'restaurant' :
-                amenity.includes('hotel') || amenity.includes('guest_house') || amenity.includes('resort') ? 'lodging' : 'attraction';
-
-              const priceLevel = placeCategory === 'restaurant' ? (cuisine.includes('fine') ? 2 : 1) : placeCategory === 'lodging' ? 3 : 1;
-              const estCost = priceLevel === 1 ? 180 : priceLevel === 2 ? 450 : 2200;
-
-              return {
-                id: `osm_${el.id || i}`,
-                name: name,
-                category: placeCategory,
-                rating: Number((4.2 + ((el.id % 7) * 0.1)).toFixed(1)),
-                user_ratings_total: 120 + ((el.id % 50) * 45),
-                vicinity: street ? `${street}, Near Your Location` : `Within ${dist < 1000 ? dist + 'm' : (dist / 1000).toFixed(1) + 'km'} of your coordinates`,
-                geometry: { location: { lat: elLat, lng: elLng } },
-                distance: dist,
-                price_level: priceLevel,
-                estimated_cost: estCost,
-                open_now: true,
-                source_db: 'OpenStreetMap Live Real POI'
-              };
-            });
-        }
-      } catch (osmErr) {
-        console.warn('Overpass live POI query fell back to geo engine:', osmErr.message);
-      }
-
-      // If backend API is ready and returned places, prefer it
-      try {
-        const response = await axios.get(`${API_URL}/recommendations/nearby`, {
-          params: { latitude: lat, longitude: lng, radius: searchRadiusMeters, category, sortBy },
-          timeout: 4000
+        setRecommendations({
+          location: { lat, lng },
+          radius: searchRadiusMeters,
+          places: livePlaces,
+          total: livePlaces.length
         });
-        if (response.data?.success && Array.isArray(response.data.places) && response.data.places.length > 0) {
-          livePlaces = response.data.places;
-        }
-      } catch {
-        // Continue with live OSM places
+        setLoading(false);
+        return;
       }
-      if (!livePlaces || livePlaces.length === 0) {
+
+      // Fallback to mock data if API fails
+      let livePlaces = [];
+      if (livePlaces.length === 0) {
         const isSRMRegion = Math.abs(lat - 12.82) < 0.4 && Math.abs(lng - 80.04) < 0.4;
         const isChennai = Math.abs(lat - 13.0) < 0.8 && Math.abs(lng - 80.2) < 0.8;
 
@@ -392,19 +371,20 @@ const NearbyPage = () => {
               {/* Radius */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Search Radius: {radius} km
+                  Search Radius: {radius} km {radius >= 500 ? '(Entire Tamil Nadu!)' : ''}
                 </label>
                 <input
                   type="range"
-                  min="1"
-                  max="20"
+                  min="10"
+                  max="500"
+                  step="10"
                   value={radius}
                   onChange={(e) => setRadius(parseInt(e.target.value))}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>1 km</span>
-                  <span>20 km</span>
+                  <span>10 km (Local)</span>
+                  <span>500 km (Statewide)</span>
                 </div>
               </div>
 
