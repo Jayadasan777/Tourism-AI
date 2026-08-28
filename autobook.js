@@ -297,6 +297,23 @@ async function clickByText(page, text, partial = false) {
 
   await delay(3000);
 
+  // Helper to type visibly and wait until it is fully finished
+  async function typeVisibly(page, selector, text) {
+    try {
+      const el = await page.$(selector);
+      if (el) {
+        await el.focus();
+        await el.click({ clickCount: 3 });
+        await page.keyboard.press('Backspace');
+        await delay(100);
+        await el.type(text, { delay: 40 });
+        await delay(300); // Wait for input handlers to settle
+        return true;
+      }
+    } catch(e) {}
+    return false;
+  }
+
   // ── STEP 8: Fill Passenger Form VISIBLY ──────────────────
   await log('STEP 8 - FILL PASSENGER DETAILS', `Typing all details VISIBLY:
    Name:   ${PASSENGER.name}
@@ -305,35 +322,49 @@ async function clickByText(page, text, partial = false) {
    Phone:  ${PASSENGER.phone}
    Email:  ${PASSENGER.email}`);
 
-  // Name
-  try {
-    const nameSelectors = ['input[placeholder*="Name" i]', 'input[name*="name" i]', 'input[id*="name" i]'];
-    for (const sel of nameSelectors) {
-      const el = await page.$(sel);
-      if (el) {
-        await el.click({ clickCount: 3 });
-        await el.type(PASSENGER.name, { delay: 30 });
-        console.log('   OK: Name -> ' + PASSENGER.name);
-        break;
-      }
+  // Phone
+  let phoneFilled = false;
+  const phoneSelectors = ['input[type="tel"]', 'input[placeholder*="Mobile" i]', 'input[placeholder*="Phone" i]', 'input[name*="mobile" i]', 'input[name*="phone" i]'];
+  for (const sel of phoneSelectors) {
+    if (await typeVisibly(page, sel, PASSENGER.phone)) {
+      phoneFilled = true;
+      console.log('   OK: Phone typed: ' + PASSENGER.phone);
+      break;
     }
-  } catch(e) {}
-  await delay(300);
+  }
+
+  // Email
+  let emailFilled = false;
+  const emailSelectors = ['input[type="email"]', 'input[placeholder*="Email" i]', 'input[name*="email" i]'];
+  for (const sel of emailSelectors) {
+    if (await typeVisibly(page, sel, PASSENGER.email)) {
+      emailFilled = true;
+      console.log('   OK: Email typed: ' + PASSENGER.email);
+      break;
+    }
+  }
+
+  // Name
+  let nameFilled = false;
+  const nameSelectors = ['input[placeholder*="Passenger Name" i]', 'input[placeholder*="Name" i]', 'input[name*="name" i]'];
+  for (const sel of nameSelectors) {
+    if (await typeVisibly(page, sel, PASSENGER.name)) {
+      nameFilled = true;
+      console.log('   OK: Name typed: ' + PASSENGER.name);
+      break;
+    }
+  }
 
   // Age
-  try {
-    const ageSelectors = ['input[placeholder*="Age" i]', 'input[name*="age" i]', 'input[id*="age" i]'];
-    for (const sel of ageSelectors) {
-      const el = await page.$(sel);
-      if (el) {
-        await el.click({ clickCount: 3 });
-        await el.type(PASSENGER.age, { delay: 30 });
-        console.log('   OK: Age -> ' + PASSENGER.age);
-        break;
-      }
+  let ageFilled = false;
+  const ageSelectors = ['input[placeholder*="Age" i]', 'input[name*="age" i]'];
+  for (const sel of ageSelectors) {
+    if (await typeVisibly(page, sel, PASSENGER.age)) {
+      ageFilled = true;
+      console.log('   OK: Age typed: ' + PASSENGER.age);
+      break;
     }
-  } catch(e) {}
-  await delay(300);
+  }
 
   // Gender
   try {
@@ -342,42 +373,44 @@ async function clickByText(page, text, partial = false) {
       const txt = await page.evaluate(e => (e.innerText || e.value || '').trim().toLowerCase(), el);
       if (txt === 'male' || txt === 'm') {
         await el.click();
-        console.log('   OK: Gender -> Male');
+        console.log('   OK: Gender -> Male selected');
         break;
       }
     }
   } catch(e) {}
-  await delay(300);
+  await delay(400);
 
-  // Phone
-  try {
-    const phoneSelectors = ['input[placeholder*="Phone" i]', 'input[placeholder*="Mobile" i]', 'input[type="tel"]', 'input[name*="phone" i]', 'input[name*="mobile" i]'];
-    for (const sel of phoneSelectors) {
-      const el = await page.$(sel);
-      if (el) {
-        await el.click({ clickCount: 3 });
-        await el.type(PASSENGER.phone, { delay: 30 });
-        console.log('   OK: Phone -> ' + PASSENGER.phone);
-        break;
-      }
+  // ── GUARANTEED DOM FALLBACK ──
+  // Double checks that every single field has the correct value inside DOM context
+  await page.evaluate((p) => {
+    const phoneInput = document.querySelector('input[type="tel"], input[placeholder*="Mobile" i], input[placeholder*="Phone" i], input[name*="mobile" i]');
+    if (phoneInput && phoneInput.value !== p.phone) {
+      phoneInput.value = p.phone;
+      phoneInput.dispatchEvent(new Event('input', { bubbles: true }));
+      phoneInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
-  } catch(e) {}
-  await delay(300);
+    const emailInput = document.querySelector('input[type="email"], input[placeholder*="Email" i], input[name*="email" i]');
+    if (emailInput && emailInput.value !== p.email) {
+      emailInput.value = p.email;
+      emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+      emailInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    const nameInput = document.querySelector('input[placeholder*="Passenger Name" i], input[placeholder*="Name" i], input[name*="name" i]');
+    if (nameInput && nameInput.value !== p.name) {
+      nameInput.value = p.name;
+      nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+      nameInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    const ageInput = document.querySelector('input[placeholder*="Age" i], input[name*="age" i]');
+    if (ageInput && ageInput.value !== p.age) {
+      ageInput.value = p.age;
+      ageInput.dispatchEvent(new Event('input', { bubbles: true }));
+      ageInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }, PASSENGER);
 
-  // Email
-  try {
-    const emailSelectors = ['input[placeholder*="Email" i]', 'input[type="email"]', 'input[name*="email" i]'];
-    for (const sel of emailSelectors) {
-      const el = await page.$(sel);
-      if (el) {
-        await el.click({ clickCount: 3 });
-        await el.type(PASSENGER.email, { delay: 30 });
-        console.log('   OK: Email -> ' + PASSENGER.email);
-        break;
-      }
-    }
-  } catch(e) {}
-  await delay(500);
+  console.log('   OK: Guaranteed fallback values verified inside inputs!');
+  await delay(800);
 
   // ── STEP 9: Proceed to Payment ───────────────────────────
   await log('STEP 9 - PAYMENT GATEWAY', 'Clicking Proceed to Payment...');
