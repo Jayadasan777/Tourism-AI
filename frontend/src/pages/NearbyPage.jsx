@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const NearbyPage = () => {
   const [location, setLocation] = useState(null);
   const [budget, setBudget] = useState('');
-  const [radius, setRadius] = useState(500); // km - Tamil Nadu coverage!
+  const [radius, setRadius] = useState(20); // km
   const [category, setCategory] = useState('all');
   const [sortBy, setSortBy] = useState('distance');
   const [loading, setLoading] = useState(false);
@@ -371,20 +371,20 @@ const NearbyPage = () => {
               {/* Radius */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Search Radius: {radius} km {radius >= 500 ? '(Entire Tamil Nadu!)' : ''}
+                  Search Radius: {radius} km
                 </label>
                 <input
                   type="range"
-                  min="10"
-                  max="500"
-                  step="10"
+                  min="1"
+                  max="50"
+                  step="1"
                   value={radius}
                   onChange={(e) => setRadius(parseInt(e.target.value))}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>10 km (Local)</span>
-                  <span>500 km (Statewide)</span>
+                  <span>1 km</span>
+                  <span>50 km</span>
                 </div>
               </div>
 

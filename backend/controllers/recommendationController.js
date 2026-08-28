@@ -25,7 +25,7 @@ const getNearbyRecommendations = async (req, res, next) => {
     }
 
     const parsedBudget = budget ? parseInt(budget) : null;
-    const parsedRadius = radius ? parseInt(radius) : 500000; // Default 500 km - Tamil Nadu coverage!
+    const parsedRadius = radius ? parseInt(radius) : 20000; // Default 20 km
 
     console.log(`📍 Recommendations request: (${lat}, ${lng}), budget: ₹${parsedBudget || 'None'}, radius: ${parsedRadius}m`);
 
