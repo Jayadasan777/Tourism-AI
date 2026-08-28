@@ -193,11 +193,10 @@ export default function IndianTourismGlobe3D({ scrollProgress = 0 }) {
 
     // 9. Animation Loop
     let reqId;
-    let clock = new THREE.Clock();
-
+    const startTime = performance.now();
     const animate = () => {
       reqId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      const elapsed = (performance.now() - startTime) * 0.001;
 
       // Ambient self-rotation of the Indian tourism globe
       globe.rotation.y += 0.006;

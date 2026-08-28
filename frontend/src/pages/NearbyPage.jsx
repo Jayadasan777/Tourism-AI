@@ -182,11 +182,34 @@ const NearbyPage = () => {
 
       let filtered = livePlaces;
       if (cat && cat !== 'all') {
-        filtered = filtered.filter(p => p.category === cat || (cat === 'hotel' && p.category === 'lodging') || (cat === 'attraction' && p.category === 'tourist_attraction'));
+        const catLower = cat.toLowerCase();
+        filtered = filtered.filter(p => {
+          const pCat = (p.category || '').toLowerCase();
+          const pTypes = (p.types || []).map(t => String(t).toLowerCase());
+          if (catLower === 'restaurant' || catLower === 'food') {
+            return pCat.includes('restaurant') || pCat.includes('food') || pCat.includes('dining') || pCat.includes('cafe') || pCat.includes('bar') || pTypes.some(t => t.includes('restaurant') || t.includes('food') || t.includes('dining') || t.includes('cafe'));
+          }
+          if (catLower === 'lodging' || catLower === 'hotel') {
+            return pCat.includes('hotel') || pCat.includes('lodging') || pCat.includes('resort') || pCat.includes('inn') || pTypes.some(t => t.includes('hotel') || t.includes('lodging') || t.includes('resort'));
+          }
+          if (catLower === 'tourist_attraction' || catLower === 'attraction') {
+            return pCat.includes('attraction') || pCat.includes('tourist') || pCat.includes('park') || pCat.includes('monument') || pCat.includes('temple') || pCat.includes('zoo') || pCat.includes('museum') || pTypes.some(t => t.includes('attraction') || t.includes('park') || t.includes('temple') || t.includes('monument'));
+          }
+          return pCat.includes(catLower) || pTypes.some(t => t.includes(catLower));
+        });
       }
+
+      // If category filtered out all Foursquare spots, fall back to all found places
+      if (filtered.length === 0 && livePlaces.length > 0) {
+        filtered = livePlaces;
+      }
+
       if (bud) {
         const numBudget = parseInt(bud);
-        filtered = filtered.filter(p => !p.estimated_cost || p.estimated_cost <= numBudget);
+        const budgetFiltered = filtered.filter(p => !p.estimated_cost || p.estimated_cost <= numBudget);
+        if (budgetFiltered.length > 0) {
+          filtered = budgetFiltered;
+        }
       }
       if (sort === 'rating') {
         filtered.sort((a, b) => b.rating - a.rating);
