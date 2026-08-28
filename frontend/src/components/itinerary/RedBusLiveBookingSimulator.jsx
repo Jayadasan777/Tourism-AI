@@ -338,8 +338,20 @@ export default function RedBusLiveBookingSimulator({ isOpen, onClose, destinatio
                   )
                 )
               ),
-              React.createElement("button", { onClick: handleOpenAbhiBus, className: "w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 rounded-xl text-sm transition-all" }, "🚀 Open Live AbhiBus to Complete Real Payment")
+              React.createElement("button", { onClick: handleOpenAbhiBus, className: "w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 rounded-xl text-sm transition-all" }, "🚀 Open Live AbhiBus to Complete Real Payment"),
+              // Bookmarklet helper
+              React.createElement("div", { className: "p-3 rounded-lg bg-zinc-950 border border-zinc-800 text-xs space-y-1.5 font-sans" },
+                React.createElement("p", { className: "text-zinc-300 font-bold flex items-center gap-1" }, "💡 Live Demo Bookmarklet:"),
+                React.createElement("p", { className: "text-zinc-400 text-[11px]" }, "Click the link below to drag and save it to your bookmarks bar. When AbhiBus opens, click it to run all steps automatically!"),
+                React.createElement("div", { className: "flex gap-2" },
+                  React.createElement("a", {
+                    href: `javascript:(async function(){const delay=ms=>new Promise(r=>setTimeout(r,ms));function clickByText(t,p){const els=Array.from(document.querySelectorAll('button,div,span,a,label,li,input[type="button"]'));for(const el of els){const txt=(el.innerText||el.value||'').trim().toLowerCase();if(p?txt.includes(t.toLowerCase()):txt===t.toLowerCase()){const r=el.getBoundingClientRect();if(r.width>0&&r.height>0){el.scrollIntoView({behavior:'smooth',block:'center'});el.click();return true;}}}return false;}console.log('🤖 Starting Smart Book...');let cs=false;for(const t of['select seats','select seat','book now','view seats']){if(clickByText(t,true)){cs=true;break;}}if(!cs){return;}await delay(3000);const seats=Array.from(document.querySelectorAll('[class*=\"available\"],[class*=\"seat-avail\"],[class*=\"seatAvail\"],canvas'));if(seats.length>0)seats[0].click();await delay(1500);clickByText('continue',true)||clickByText('proceed',true)||clickByText('next',true);await delay(2000);for(const loc of['koyambedu','cmbt','kk nagar','broadway','chennai']){if(clickByText(loc,true))break;}await delay(1500);clickByText('continue',true)||clickByText('proceed',true)||clickByText('next',true);await delay(3000);const P={n:'Jayadasan S',a:'22',p:'7708254161',e:'jayadasan@smarttour.ai'};const nI=document.querySelector('input[placeholder*=\"Name\" i],input[name*=\"name\" i]');if(nI){nI.value=P.n;nI.dispatchEvent(new Event('input',{bubbles:true}));}const aI=document.querySelector('input[placeholder*=\"Age\" i],input[name*=\"age\" i]');if(aI){aI.value=P.a;aI.dispatchEvent(new Event('input',{bubbles:true}));}const pI=document.querySelector('input[type=\"tel\"],input[placeholder*=\"Mobile\" i],input[name*=\"mobile\" i]');if(pI){pI.value=P.p;pI.dispatchEvent(new Event('input',{bubbles:true}));}const eI=document.querySelector('input[type=\"email\"],input[placeholder*=\"Email\" i],input[name*=\"email\" i]');if(eI){eI.value=P.e;eI.dispatchEvent(new Event('input',{bubbles:true}));}const gEls=Array.from(document.querySelectorAll('select,input[type=\"radio\"],label,option'));for(const el of gEls){const txt=(el.innerText||el.value||'').trim().toLowerCase();if(txt==='male'||txt==='m'){el.click();break;}}await delay(1500);clickByText('proceed to pay',true)||clickByText('pay now',true)||clickByText('continue to payment',true);})();`,
+                    className: "bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded text-[11px] font-bold text-center w-full block transition-all"
+                  }, "⭐ Drag Me to Bookmarks Bar (Smart Book)")
+                )
+              )
             )
+
           )
         ),
         // Agent log terminal
