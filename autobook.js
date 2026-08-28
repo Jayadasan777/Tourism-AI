@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Tourism AI - AbhiBus Live Autonomous Booking Demo
  * No OTP! Full visible step-by-step demo to payment page.
  * Run: node autobook.js  (from e:\tourism directory)
@@ -53,7 +53,7 @@ async function clickByText(page, text, partial = false) {
 
   const browser = await puppeteer.launch({
     headless: false,
-    slowMo: 80,               // ← Watch every click & keystroke clearly!
+    slowMo: 80,               // â† Watch every click & keystroke clearly!
     defaultViewport: null,
     args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox']
   });
@@ -61,7 +61,7 @@ async function clickByText(page, text, partial = false) {
   const page = await browser.newPage();
   await page.setDefaultTimeout(30000);
 
-  // ── STEP 1: Navigate to AbhiBus ──────────────────────────
+  // â”€â”€ STEP 1: Navigate to AbhiBus â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const travelDate = new Date();
   travelDate.setDate(travelDate.getDate() + 1);
   const yyyy = travelDate.getFullYear();
@@ -74,16 +74,16 @@ async function clickByText(page, text, partial = false) {
   console.log('   URL: ' + url);
 
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await delay(4000);
+  await delay(1200);
 
-  // ── STEP 2: Scroll through results ───────────────────────
+  // â”€â”€ STEP 2: Scroll through results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 2 - ANALYZE BUSES', 'Scanning all available buses, ratings, prices...');
   await page.evaluate(() => window.scrollBy(0, 300));
-  await delay(800);
+  await delay(150);
   await page.evaluate(() => window.scrollBy(0, 300));
-  await delay(800);
+  await delay(150);
 
-  // ── STEP 3: Click "Select Seats" on best bus based on rating & price ───────
+  // â”€â”€ STEP 3: Click "Select Seats" on best bus based on rating & price â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 3 - SELECT BUS', 'Evaluating all available buses based on rating, cost, and reviews...');
 
   let seatsClicked = false;
@@ -98,7 +98,7 @@ async function clickByText(page, text, partial = false) {
       const cards = Array.from(document.querySelectorAll('div')).filter(el => {
         const text = el.innerText || '';
         const hasSelectSeats = text.toLowerCase().includes('select seats') || text.toLowerCase().includes('select seat') || text.toLowerCase().includes('book now');
-        const hasPrice = /₹\d+/.test(text) || /rs\.?\s*\d+/i.test(text) || /\b\d{3,4}\b/.test(text);
+        const hasPrice = /â‚¹\d+/.test(text) || /rs\.?\s*\d+/i.test(text) || /\b\d{3,4}\b/.test(text);
         return hasSelectSeats && hasPrice && el.querySelectorAll('div').length < 40 && isVisible(el);
       });
 
@@ -111,7 +111,7 @@ async function clickByText(page, text, partial = false) {
         
         // 1. Rating parsing
         let rating = 3.5;
-        const ratingMatch = text.match(/★\s*([0-9.]+)|([0-9.]+)\s*★|rating\s*([0-9.]+)/i);
+        const ratingMatch = text.match(/â˜…\s*([0-9.]+)|([0-9.]+)\s*â˜…|rating\s*([0-9.]+)/i);
         if (ratingMatch) {
           rating = parseFloat(ratingMatch[1] || ratingMatch[2] || ratingMatch[3]);
         } else {
@@ -121,7 +121,7 @@ async function clickByText(page, text, partial = false) {
 
         // 2. Price parsing
         let price = 1500;
-        const priceMatch = text.replace(/,/g, '').match(/(?:₹|Rs\.?)\s*(\d+)/i);
+        const priceMatch = text.replace(/,/g, '').match(/(?:â‚¹|Rs\.?)\s*(\d+)/i);
         if (priceMatch) {
           price = parseInt(priceMatch[1], 10);
         } else {
@@ -177,12 +177,12 @@ async function clickByText(page, text, partial = false) {
       }
     });
   } catch (e) {
-    console.log('   ⚠️ Error in page.evaluate evaluation: ' + e.message);
+    console.log('   âš ï¸ Error in page.evaluate evaluation: ' + e.message);
   }
 
   // Fallback if dynamic parsing didn't click anything
   if (!seatsClicked) {
-    console.log('   ⚠️ Dynamic selection failed. Falling back to generic text click...');
+    console.log('   âš ï¸ Dynamic selection failed. Falling back to generic text click...');
     const selectSeatTexts = ['select seats', 'select seat', 'book now', 'view seats'];
     for (const btnText of selectSeatTexts) {
       const clicked = await clickByText(page, btnText, true);
@@ -211,9 +211,9 @@ async function clickByText(page, text, partial = false) {
     }
   }
 
-  await delay(2000);
+  await delay(100);
 
-  // ── STEP 4: Select a seat from the layout ────────────────
+  // â”€â”€ STEP 4: Select a seat from the layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 4 - CHOOSE SEAT', 'Selecting available sleeper berth from seat map...');
 
   // Try canvas click first
@@ -243,9 +243,9 @@ async function clickByText(page, text, partial = false) {
     }
   } catch(e) {}
 
-  await delay(1500);
+  await delay(100);
 
-  // ── STEP 5: Click "Continue" / Proceed to boarding ───────
+  // â”€â”€ STEP 5: Click "Continue" / Proceed to boarding â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 5 - BOARDING POINT', 'Proceeding to boarding & dropping point selection...');
 
   const continueTexts = ['continue', 'proceed', 'next', 'select boarding'];
@@ -257,9 +257,9 @@ async function clickByText(page, text, partial = false) {
     }
   }
 
-  await delay(2000);
+  await delay(100);
 
-  // ── STEP 6: Select boarding point ────────────────────────
+  // â”€â”€ STEP 6: Select boarding point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 6 - BOARDING SELECTION', 'Selecting Chennai boarding point...');
 
   // Try selecting first available radio/boarding point
@@ -281,9 +281,9 @@ async function clickByText(page, text, partial = false) {
     }
   }
 
-  await delay(1500);
+  await delay(100);
 
-  // ── STEP 7: Proceed to passenger details ─────────────────
+  // â”€â”€ STEP 7: Proceed to passenger details â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 7 - PASSENGER FORM', 'Clicking to fill passenger details...');
 
   const proceedTexts = ['continue', 'proceed', 'next', 'passenger detail', 'fill detail'];
@@ -295,7 +295,7 @@ async function clickByText(page, text, partial = false) {
     }
   }
 
-  await delay(3000);
+  await delay(600);
 
   // Helper to type visibly and wait until it is fully finished
   async function typeVisibly(page, selector, text) {
@@ -305,16 +305,16 @@ async function clickByText(page, text, partial = false) {
         await el.focus();
         await el.click({ clickCount: 3 });
         await page.keyboard.press('Backspace');
-        await delay(100);
-        await el.type(text, { delay: 40 });
-        await delay(300); // Wait for input handlers to settle
+        await delay(15);
+        await el.type(text, { delay: 10 });
+        await delay(100); // Wait for input handlers to settle
         return true;
       }
     } catch(e) {}
     return false;
   }
 
-  // ── STEP 8: Fill Passenger Form VISIBLY ──────────────────
+  // â”€â”€ STEP 8: Fill Passenger Form VISIBLY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 8 - FILL PASSENGER DETAILS', `Typing all details VISIBLY:
    Name:   ${PASSENGER.name}
    Age:    ${PASSENGER.age}
@@ -378,9 +378,9 @@ async function clickByText(page, text, partial = false) {
       }
     }
   } catch(e) {}
-  await delay(400);
+  await delay(100);
 
-  // ── GUARANTEED DOM FALLBACK ──
+  // â”€â”€ GUARANTEED DOM FALLBACK â”€â”€
   // Double checks that every single field has the correct value inside DOM context
   await page.evaluate((p) => {
     const phoneInput = document.querySelector('input[type="tel"], input[placeholder*="Mobile" i], input[placeholder*="Phone" i], input[name*="mobile" i]');
@@ -410,9 +410,9 @@ async function clickByText(page, text, partial = false) {
   }, PASSENGER);
 
   console.log('   OK: Guaranteed fallback values verified inside inputs!');
-  await delay(800);
+  await delay(150);
 
-  // ── STEP 9: Proceed to Payment ───────────────────────────
+  // â”€â”€ STEP 9: Proceed to Payment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   await log('STEP 9 - PAYMENT GATEWAY', 'Clicking Proceed to Payment...');
 
   const payTexts = ['proceed to pay', 'pay now', 'continue to payment', 'confirm booking', 'make payment', 'continue booking', 'book ticket'];
@@ -424,7 +424,7 @@ async function clickByText(page, text, partial = false) {
     }
   }
 
-  await delay(5000);
+  await delay(1500);
 
   await log('REACHED PAYMENT GATEWAY!', `
    Name:   ${PASSENGER.name}
@@ -439,3 +439,4 @@ async function clickByText(page, text, partial = false) {
   console.error('\nERROR:', err.message);
   process.exit(1);
 });
+
