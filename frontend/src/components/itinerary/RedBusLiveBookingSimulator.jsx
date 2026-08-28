@@ -101,17 +101,35 @@ export default function RedBusLiveBookingSimulator({ isOpen, onClose, destinatio
 
   const ss = (n) => n < step ? "done" : n === step ? "active" : "pending";
 
-  const handleOpenAbhiBus = () => {
-    // Correct AbhiBus URL format: /bus_search/{from}/{fromId}/{to}/{toId}/{YYYY-MM-DD}/O
-    // Chennai city ID = 6, Kanyakumari city ID = 1667
+  const handleOpenAbhiBus = async () => {
+    // Build fallback URL
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const yyyy = tomorrow.getFullYear();
     const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
     const dd = String(tomorrow.getDate()).padStart(2, '0');
     const dateStr = `${yyyy}-${mm}-${dd}`;
-    const url = `https://www.abhibus.com/bus_search/Chennai/6/Kanyakumari/1667/${dateStr}/O`;
-    window.open(url, '_blank');
+    const fallbackUrl = `https://www.abhibus.com/bus_search/Chennai/6/Kanyakumari/1667/${dateStr}/O`;
+
+    try {
+      console.log("🤖 Triggering real AbhiBus browser automation via local backend...");
+      const response = await fetch('http://localhost:5000/api/agentic/automate-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'Chennai',
+          to: dest
+        })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error("Backend automation failed to start");
+      }
+      console.log("🤖 Real AbhiBus automation successfully triggered on your desktop!");
+    } catch (e) {
+      console.log("ℹ️ Local backend not running. Falling back to search page.");
+      window.open(fallbackUrl, '_blank');
+    }
   };
 
   return React.createElement(AnimatePresence, null,
