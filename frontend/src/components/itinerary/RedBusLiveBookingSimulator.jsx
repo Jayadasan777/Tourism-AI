@@ -65,7 +65,7 @@ export default function RedBusLiveBookingSimulator({ isOpen, onClose, destinatio
     }, 6600);
 
     // Step 4: Typing animation for passenger credentials
-    const t6 = setTimeout(() => setTypedPhone('9876543210'), 7400);
+    const t6 = setTimeout(() => setTypedPhone('7708254161'), 7400);
     const t7 = setTimeout(() => setTypedEmail('jayadasan@smarttour.ai'), 8200);
     const t8 = setTimeout(() => setTypedName('Jayadasan S'), 9000);
     const t9 = setTimeout(() => setTypedAge('22'), 9600);
