@@ -172,30 +172,28 @@ const getSmartRecommendations = async ({ latitude, longitude, budget, radius = 5
       types: venue.categories || [venue.category]
     }));
 
-    // Format & deduplicate
+    // Deduplicate by ID
     const seen = new Set();
     let formatted = [];
 
     for (const p of combinedPlaces) {
-      if (p.place_id && !seen.has(p.place_id)) {
-        seen.add(p.place_id);
-        const costLevel = p.price_level || 1;
-        const estCost = costLevel === 1 ? 200 : costLevel === 2 ? 600 : costLevel === 3 ? 1800 : 3500;
+      const placeId = p.id || p.place_id;
+      if (placeId && !seen.has(placeId)) {
+        seen.add(placeId);
 
         formatted.push({
-          id: p.place_id,
+          id: placeId,
           name: p.name,
-          category: (p.types || []).includes('restaurant') || (p.types || []).includes('cafe') ? 'restaurant' :
-                    (p.types || []).includes('lodging') ? 'hotel' : 'attraction',
+          category: p.category,
           rating: p.rating || 4.2,
           user_ratings_total: p.user_ratings_total || 100,
-          vicinity: p.vicinity || p.formatted_address || 'Nearby Area',
+          vicinity: p.vicinity || 'Nearby Area',
           geometry: p.geometry,
-          distance: 500, // Approximate
-          price_level: costLevel,
-          estimated_cost: estCost,
-          open_now: p.opening_hours ? p.opening_hours.open_now : true,
-          types: p.types || []
+          distance: p.distance || 0,
+          price_level: p.price_level || 2,
+          estimated_cost: p.estimated_cost || 500,
+          open_now: p.open_now !== false,
+          types: p.types || [p.category]
         });
       }
     }
@@ -208,6 +206,8 @@ const getSmartRecommendations = async ({ latitude, longitude, budget, radius = 5
       formatted.sort((a, b) => b.rating - a.rating);
     }
 
+    console.log(`📊 Returning ${formatted.length} places to frontend`);
+
     return {
       success: true,
       total: formatted.length,
@@ -218,11 +218,12 @@ const getSmartRecommendations = async ({ latitude, longitude, budget, radius = 5
         radius,
         category,
         budget,
-        source: 'google_places_live'
+        source: 'foursquare_real_data'
       }
     };
   } catch (err) {
-    console.error('Error in live Google Places, using fallback:', err.message);
+    console.error('❌ Error in Foursquare recommendations:', err.message);
+    console.error('Stack:', err.stack);
     return getSmartFallbackNearby(latitude, longitude, radius, category, budget);
   }
 };

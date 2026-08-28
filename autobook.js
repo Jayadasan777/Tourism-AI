@@ -295,7 +295,91 @@ async function clickByText(page, text, partial = false) {
     }
   }
 
-  await delay(600);
+  await delay(1200);
+
+  // ── Handle Login/OTP popup if it appears ──
+  console.log('   🤖 Checking for Login/OTP verification popup...');
+  try {
+    const popupFound = await page.evaluate(() => {
+      const text = document.body.innerText.toLowerCase();
+      return text.includes('login') && (text.includes('otp') || text.includes('mobile number') || text.includes('continue with'));
+    });
+
+    if (popupFound) {
+      console.log('   🤖 Login popup detected. Attempting to click "Skip"...');
+      const skipped = await page.evaluate(() => {
+        const els = Array.from(document.querySelectorAll('a, button, span, div, p'));
+        const skipBtn = els.find(el => (el.innerText || '').trim().toLowerCase() === 'skip');
+        if (skipBtn) {
+          skipBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          skipBtn.click();
+          return true;
+        }
+        return false;
+      });
+
+      if (skipped) {
+        console.log('   OK: Bypassed login popup via "Skip"!');
+        await delay(800);
+      } else {
+        console.log('   ⚠️ Could not find "Skip" link. Running OTP verification fallback...');
+        
+        // Clear phone input and type the correct user phone number
+        const mobileInput = await page.$('input[placeholder*="Mobile" i], input[type="tel"]');
+        if (mobileInput) {
+          await mobileInput.click({ clickCount: 3 });
+          await page.keyboard.press('Backspace');
+          await delay(100);
+          await mobileInput.type(PASSENGER.phone, { delay: 30 });
+          
+          // Click login button
+          const loginBtn = await page.evaluate(() => {
+            const btns = Array.from(document.querySelectorAll('button, div, span, a'));
+            const btn = btns.find(b => (b.innerText || '').trim().toLowerCase() === 'login');
+            if (btn) { btn.click(); return true; }
+            return false;
+          });
+          
+          if (loginBtn) {
+            console.log('   🤖 Login clicked. OTP sent to: ' + PASSENGER.phone);
+            await delay(1000);
+          }
+        }
+
+        // OTP terminal prompt fallback
+        const readline = require('readline');
+        const askOTPLocal = () => new Promise((resolve) => {
+          const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+          console.log('\n\n  📱 Enter the 6-digit OTP sent to ' + PASSENGER.phone + ':\n');
+          rl.question('  >> OTP: ', (otp) => { rl.close(); resolve(otp.trim()); });
+        });
+
+        const otp = await askOTPLocal();
+        if (otp && otp.length >= 4) {
+          // Type OTP
+          const otpInputs = await page.$$('input[maxlength="1"], input[class*="otp" i]');
+          if (otpInputs.length >= 4) {
+            for (let i = 0; i < Math.min(otpInputs.length, otp.length); i++) {
+              await otpInputs[i].click();
+              await otpInputs[i].type(otp[i], { delay: 50 });
+            }
+          } else {
+            const singleOtp = await page.$('input[placeholder*="OTP" i]');
+            if (singleOtp) { await singleOtp.type(otp); }
+          }
+          await delay(500);
+          await page.keyboard.press('Enter');
+          console.log('   OK: OTP submitted!');
+        }
+      }
+    } else {
+      console.log('   🤖 No login popup detected. Continuing directly...');
+    }
+  } catch(e) {
+    console.log('   ⚠️ Popup handler error: ' + e.message);
+  }
+
+  await delay(800);
 
   // Helper to type visibly and wait until it is fully finished
   async function typeVisibly(page, selector, text) {
@@ -422,88 +506,6 @@ async function clickByText(page, text, partial = false) {
       console.log('   OK: "' + txt + '" clicked! Heading to payment...');
       break;
     }
-  }
-
-  await delay(1500);
-
-  // ── Handle Login/OTP popup if it appears ──
-  console.log('   🤖 Checking for Login/OTP verification popup...');
-  try {
-    const popupFound = await page.evaluate(() => {
-      const text = document.body.innerText.toLowerCase();
-      return text.includes('login') && (text.includes('otp') || text.includes('mobile number'));
-    });
-
-    if (popupFound) {
-      console.log('   🤖 Login popup detected. Attempting to click "Skip"...');
-      const skipped = await page.evaluate(() => {
-        const els = Array.from(document.querySelectorAll('a, button, span, div, p'));
-        const skipBtn = els.find(el => (el.innerText || '').trim().toLowerCase() === 'skip');
-        if (skipBtn) {
-          skipBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          skipBtn.click();
-          return true;
-        }
-        return false;
-      });
-
-      if (skipped) {
-        console.log('   OK: Bypassed login popup via "Skip"!');
-        await delay(1500);
-      } else {
-        console.log('   ⚠️ Could not find "Skip" link. Running OTP verification fallback...');
-        
-        // Clear phone input and type the correct user phone number
-        const mobileInput = await page.$('input[placeholder*="Mobile" i], input[type="tel"]');
-        if (mobileInput) {
-          await mobileInput.click({ clickCount: 3 });
-          await page.keyboard.press('Backspace');
-          await delay(100);
-          await mobileInput.type(PASSENGER.phone, { delay: 30 });
-          
-          // Click login button
-          const loginBtn = await page.evaluate(() => {
-            const btns = Array.from(document.querySelectorAll('button, div, span, a'));
-            const btn = btns.find(b => (b.innerText || '').trim().toLowerCase() === 'login');
-            if (btn) { btn.click(); return true; }
-            return false;
-          });
-          
-          if (loginBtn) {
-            console.log('   🤖 Login clicked. OTP sent to: ' + PASSENGER.phone);
-            await delay(1000);
-          }
-        }
-
-        // OTP terminal prompt fallback
-        const readline = require('readline');
-        const askOTPLocal = () => new Promise((resolve) => {
-          const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-          console.log('\n\n  📱 Enter the 6-digit OTP sent to ' + PASSENGER.phone + ':\n');
-          rl.question('  >> OTP: ', (otp) => { rl.close(); resolve(otp.trim()); });
-        });
-
-        const otp = await askOTPLocal();
-        if (otp && otp.length >= 4) {
-          // Type OTP
-          const otpInputs = await page.$$('input[maxlength="1"], input[class*="otp" i]');
-          if (otpInputs.length >= 4) {
-            for (let i = 0; i < Math.min(otpInputs.length, otp.length); i++) {
-              await otpInputs[i].click();
-              await otpInputs[i].type(otp[i], { delay: 50 });
-            }
-          } else {
-            const singleOtp = await page.$('input[placeholder*="OTP" i]');
-            if (singleOtp) { await singleOtp.type(otp); }
-          }
-          await delay(500);
-          await page.keyboard.press('Enter');
-          console.log('   OK: OTP submitted!');
-        }
-      }
-    }
-  } catch(e) {
-    console.log('   ⚠️ Popup handler error: ' + e.message);
   }
 
   await delay(1500);
