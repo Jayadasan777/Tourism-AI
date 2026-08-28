@@ -21,7 +21,7 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const budgetPercentage = budget > 0 ? (totalEstimatedCost / budget) * 100 : 0;
 
   const handleAutoBook = () => {
-    // 1. Open the Interactive Live Autonomous RedBus Booking Agent on screen
+    // 1. Show the visual simulator immediately
     setShowBookingModal(true);
   };
 

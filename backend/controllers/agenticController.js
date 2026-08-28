@@ -229,26 +229,35 @@ const getAgentStatus = async (req, res, next) => {
  */
 const automateRealBooking = async (req, res, next) => {
   try {
-    const { from, to, date, passengerDetails } = req.body;
+    const { from, to } = req.body;
 
-    console.log('\n🤖 STARTING BROWSER AUTOMATION...');
-    console.log(`   ${from} → ${to}`);
+    console.log('\n🤖 STARTING ABHIBUS AUTOMATION...');
+    console.log(`   ${from || 'Chennai'} → ${to || 'Kanyakumari'}`);
 
-    // Import browser automation service
-    const { automateRedBusBooking } = require('../services/browserAutomation');
-
-    // Start automation (this opens browser and goes through booking)
-    const result = await automateRedBusBooking({
-      from,
-      to,
-      date,
-      passengerDetails
+    // Respond immediately so browser doesn't time out
+    res.status(200).json({
+      success: true,
+      message: '🤖 AbhiBus automation started! Watch the Chrome window on your desktop.',
+      status: 'AUTOMATION_STARTED'
     });
 
-    // Send result back to frontend
-    res.status(200).json({
-      success: result.success,
-      data: result
+    // Run autobook.js in background (spawns visible Chrome window)
+    const { spawn } = require('child_process');
+    const path = require('path');
+    const scriptPath = path.join(__dirname, '../../autobook.js');
+
+    const child = spawn('node', [scriptPath], {
+      cwd: path.join(__dirname, '../..'),
+      stdio: 'inherit',   // shows output in terminal
+      detached: false
+    });
+
+    child.on('exit', (code) => {
+      console.log(`\n✅ AbhiBus automation finished with code: ${code}`);
+    });
+
+    child.on('error', (err) => {
+      console.error('❌ Automation error:', err.message);
     });
 
   } catch (error) {
@@ -256,6 +265,7 @@ const automateRealBooking = async (req, res, next) => {
     next(error);
   }
 };
+
 
 module.exports = {
   planCompleteTrip,
