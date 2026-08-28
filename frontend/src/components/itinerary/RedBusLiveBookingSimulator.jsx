@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function useTypingEffect(targetText, startDelay, charDelay) {
@@ -102,7 +102,16 @@ export default function RedBusLiveBookingSimulator({ isOpen, onClose, destinatio
   const ss = (n) => n < step ? "done" : n === step ? "active" : "pending";
 
   const handleOpenAbhiBus = () => {
-    window.open("https://www.abhibus.com/bus_tickets/chennai-to-kanyakumari/ONEWAY", "_blank");
+    // Build tomorrow's date in DD-MM-YYYY format (AbhiBus URL format)
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const yyyy = tomorrow.getFullYear();
+    const dateStr = `${dd}-${mm}-${yyyy}`;
+    // Correct AbhiBus URL: /bus_tickets/from-to/DD-MM-YYYY/ONEWAY
+    const url = `https://www.abhibus.com/bus_tickets/chennai-to-kanyakumari/${dateStr}/ONEWAY`;
+    window.open(url, '_blank');
   };
 
   return React.createElement(AnimatePresence, null,
