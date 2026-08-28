@@ -20,9 +20,33 @@ const ItineraryDisplay = ({ itinerary, onRegenerate, onSave, loading }) => {
   const isOverBudget = budgetComparison > 0;
   const budgetPercentage = budget > 0 ? (totalEstimatedCost / budget) * 100 : 0;
 
-  const handleAutoBook = () => {
-    // 1. Show the visual simulator immediately
-    setShowBookingModal(true);
+  const handleAutoBook = async () => {
+    setBookingLoading(true);
+    setBookingError(null);
+    try {
+      console.log('🤖 Triggering real AbhiBus browser automation...');
+      const response = await fetch('http://localhost:5000/api/agentic/automate-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'Chennai',
+          to: destination
+        })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to start browser automation');
+      }
+      console.log('🤖 Real AbhiBus automation successfully triggered on your desktop!');
+    } catch (e) {
+      console.error('❌ Automation trigger failed:', e);
+      setBookingError(e.message || 'Could not start automation. Make sure node backend/server.js is running.');
+    } finally {
+      // Keep loading spinner for 8 seconds while Chrome launches
+      setTimeout(() => {
+        setBookingLoading(false);
+      }, 8000);
+    }
   };
 
   return (
